@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.data.account
+package by.varyvoda.android.moneymaster.data.model.account
 
 import by.varyvoda.android.moneymaster.data.domain.Money
 
@@ -12,6 +12,9 @@ interface AccountMutation {
     }
 
     val type: Type
-    val account: Account
+
+    fun mutate(balance: Money): Money
+
+    fun undo(balance: Money): Money
 }
 
