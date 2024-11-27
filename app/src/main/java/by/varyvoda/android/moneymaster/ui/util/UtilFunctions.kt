@@ -1,24 +1,40 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package by.varyvoda.android.moneymaster.ui.util
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 fun anyNull(value1: Any?, value2: Any?): Boolean {
+    contract {
+        returns(false) implies (value1 != null && value2 != null)
+    }
     return value1 == null
             || value2 == null
 }
 
 fun anyNull(value1: Any?, value2: Any?, value3: Any?): Boolean {
+    contract {
+        returns(false) implies (value1 != null && value2 != null && value3 != null)
+    }
     return value1 == null
             || value2 == null
             || value3 == null
 }
 
 fun anyNull(value1: Any?, value2: Any?, value3: Any?, value4: Any?): Boolean {
+    contract {
+        returns(false) implies (value1 != null && value2 != null && value3 != null && value4 != null)
+    }
     return value1 == null
             || value2 == null
             || value3 == null
             || value4 == null
 }
 
-fun anyNull(vararg values: Any?): Boolean = values.any { it == null }
+fun anyNull(vararg values: Any?): Boolean {
+    return values.any { it == null }
+}
 
 
 fun allNull(value1: Any?, value2: Any?): Boolean {

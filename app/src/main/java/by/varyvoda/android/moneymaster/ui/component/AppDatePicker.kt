@@ -25,7 +25,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.domain.PrimitiveDate
+import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

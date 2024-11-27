@@ -2,7 +2,7 @@
     <string name="app_name">Money Master</string>
     <string name="account_choose_alert_title">Choose account</string>
     <string name="create_account">Create account</string>
-    <string name="account_create_title">Account creating</string>
+    <string name="account_create_title">New account</string>
     <string name="account_creation_name_field_label">Name</string>
     <string name="account_creation_balance_field_label">Balance</string>
     <string name="select_currency">Select currency</string>
@@ -11,11 +11,19 @@
     <string name="create">Create</string>
     <string name="add_income">Add income</string>
     <string name="edit_balance">Edit balance</string>
-    <string name="add_outcome">Add outcome</string>
+    <string name="add_expense">Add expense</string>
     <string name="add_transfer">Add transfer</string>
     <string name="amount">Amount</string>
     <string name="confirm">Confirm</string>
     <string name="select">Select</string>
     <string name="transaction_date_format">MM/DD/YYYY</string>
     <string name="select_date">Select date</string>
+    <string name="back">Back</string>
+    <string name="account_icon">Account icon</string>
+    <string name="account_creation_default_card_title">Title will be here</string>
+    <string name="general_information">General information</string>
+    <string name="appearance">Appearance</string>
+    <string name="setup_color_for_account">Set up colour for your account</string>
+    <string name="selected_theme">Selected theme</string>
+    <string name="currency">Currency</string>
 </resources>

@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,7 +18,7 @@ fun BalanceField(
     imeAction: ImeAction,
     modifier: Modifier = Modifier
 ) {
-    TextField(
+    AppTextField(
         value = value,
         label = { Text(text = stringResource(labelId)) },
         onValueChange = onValueChange,

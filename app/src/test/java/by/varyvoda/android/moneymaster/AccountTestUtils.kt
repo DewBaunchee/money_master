@@ -1,23 +1,25 @@
 package by.varyvoda.android.moneymaster
 
-import android.icu.util.Calendar
-import by.varyvoda.android.moneymaster.data.account.Account
-import by.varyvoda.android.moneymaster.data.account.AccountIncome
-import by.varyvoda.android.moneymaster.data.account.AccountMutationCategory
-import by.varyvoda.android.moneymaster.data.account.AccountOutcome
-import by.varyvoda.android.moneymaster.data.currency.Currency
+import by.varyvoda.android.moneymaster.data.model.account.Account
+import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountExpense
+import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountIncome
+import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
+import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import java.util.Date
+
 
 fun fastAccount() =
     Account(
         name = "",
-        currency = Currency.BYN,
+        currencyCode = Currency.BYN.code,
         initialBalance = 0,
+        currentBalance = 0,
+        themeId = 0L
     )
 
 fun fastOutcome() =
-    AccountOutcome(
-        outcome = 0,
+    AccountExpense(
+        amount = 0,
         category = AccountMutationCategory.Unknown,
         date = Date(),
         description = "Outcome",

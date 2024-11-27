@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.account.Account
+import by.varyvoda.android.moneymaster.data.model.account.Account
 
 @Composable
 fun AccountSelect(
@@ -23,7 +23,7 @@ fun AccountSelect(
     var chooseShown by remember { mutableStateOf(false) }
 
     if (chooseShown) {
-        SelectDialog(
+        ListDialog(
             items = accounts,
             current = current,
             onSelect = { chooseShown = false; onSelect(it) },

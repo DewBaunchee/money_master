@@ -1,23 +1,17 @@
 package by.varyvoda.android.moneymaster.data.model.account
 
-import by.varyvoda.android.moneymaster.data.domain.Money
-import by.varyvoda.android.moneymaster.data.model.currency.Currency
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.Money
 
+@Entity(tableName = "account")
 data class Account(
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val currency: Currency,
+    val currencyCode: String,
     val initialBalance: Money,
-    val mutations: List<AccountMutation> = listOf<AccountMutation>()
-) {
-
-    val balance by lazy {
-        mutations.fold(initialBalance) { currentBalance, mutation ->
-            mutation.mutate(currentBalance)
-        }
-    }
-
-    override fun toString(): String {
-        return "$name $currency $balance"
-    }
-}
+    val currentBalance: Money,
+    val themeId: Id
+)

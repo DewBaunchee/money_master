@@ -1,13 +1,13 @@
 package by.varyvoda.android.moneymaster
 
-import by.varyvoda.android.moneymaster.data.model.account.AccountBalanceEdit
+import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountBalanceEdit
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class AccountTests {
 
     @Test
-    fun account100_outcome150_resultMinus50() {
+    fun account100_expense150_resultMinus50() {
         val expectedBalance = -50
         val account =
             fastAccount().copy(
@@ -31,7 +31,7 @@ class AccountTests {
     }
 
     @Test
-    fun account100_outcome50income150_result200() {
+    fun account100_expense50income150_result200() {
         val expectedBalance = 200
         val account =
             fastAccount().copy(
