@@ -15,9 +15,11 @@ composeBom = "2024.04.01"
 roomRuntime = "2.7.0-alpha11"
 runtimeLivedata = "1.6.5"
 ksp = "2.0.0-1.0.21"
+composeIcons = "1.7.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeIcons" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -45,5 +47,5 @@ androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedat
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-devtoolsKsp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
+devtoolsKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

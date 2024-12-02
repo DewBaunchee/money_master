@@ -23,19 +23,20 @@ fun AccountSelect(
     var chooseShown by remember { mutableStateOf(false) }
 
     if (chooseShown) {
-        ListDialog(
-            items = accounts,
-            current = current,
-            onSelect = { chooseShown = false; onSelect(it) },
-            onDismissRequest = { chooseShown = false },
-            onCreateRequest = onCreateRequest
-        )
+//        ListDialog(
+//            items = accounts,
+//            current = current,
+//            onSelect = { chooseShown = false; onSelect(it) },
+//            onDismissRequest = { chooseShown = false },
+//        )
     }
 
-    OutlinedButton(onClick = { chooseShown = true }) {
+    OutlinedButton(
+        onClick = { chooseShown = true },
+        modifier = modifier
+    ) {
         Text(
             text = if (current == null) stringResource(R.string.select) else current.toString(),
-            modifier = modifier
         )
     }
 }

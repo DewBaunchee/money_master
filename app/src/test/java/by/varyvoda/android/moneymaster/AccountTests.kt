@@ -1,6 +1,6 @@
 package by.varyvoda.android.moneymaster
 
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountBalanceEdit
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountBalanceEdit
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

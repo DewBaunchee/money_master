@@ -8,10 +8,11 @@ import com.google.gson.reflect.TypeToken
 class ColorConverters {
 
     @TypeConverter
-    fun toLong(color: Color): Long = color.value.toLong()
+    fun toString(color: Color): String = Gson().toJson(color.value)
 
     @TypeConverter
-    fun toColor(long: Long): Color = Color(long)
+    fun toColor(json: String): Color =
+        Color(Gson().fromJson<ULong>(json, ULong::class.java))
 }
 
 class ColorListConverters {
@@ -21,6 +22,6 @@ class ColorListConverters {
 
     @TypeConverter
     fun toColorList(json: String): List<Color> =
-        Gson().fromJson<List<Int>>(json, object : TypeToken<List<Int>>() {}.type)
+        Gson().fromJson<List<ULong>>(json, object : TypeToken<List<ULong>>() {}.type)
             .map { Color(it) }
 }

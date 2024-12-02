@@ -1,27 +1,18 @@
 package by.varyvoda.android.moneymaster.data.service.account
 
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountIncome
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountOperation
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountExpense
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpense
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
-import by.varyvoda.android.moneymaster.data.repository.account.mutation.AccountMutationRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.AccountOperationRepository
 
 class AccountServiceImpl(
     private val accountRepository: AccountRepository,
-    private val accountMutationRepository: AccountMutationRepository
+    private val accountOperationRepository: AccountOperationRepository
 ) : AccountService {
-
-    override suspend fun addMutation(
-        accountId: Id,
-        mutation: AccountOperation
-    ) {
-//        accountMutationRepository.insert()
-    }
 
     override suspend fun createAccount(
         name: String,
@@ -43,16 +34,16 @@ class AccountServiceImpl(
     override suspend fun addIncome(
         accountId: Id,
         amount: Money,
-        category: AccountMutationCategory,
+        categoryId: Id,
         date: PrimitiveDate,
         description: String,
         images: List<Int>
     ) {
-        accountMutationRepository.insert(
+        accountOperationRepository.insert(
             AccountIncome(
                 accountId = accountId,
                 amount = amount,
-                categoryId = category.id,
+                categoryId = categoryId,
                 date = date,
                 description = description,
 //                images = images
@@ -63,16 +54,16 @@ class AccountServiceImpl(
     override suspend fun addExpense(
         accountId: Id,
         amount: Money,
-        category: AccountMutationCategory,
+        categoryId: Id,
         date: PrimitiveDate,
         description: String,
         images: List<Int>
     ) {
-        accountMutationRepository.insert(
+        accountOperationRepository.insert(
             AccountExpense(
                 accountId = accountId,
                 amount = amount,
-                categoryId = category.id,
+                categoryId = categoryId,
                 date = date,
                 description = description,
 //                images = images

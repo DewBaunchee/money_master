@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.data.model.account.mutation
+package by.varyvoda.android.moneymaster.data.model.account.operation
 
 import androidx.room.Entity
 import androidx.room.Ignore

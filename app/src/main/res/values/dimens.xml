@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_padding">16.dp</dimen>
+    <dimen name="profile_icon_greeting_space">8.dp</dimen>
+    <dimen name="icon_button_padding">8.dp</dimen>
+    <dimen name="icon_button_space">4.dp</dimen>
+    <dimen name="homescreen_padding">8.dp</dimen>
+    <dimen name="card_gallery_space">16.dp</dimen>
+    <dimen name="list_dialog_item_padding">8.dp</dimen>
+    <dimen name="list_dialog_item_space">4.dp</dimen>
+    <dimen name="form_padding">16.dp</dimen>
+    <dimen name="form_spaced_by">16.dp</dimen>
+    <dimen name="icon_and_label_row_padding">8.dp</dimen>
+    <dimen name="grid_picker_space">4.dp</dimen>
+    <dimen name="grid_picker_box_size">50.dp</dimen>
+    <dimen name="full_screen_dialog_bottom_padding">32.dp</dimen>
+    <dimen name="button_selector_space">8.dp</dimen>
 </resources>

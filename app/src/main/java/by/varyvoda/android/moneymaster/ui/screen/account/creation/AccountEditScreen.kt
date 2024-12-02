@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,11 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,22 +44,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.theme.AccountTheme
-import by.varyvoda.android.moneymaster.data.model.currency.Currency
+import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.ListDialog
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 
-object AccountCreationDestination : NavigationDestination {
-    override val route = "account/create"
-    override val titleRes = R.string.account_create_title
+object AccountEditDestination : NavigationDestination {
+    override val route = "account/edit" // TODO arguments to edit
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountCreationScreen(
     modifier: Modifier = Modifier,
-    viewModel: AccountCreationViewModel = viewModel()
+    viewModel: AccountEditViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
@@ -94,25 +88,28 @@ fun AccountCreationScreen(
 @Composable
 fun AccountCreationBody(
     modifier: Modifier = Modifier,
-    viewModel: AccountCreationViewModel = viewModel()
+    viewModel: AccountEditViewModel = viewModel()
 ) {
+    val currencies = viewModel.currencies.collectAsState().value
+    val accountThemes = viewModel.accountThemes.collectAsState().value
     val (name, currency, initialBalance, theme) = viewModel.uiState.collectAsState().value
     var currencySelectionShown by remember { mutableStateOf(false) }
 
+    if (theme == null) return
+
     Column(
         modifier = modifier
-            .padding(dimensionResource(R.dimen.card_padding)),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(dimensionResource(R.dimen.form_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.form_spaced_by))
     ) {
         AccountCard(
             Icons.Default.Home,
-            theme = theme ?: AccountTheme.Default,
+            theme = theme,
             title = name,
             balance = initialBalance,
             currency = currency,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
         )
         Text(
             text = stringResource(R.string.general_information),
@@ -160,15 +157,16 @@ fun AccountCreationBody(
         )
         if (currencySelectionShown) {
             ListDialog(
-                items = listOf(Currency.USD, Currency.BYN),
-                current = currency,
+                items = currencies,
+                isSelected = { it.code == currency?.code },
                 onSelect = {
                     currencySelectionShown = false
                     viewModel.changeCurrency(it)
                 },
                 onDismissRequest = { currencySelectionShown = false },
-                onCreateRequest = {}
-            )
+            ) {
+                Text(text = it.name)
+            }
         }
         Text(
             text = stringResource(R.string.appearance),
@@ -176,7 +174,7 @@ fun AccountCreationBody(
         )
         Text(text = stringResource(R.string.setup_color_for_account))
         ThemeGallery(
-            themes = AccountTheme.List,
+            themes = accountThemes,
             currentTheme = theme,
             onThemeSelect = { viewModel.onSelectTheme(it) },
             modifier = Modifier.fillMaxWidth()
@@ -239,92 +237,4 @@ fun ThemeGallery(
 
         }
     }
-}
-
-@Composable
-fun AccountCard(
-    icon: ImageVector,
-    theme: AccountTheme,
-    title: String,
-    balance: String,
-    currency: Currency?,
-    modifier: Modifier = Modifier
-) {
-    Card(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .background(
-                    Brush.linearGradient(
-                        colors = theme.gradientColors,
-                        start = Offset(0f, Float.POSITIVE_INFINITY),
-                        end = Offset(Float.POSITIVE_INFINITY, 0f)
-                    )
-                )
-                .fillMaxSize()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .padding(dimensionResource(R.dimen.card_padding))
-                    .fillMaxSize()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.small),
-                    ) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = stringResource(R.string.account_icon),
-                            tint = Color.White,
-                            modifier = Modifier
-                                .background(Color(1f, 1f, 1f, 0.2f))
-                                .padding(4.dp)
-                                .clip(MaterialTheme.shapes.small),
-                        )
-                    }
-                    Text(
-                        text = if (title.isBlank())
-                            stringResource(R.string.account_creation_default_card_title)
-                        else
-                            title,
-                        color = Color.White
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Column {
-                        Text(
-                            text = if (balance.isBlank()) "" else stringResource(R.string.amount),
-                            color = Color(0xFFF1F3F6),
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                        Text(
-                            text = makeMoneyString(balance, currency),
-                            color = Color.White,
-                            style = MaterialTheme.typography.displaySmall
-                        )
-                    }
-                    if (currency != null) {
-                        Text(
-                            text = currency.code,
-                            color = Color(0xFFF1F3F6),
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-private fun makeMoneyString(money: String, currency: Currency?): String {
-    return if (currency == null) money else currency.symbol + money
 }

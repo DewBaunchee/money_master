@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.data.model.account.mutation
+package by.varyvoda.android.moneymaster.data.model.account.operation
 
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -7,25 +7,24 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 
-@Entity(tableName = "account_expense")
-data class AccountExpense(
+@Entity(tableName = "account_transfer")
+data class AccountTransfer(
     @PrimaryKey(autoGenerate = true)
-    override val id: Id = 0,
+    override val id: Id,
     override val accountId: Id,
     override val date: PrimitiveDate,
-    val amount: Money,
-    val categoryId: Id,
-    val description: String,
+    val relatedAccountId: Id,
+    val amount: Money
 ) : AccountOperation {
 
     @Ignore
-    override val type = AccountOperation.Type.EXPENSE
+    override val type = AccountOperation.Type.TRANSFER
 
     override fun mutate(balance: Money): Money {
-        return balance - amount
+        return balance + amount
     }
 
     override fun undo(balance: Money): Money {
-        return balance + amount
+        return balance - amount
     }
 }

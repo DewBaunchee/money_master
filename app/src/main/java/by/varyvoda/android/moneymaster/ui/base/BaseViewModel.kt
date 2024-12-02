@@ -2,6 +2,7 @@ package by.varyvoda.android.moneymaster.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
 import by.varyvoda.android.moneymaster.ui.effect.BaseEffect
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,10 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel : ViewModel() {
+
+    companion object {
+        const val DEFAULT_TIMEOUT_MILLIS = 5000L
+    }
 
     private val exceptionHandler = CoroutineExceptionHandler(::onError)
 

@@ -1,14 +1,10 @@
 package by.varyvoda.android.moneymaster.data.service.account
 
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountOperation
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 
 interface AccountService {
-
-    suspend fun addMutation(accountId: Id, mutation: AccountOperation)
 
     suspend fun createAccount(
         name: String, currencyCode: String, initialBalance: Money, themeId: Id
@@ -17,7 +13,7 @@ interface AccountService {
     suspend fun addIncome(
         accountId: Id,
         amount: Money,
-        category: AccountMutationCategory,
+        categoryId: Id,
         date: PrimitiveDate,
         description: String,
         images: List<Int>
@@ -26,7 +22,7 @@ interface AccountService {
     suspend fun addExpense(
         accountId: Id,
         amount: Money,
-        category: AccountMutationCategory,
+        categoryId: Id,
         date: PrimitiveDate,
         description: String,
         images: List<Int>

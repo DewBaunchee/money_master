@@ -1,11 +1,9 @@
 package by.varyvoda.android.moneymaster.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import by.varyvoda.android.moneymaster.R
 
 val PoppinsFamily = FontFamily(
@@ -13,30 +11,35 @@ val PoppinsFamily = FontFamily(
 )
 
 // Set of Material typography styles to start with
-val Typography = Typography(
+val Typography = Typography().let { defaultTypography ->
+    Typography(
+        displayLarge = defaultTypography.displayLarge.copy(fontFamily = PoppinsFamily),
+        displayMedium = defaultTypography.displayMedium.copy(fontFamily = PoppinsFamily),
+        displaySmall = defaultTypography.displaySmall.copy(fontFamily = PoppinsFamily),
 
-    bodyLarge = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
+        headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = PoppinsFamily),
+        headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = PoppinsFamily),
+        headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = PoppinsFamily),
 
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        titleLarge = defaultTypography.titleLarge.copy(
+            fontFamily = PoppinsFamily,
+            fontWeight = FontWeight.Bold
+        ),
+        titleMedium = defaultTypography.titleMedium.copy(
+            fontFamily = PoppinsFamily,
+            fontWeight = FontWeight.Bold
+        ),
+        titleSmall = defaultTypography.titleSmall.copy(
+            fontFamily = PoppinsFamily,
+            fontWeight = FontWeight.Bold
+        ),
+
+        bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = PoppinsFamily),
+        bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = PoppinsFamily),
+        bodySmall = defaultTypography.bodySmall.copy(fontFamily = PoppinsFamily),
+
+        labelLarge = defaultTypography.labelLarge.copy(fontFamily = PoppinsFamily),
+        labelMedium = defaultTypography.labelMedium.copy(fontFamily = PoppinsFamily),
+        labelSmall = defaultTypography.labelSmall.copy(fontFamily = PoppinsFamily)
     )
-    */
-)
+}

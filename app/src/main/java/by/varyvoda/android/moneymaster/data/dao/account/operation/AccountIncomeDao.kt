@@ -1,9 +1,9 @@
-package by.varyvoda.android.moneymaster.data.dao.account.mutation
+package by.varyvoda.android.moneymaster.data.dao.account.operation
 
 import androidx.room.Dao
 import androidx.room.Query
 import by.varyvoda.android.moneymaster.data.dao.BaseDao
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountIncome
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
 

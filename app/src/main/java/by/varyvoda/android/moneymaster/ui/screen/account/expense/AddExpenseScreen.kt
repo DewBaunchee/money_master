@@ -14,15 +14,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
 import by.varyvoda.android.moneymaster.R
+import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.ui.component.AccountSelect
 import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
 import by.varyvoda.android.moneymaster.ui.component.BalanceField
-import by.varyvoda.android.moneymaster.ui.component.CategoryPicker
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 
 object AddExpenseDestination : NavigationDestination {
-    override val route = "expense/add"
-    override val titleRes: Int = R.string.app_name
+    const val ACCOUNT_ID_ROUTE_ARG = "accountId"
+    override val route = "expense/add?$ACCOUNT_ID_ROUTE_ARG={$ACCOUNT_ID_ROUTE_ARG}"
+
+    fun route(accountId: Id?): String {
+        return "expense/add?$ACCOUNT_ID_ROUTE_ARG=$accountId"
+    }
 }
 
 @Composable
@@ -62,7 +66,7 @@ fun AddExpenseScreen(
             R.string.select_date,
             R.string.transaction_date_format
         )
-        CategoryPicker()
+//        CategoryPicker()
         Spacer(modifier = Modifier.weight(1f))
         Row {
             OutlinedButton(onClick = { viewModel.onCancelClick() }) {

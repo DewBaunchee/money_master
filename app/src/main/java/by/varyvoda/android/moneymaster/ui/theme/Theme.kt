@@ -17,18 +17,49 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryGray,
-    secondary = PrimaryGray,
-    tertiary = PrimaryGray
+    onPrimary = Secondary,
+//    primaryContainer = ColorLightTokens.PrimaryContainer,
+//    onPrimaryContainer = ColorLightTokens.OnPrimaryContainer,
+//    inversePrimary = ColorLightTokens.InversePrimary,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondary = Secondary,
+    onSecondary = SecondaryContainer,
+    secondaryContainer = SecondaryContainer,
+    onSecondaryContainer = Secondary,
+
+    tertiary = PrimaryGray,
+//    onTertiary = ColorLightTokens.OnTertiary,
+//    tertiaryContainer = ColorLightTokens.TertiaryContainer,
+//    onTertiaryContainer = ColorLightTokens.OnTertiaryContainer,
+//
+    background = Background,
+//    onBackground = ColorLightTokens.OnBackground,
+//
+//    surface = ColorLightTokens.Surface,
+//    onSurface = ColorLightTokens.OnSurface,
+//    surfaceVariant = ColorLightTokens.SurfaceVariant,
+//    onSurfaceVariant = ColorLightTokens.OnSurfaceVariant,
+//    surfaceTint = PrimaryGray,
+//    inverseSurface = ColorLightTokens.InverseSurface,
+//    inverseOnSurface = ColorLightTokens.InverseOnSurface,
+//
+//    error = ColorLightTokens.Error,
+//    onError = ColorLightTokens.OnError,
+//    errorContainer = ColorLightTokens.ErrorContainer,
+//    onErrorContainer = ColorLightTokens.OnErrorContainer,
+//
+//    outline = ColorLightTokens.Outline,
+//    outlineVariant = ColorLightTokens.OutlineVariant,
+//
+//    scrim = ColorLightTokens.Scrim,
+//
+//    surfaceBright = ColorLightTokens.SurfaceBright,
+//    surfaceContainer = ColorLightTokens.SurfaceContainer,
+//    surfaceContainerHigh = ColorLightTokens.SurfaceContainerHigh,
+//    surfaceContainerHighest = ColorLightTokens.SurfaceContainerHighest,
+//    surfaceContainerLow = ColorLightTokens.SurfaceContainerLow,
+//    surfaceContainerLowest = ColorLightTokens.SurfaceContainerLowest,
+//    surfaceDim = ColorLightTokens.SurfaceDim,
 )
 
 @Composable
@@ -49,7 +80,7 @@ fun MoneyMasterTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme, // FIXME
         typography = Typography,
         shapes = Shapes,
         content = content

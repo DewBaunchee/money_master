@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.kodein.di)
     implementation(libs.kodein.di.framework.compose)
     implementation(libs.gson)
+    implementation(libs.androidx.material.icons.extended)
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     //Room
     implementation(libs.androidx.room.runtime)

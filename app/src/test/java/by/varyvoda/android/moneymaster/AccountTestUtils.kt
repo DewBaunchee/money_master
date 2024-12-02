@@ -1,9 +1,9 @@
 package by.varyvoda.android.moneymaster
 
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountExpense
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountIncome
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpense
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
+import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import java.util.Date
 
@@ -20,7 +20,7 @@ fun fastAccount() =
 fun fastOutcome() =
     AccountExpense(
         amount = 0,
-        category = AccountMutationCategory.Unknown,
+        category = AccountOperationCategory.Unknown,
         date = Date(),
         description = "Outcome",
         images = listOf()
@@ -29,7 +29,7 @@ fun fastOutcome() =
 fun fastIncome() =
     AccountIncome(
         income = 0,
-        category = AccountMutationCategory.Unknown,
+        category = AccountOperationCategory.Unknown,
         date = Date(),
         description = "Income",
         images = listOf()

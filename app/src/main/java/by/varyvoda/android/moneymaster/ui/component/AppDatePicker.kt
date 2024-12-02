@@ -11,7 +11,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -40,16 +39,16 @@ fun AppDatePicker(
 ) {
     var showModal by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
+    AppTextField(
         value = date?.let { convertMillisToDate(it) } ?: "",
         onValueChange = { },
+        asButton = true,
         label = { Text(stringResource(labelId)) },
         placeholder = { Text(stringResource(dateFormatId)) },
         trailingIcon = {
             Icon(Icons.Default.DateRange, contentDescription = stringResource(labelId))
         },
         modifier = modifier
-            .fillMaxWidth()
             .pointerInput(date) {
                 awaitEachGesture {
                     // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput

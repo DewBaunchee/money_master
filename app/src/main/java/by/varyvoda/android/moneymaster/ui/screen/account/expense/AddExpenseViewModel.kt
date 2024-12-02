@@ -2,14 +2,13 @@ package by.varyvoda.android.moneymaster.ui.screen.account.expense
 
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
-import by.varyvoda.android.moneymaster.ui.util.allNotNull
+import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,14 +22,10 @@ class AddExpenseViewModel(
     accountRepository: AccountRepository
 ) : BaseViewModel() {
 
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
-    }
-
     val accounts = accountRepository.getAll()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
             initialValue = listOf()
         )
     private val _uiState = MutableStateFlow(AddExpenseUiState())
@@ -42,6 +37,11 @@ class AddExpenseViewModel(
         combine(accounts, _uiState) { accounts, uiState ->
             currentAccount = accounts.find { it.id == uiState.accountId }
         }
+    }
+
+    fun applyNavigationArguments(accountId: Id?) {
+        if (accountId == null) return
+        selectAccount(accountId)
     }
 
     fun selectAccount(accountId: Id) {
@@ -64,11 +64,11 @@ class AddExpenseViewModel(
         return uiState.value.accountId != null
     }
 
-    fun canCreateMutation(): Boolean {
+    fun canCreateOperation(): Boolean {
         return uiState.value.let {
             allNotNull(
                 it.amount.toLongOrNull(),
-                it.category,
+                it.categoryId,
                 it.date
             )
         }
@@ -79,7 +79,7 @@ class AddExpenseViewModel(
     }
 
     fun canSave(): Boolean {
-        return isAccountSelected() && canCreateMutation()
+        return isAccountSelected() && canCreateOperation()
     }
 
     fun onSaveClick() {
@@ -87,7 +87,7 @@ class AddExpenseViewModel(
             accountService.addExpense(
                 getAccountId(),
                 amount = getAmount(),
-                category = getCategory(),
+                categoryId = getCategoryId(),
                 date = getDate(),
                 description = getDescription(),
                 images = listOf()
@@ -107,8 +107,8 @@ class AddExpenseViewModel(
         return uiState.value.amount.toLongOrNull() ?: throw IllegalStateException("Invalid amount")
     }
 
-    fun getCategory(): AccountMutationCategory {
-        return uiState.value.category ?: throw IllegalStateException("Category isn't selected")
+    fun getCategoryId(): Id {
+        return uiState.value.categoryId ?: throw IllegalStateException("Category isn't selected")
     }
 
     fun getDate(): PrimitiveDate {
@@ -124,7 +124,7 @@ data class AddExpenseUiState(
     val accountId: Id? = null,
     val amount: String = "0",
     val date: PrimitiveDate? = null,
-    val category: AccountMutationCategory? = null,
+    val categoryId: Id? = null,
     val description: String = "",
     val images: List<Int> = listOf()
 )

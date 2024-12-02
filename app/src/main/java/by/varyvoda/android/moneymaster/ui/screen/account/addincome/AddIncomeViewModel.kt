@@ -1,51 +1,68 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.addincome
 
 import androidx.lifecycle.viewModelScope
-import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.mutation.AccountMutationCategory
+import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
-import by.varyvoda.android.moneymaster.ui.util.allNotNull
+import by.varyvoda.android.moneymaster.util.allNotNull
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddIncomeViewModel(
     private val accountService: AccountService,
+    private val categoryRepository: AccountOperationCategoryRepository,
     accountRepository: AccountRepository
 ) : BaseViewModel() {
 
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
-    }
-
-    val accounts = accountRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
     private val _uiState = MutableStateFlow(AddIncomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    var currentAccount: Account? = null
+    val accounts = accountRepository.getAllDetails()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
+            initialValue = listOf()
+        )
+    val dateSuggestions = MutableStateFlow(DateSuggestion.DEFAULT)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categories = _uiState
+        .map { it.categorySearchString }
+        .distinctUntilChanged()
+        .flatMapLatest { categoryRepository.getAll(it) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
+            initialValue = listOf()
+        )
+
+    var currentAccount: AccountDetails? = null
 
     init {
         combine(accounts, _uiState) { accounts, uiState ->
             currentAccount = accounts.find { it.id == uiState.accountId }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = null
-        )
+        }.launchIn(viewModelScope)
+    }
+
+    fun applyNavigationArguments(accountId: Id?) {
+        if (accountId == null) return
+        selectAccount(accountId)
     }
 
     fun selectAccount(accountId: Id) {
@@ -64,26 +81,34 @@ class AddIncomeViewModel(
         _uiState.update { it.copy(description = description) }
     }
 
+    fun changeCategory(categoryId: Id?) {
+        _uiState.update { it.copy(categoryId = categoryId) }
+    }
+
+    fun changeCategorySearchString(searchString: String) {
+        _uiState.update { it.copy(categorySearchString = searchString) }
+    }
+
     fun isAccountSelected(): Boolean {
         return uiState.value.accountId != null
     }
 
-    fun canCreateMutation(): Boolean {
+    fun canCreateOperation(): Boolean {
         return uiState.value.let {
             allNotNull(
                 it.amount.toLongOrNull(),
-                it.category,
-                it.date
+                it.date,
+                it.categoryId,
             )
         }
     }
 
-    fun onCancelClick() {
+    fun onBackClick() {
         navigateUp()
     }
 
     fun canSave(): Boolean {
-        return isAccountSelected() && canCreateMutation()
+        return isAccountSelected() && canCreateOperation()
     }
 
     fun onSaveClick() {
@@ -91,7 +116,7 @@ class AddIncomeViewModel(
             accountService.addIncome(
                 getAccountId(),
                 amount = getAmount(),
-                category = getCategory(),
+                categoryId = getCategoryId(),
                 date = getDate(),
                 description = getDescription(),
                 images = listOf()
@@ -100,35 +125,36 @@ class AddIncomeViewModel(
         }
     }
 
-    fun getAccountId(): Id {
+    private fun getAccountId(): Id {
         if (uiState.value.accountId == null)
             throw IllegalStateException("Account isn't selected")
 
         return uiState.value.accountId!!
     }
 
-    fun getAmount(): Money {
+    private fun getAmount(): Money {
         return uiState.value.amount.toLongOrNull() ?: throw IllegalStateException("Invalid amount")
     }
 
-    fun getCategory(): AccountMutationCategory {
-        return uiState.value.category ?: throw IllegalStateException("Category isn't selected")
-    }
-
-    fun getDate(): PrimitiveDate {
+    private fun getDate(): PrimitiveDate {
         return uiState.value.date ?: throw IllegalStateException("Date isn't selected")
     }
 
-    fun getDescription(): String {
+    private fun getDescription(): String {
         return uiState.value.description
+    }
+
+    private fun getCategoryId(): Id {
+        return uiState.value.categoryId ?: throw IllegalStateException("Category isn't selected")
     }
 }
 
 data class AddIncomeUiState(
     val accountId: Id? = null,
-    val amount: String = "0",
+    val amount: String = "",
     val date: PrimitiveDate? = null,
-    val category: AccountMutationCategory? = null,
+    val categoryId: Id? = null,
     val description: String = "",
-    val images: List<Int> = listOf()
+    val images: List<Int> = listOf(),
+    val categorySearchString: String = "",
 )

@@ -10,8 +10,8 @@ data class Account(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val currencyCode: String,
     val initialBalance: Money,
     val currentBalance: Money,
-    val themeId: Id
+    val currencyCode: String,
+    val themeId: Id,
 )

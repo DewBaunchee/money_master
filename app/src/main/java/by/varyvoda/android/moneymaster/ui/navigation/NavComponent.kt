@@ -1,15 +1,12 @@
 package by.varyvoda.android.moneymaster.ui.navigation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import by.varyvoda.android.moneymaster.config.appModule
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.base.NavigateBackEffect
 import by.varyvoda.android.moneymaster.ui.base.NavigateBackToEffect
@@ -20,29 +17,26 @@ import by.varyvoda.android.moneymaster.ui.effect.handle
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
-import org.kodein.di.DI
-import org.kodein.di.DI.Companion.invoke
 import org.kodein.di.compose.localDI
-import org.kodein.di.compose.withDI
 import org.kodein.di.instance
 
 @Composable
 fun NavComponent(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    context: Context = LocalContext.current
-) = withDI(DI {
-    import(appModule(context))
-}) {
+) {
     val di = localDI()
 
     NavHost(
@@ -55,20 +49,35 @@ fun NavComponent(
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             HomeScreen(viewModel = viewModel)
         }
-        composable(route = AccountCreationDestination.route) {
-            val viewModel: AccountCreationViewModel by di.instance()
+        composable(route = AccountEditDestination.route) {
+            val viewModel: AccountEditViewModel by di.instance()
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             AccountCreationScreen(viewModel = viewModel)
         }
         composable(route = AddIncomeDestination.route) {
+            val accountId = it.arguments?.getString(AddIncomeDestination.ACCOUNT_ID_ROUTE_ARG)
+
             val viewModel: AddIncomeViewModel by di.instance()
+
+            viewModel.applyNavigationArguments(accountId?.toLongOrNull())
+
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             AddIncomeScreen(viewModel = viewModel)
         }
         composable(route = AddExpenseDestination.route) {
+            val accountId = it.arguments?.getString(AddIncomeDestination.ACCOUNT_ID_ROUTE_ARG)
+
             val viewModel: AddExpenseViewModel by di.instance()
+
+            viewModel.applyNavigationArguments(accountId?.toLong())
+
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             AddExpenseScreen(viewModel = viewModel)
+        }
+        composable(route = AccountOperationCategoryDestination.route) {
+            val viewModel: AccountOperationCategoryEditViewModel by di.instance()
+            NavigationHandler(navController = navController, baseViewModel = viewModel)
+            AccountOperationCategoryEditScreen(viewModel = viewModel)
         }
     }
 }
