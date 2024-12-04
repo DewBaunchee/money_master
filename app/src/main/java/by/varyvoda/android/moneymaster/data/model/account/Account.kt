@@ -2,7 +2,9 @@ package by.varyvoda.android.moneymaster.data.model.account
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import by.varyvoda.android.moneymaster.data.model.domain.Id
+import androidx.room.TypeConverters
+import by.varyvoda.android.moneymaster.data.converter.ColorThemeConverters
+import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 
 @Entity(tableName = "account")
@@ -13,5 +15,6 @@ data class Account(
     val initialBalance: Money,
     val currentBalance: Money,
     val currencyCode: String,
-    val themeId: Id,
+    @TypeConverters(ColorThemeConverters::class)
+    val theme: ColorTheme,
 )

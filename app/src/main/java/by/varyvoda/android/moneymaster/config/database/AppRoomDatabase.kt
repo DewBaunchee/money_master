@@ -5,13 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import by.varyvoda.android.moneymaster.data.converter.ColorConverters
+import by.varyvoda.android.moneymaster.data.converter.ColorListConverters
+import by.varyvoda.android.moneymaster.data.converter.ColorThemeConverters
+import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountBalanceEditDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountExpenseDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountIncomeDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountOperationCategoryDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountTransferDao
-import by.varyvoda.android.moneymaster.data.dao.account.theme.AccountThemeDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountBalanceEdit
@@ -19,31 +22,32 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpen
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountTransfer
-import by.varyvoda.android.moneymaster.data.model.account.theme.AccountTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 
 @Database(
     entities = [
         Currency::class,
         Account::class,
-        AccountTheme::class,
         AccountBalanceEdit::class,
         AccountIncome::class,
         AccountExpense::class,
         AccountTransfer::class,
         AccountOperationCategory::class,
     ],
-    version = 6,
+    version = 9,
     exportSchema = false
 )
-@TypeConverters(ColorConverters::class, ColorListConverters::class)
+@TypeConverters(
+    ColorConverters::class,
+    ColorListConverters::class,
+    ColorThemeConverters::class,
+    RoomIconConverter::class,
+)
 abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun currencyDao(): CurrencyDao
 
     abstract fun accountDao(): AccountDao
-
-    abstract fun accountThemeDao(): AccountThemeDao
 
     abstract fun accountBalanceEditDao(): AccountBalanceEditDao
 
@@ -57,12 +61,16 @@ abstract class AppRoomDatabase : RoomDatabase() {
 
     companion object {
 
-        fun createDatabase(context: Context): AppRoomDatabase {
+        fun createDatabase(
+            context: Context,
+            iconConverter: RoomIconConverter,
+        ): AppRoomDatabase {
             return Room.databaseBuilder(
                 context,
                 AppRoomDatabase::class.java,
                 "moneymaster_database"
             )
+                .addTypeConverter(iconConverter)
                 .fallbackToDestructiveMigration()
                 .build()
         }

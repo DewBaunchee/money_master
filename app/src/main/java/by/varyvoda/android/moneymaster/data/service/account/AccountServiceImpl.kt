@@ -3,6 +3,7 @@ package by.varyvoda.android.moneymaster.data.service.account
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpense
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
+import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
@@ -18,7 +19,7 @@ class AccountServiceImpl(
         name: String,
         currencyCode: String,
         initialBalance: Money,
-        themeId: Id
+        theme: ColorTheme,
     ) {
         accountRepository.insert(
             Account(
@@ -26,7 +27,7 @@ class AccountServiceImpl(
                 currencyCode = currencyCode,
                 initialBalance = initialBalance,
                 currentBalance = initialBalance,
-                themeId = themeId
+                theme = theme
             )
         )
     }

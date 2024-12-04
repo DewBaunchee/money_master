@@ -46,4 +46,7 @@
     <string name="category_type">Category type</string>
     <string name="expense">Expense</string>
     <string name="income">Income</string>
+    <string name="appearance_description">Choose an icon and background for the new category</string>
+    <string name="background">Background</string>
+    <string name="icon">Icon</string>
 </resources>

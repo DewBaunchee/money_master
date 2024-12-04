@@ -1,5 +1,6 @@
 package by.varyvoda.android.moneymaster.data.service.account
 
+import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
@@ -7,7 +8,10 @@ import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 interface AccountService {
 
     suspend fun createAccount(
-        name: String, currencyCode: String, initialBalance: Money, themeId: Id
+        name: String,
+        currencyCode: String,
+        initialBalance: Money,
+        theme: ColorTheme
     )
 
     suspend fun addIncome(

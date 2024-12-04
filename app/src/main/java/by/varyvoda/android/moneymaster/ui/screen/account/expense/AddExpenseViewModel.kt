@@ -22,14 +22,10 @@ class AddExpenseViewModel(
     accountRepository: AccountRepository
 ) : BaseViewModel() {
 
-    val accounts = accountRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
     private val _uiState = MutableStateFlow(AddExpenseUiState())
     val uiState = _uiState.asStateFlow()
+
+    val accounts = accountRepository.getAll().stateInThis()
 
     var currentAccount: Account? = null
 

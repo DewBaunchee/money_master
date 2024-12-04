@@ -37,12 +37,14 @@ import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.BalanceField
 import by.varyvoda.android.moneymaster.ui.component.CategoryPicker
+import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.FullScreenCategoryPicker
 import by.varyvoda.android.moneymaster.ui.component.FullScreenDialog
 import by.varyvoda.android.moneymaster.ui.component.ListDialog
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SearchField
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 object AddIncomeDestination : NavigationDestination {
     const val ACCOUNT_ID_ROUTE_ARG = "accountId"
@@ -92,16 +94,25 @@ fun AddIncomeBody(
 
     val accountDetails = viewModel.currentAccount
 
-    Box(
+    FormBox(
+        buttons = listOf {
+            AppButton(
+                onClick = { viewModel.onSaveClick() },
+                enabled = viewModel.canSave(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                Text(text = stringResource(R.string.save))
+            }
+        },
         modifier = modifier
-            .fillMaxSize()
     ) {
         Column {
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.form_spaced_by)),
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(dimensionResource(R.dimen.form_padding)),
+                    .padding(formPadding()),
             ) {
                 Text(
                     stringResource(R.string.general),
@@ -199,20 +210,10 @@ fun AddIncomeBody(
                 categories = categories,
                 isSelected = { it.id == categoryId },
                 onSelect = { viewModel.changeCategory(it.id) },
+                onAddCategoryClick = { viewModel.onAddCategoryClick() },
                 searchString = categorySearchString,
                 onSearchStringChange = { viewModel.changeCategorySearchString(it) }
             )
-        }
-
-        AppButton(
-            onClick = { viewModel.onSaveClick() },
-            enabled = viewModel.canSave(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.form_padding))
-                .align(Alignment.BottomCenter)
-        ) {
-            Text(text = stringResource(R.string.save))
         }
     }
 }
@@ -222,6 +223,7 @@ fun CategoryPickerSection(
     categories: List<AccountOperationCategory>,
     isSelected: (AccountOperationCategory) -> Boolean,
     onSelect: (AccountOperationCategory) -> Unit,
+    onAddCategoryClick: () -> Unit,
     searchString: String,
     onSearchStringChange: (String) -> Unit,
 ) {
@@ -237,6 +239,7 @@ fun CategoryPickerSection(
             categories = categories,
             isSelected = isSelected,
             onSelect = onSelect,
+            onAddCategoryClick = onAddCategoryClick,
             onClose = { allCategoriesShown = false },
             searchString = searchString,
             onSearchStringChange = onSearchStringChange,
@@ -249,6 +252,7 @@ fun FullScreenCategoriesPickerDialog(
     categories: List<AccountOperationCategory>,
     isSelected: (AccountOperationCategory) -> Boolean,
     onSelect: (AccountOperationCategory) -> Unit,
+    onAddCategoryClick: () -> Unit,
     onClose: () -> Unit,
     searchString: String,
     onSearchStringChange: (String) -> Unit,
@@ -259,10 +263,10 @@ fun FullScreenCategoriesPickerDialog(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.form_padding)),
+                verticalArrangement = Arrangement.spacedBy(formPadding()),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(dimensionResource(R.dimen.form_padding)),
+                    .padding(formPadding()),
             ) {
                 SearchField(
                     searchString = searchString,
@@ -270,36 +274,34 @@ fun FullScreenCategoriesPickerDialog(
                     modifier = Modifier
                         .fillMaxWidth(),
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+                FormBox(
+                    buttons = listOf(
+                        {
+                            AppButton(
+                                onClick = onAddCategoryClick,
+                                isSecondary = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Text(text = stringResource(R.string.add_category))
+                            }
+                        },
+                        {
+                            AppButton(
+                                onClick = onClose,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Text(text = stringResource(R.string.close))
+                            }
+                        }
+                    )
                 ) {
                     FullScreenCategoryPicker(
                         categories = categories,
                         isSelected = isSelected,
                         onSelect = onSelect,
                     )
-                    Column(
-                        modifier = Modifier
-                            .padding(bottom = dimensionResource(R.dimen.full_screen_dialog_bottom_padding))
-                            .align(Alignment.BottomCenter)
-                    ) {
-                        AppButton(
-                            onClick = { },
-                            isSecondary = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = stringResource(R.string.add_category))
-                        }
-                        AppButton(
-                            onClick = onClose,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = stringResource(R.string.close))
-                        }
-                    }
                 }
             }
         }

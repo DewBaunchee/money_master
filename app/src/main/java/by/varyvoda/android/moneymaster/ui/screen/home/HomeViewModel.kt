@@ -21,19 +21,12 @@ class HomeViewModel(
     accountRepository: AccountRepository
 ) : BaseViewModel() {
 
-    val accountDetails = accountRepository.getAllDetails()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = null
-        )
-
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        navigateTo(AccountOperationCategoryDestination.route)
+    val accountDetails = accountRepository.getAllDetails().stateInThis(null)
 
+    init {
         combine(accountDetails, _uiState) { accounts, uiState ->
 
             if (accounts == null) return@combine

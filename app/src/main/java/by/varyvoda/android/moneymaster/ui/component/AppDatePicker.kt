@@ -4,13 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -25,6 +23,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef.Companion.toIconRef
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -46,7 +45,7 @@ fun AppDatePicker(
         label = { Text(stringResource(labelId)) },
         placeholder = { Text(stringResource(dateFormatId)) },
         trailingIcon = {
-            Icon(Icons.Default.DateRange, contentDescription = stringResource(labelId))
+            AppIcon(Icons.Default.DateRange.toIconRef(stringResource(labelId)))
         },
         modifier = modifier
             .pointerInput(date) {

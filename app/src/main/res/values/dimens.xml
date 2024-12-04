@@ -15,4 +15,6 @@
     <dimen name="grid_picker_box_size">50.dp</dimen>
     <dimen name="full_screen_dialog_bottom_padding">32.dp</dimen>
     <dimen name="button_selector_space">8.dp</dimen>
+    <dimen name="icon_size">16.dp</dimen>
+    <dimen name="large_icon_size">24.dp</dimen>
 </resources>

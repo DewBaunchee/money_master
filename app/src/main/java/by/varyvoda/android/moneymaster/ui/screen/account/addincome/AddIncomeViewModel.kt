@@ -10,17 +10,16 @@ import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryDestination
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,12 +32,8 @@ class AddIncomeViewModel(
     private val _uiState = MutableStateFlow(AddIncomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    val accounts = accountRepository.getAllDetails()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
+    val accounts = accountRepository.getAllDetails().stateInThis()
+
     val dateSuggestions = MutableStateFlow(DateSuggestion.DEFAULT)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,11 +41,7 @@ class AddIncomeViewModel(
         .map { it.categorySearchString }
         .distinctUntilChanged()
         .flatMapLatest { categoryRepository.getAll(it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
+        .stateInThis()
 
     var currentAccount: AccountDetails? = null
 
@@ -87,6 +78,10 @@ class AddIncomeViewModel(
 
     fun changeCategorySearchString(searchString: String) {
         _uiState.update { it.copy(categorySearchString = searchString) }
+    }
+
+    fun onAddCategoryClick() {
+        navigateTo(AccountOperationCategoryDestination.route)
     }
 
     fun isAccountSelected(): Boolean {

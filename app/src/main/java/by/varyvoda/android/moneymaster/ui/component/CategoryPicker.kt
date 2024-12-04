@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.ui.component
 
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
-import by.varyvoda.android.moneymaster.util.toBrush
+import by.varyvoda.android.moneymaster.data.model.domain.toBrush
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun CategoryPicker(
@@ -35,7 +35,7 @@ fun CategoryPicker(
         CompactGridPicker(
             items = categories,
             modifier = Modifier
-                .height(110.dp)
+                .height(160.dp)
         ) {
             CategoryButton(
                 onClick = { onSelect(it) },
@@ -75,10 +75,10 @@ fun CategoryButton(
     AppIconButton(
         onClick = onClick,
         isSelected = isSelected,
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.form_padding)),
+        modifier = modifier,
         text = category.name,
-        imageVector = null,
-        background = category.color.toBrush(),
+        iconRef = category.iconRef,
+        tint = MaterialTheme.colorScheme.secondary,
+        background = category.colorTheme.colors.toBrush(),
     )
 }

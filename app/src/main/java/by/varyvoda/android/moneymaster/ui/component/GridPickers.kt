@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun TitledPicker(
@@ -35,7 +36,7 @@ fun TitledPicker(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(horizontal = dimensionResource(R.dimen.form_padding))
+                .padding(horizontal = formPadding())
         ) {
             title()
             Spacer(modifier = Modifier.weight(1f))
@@ -43,7 +44,11 @@ fun TitledPicker(
                 text = stringResource(R.string.view_all),
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
-                    .clickable(onClick = onViewAllClick)
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = onViewAllClick,
+                    )
             )
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.form_spaced_by)))
@@ -59,8 +64,8 @@ fun <T> CompactGridPicker(
 ) {
     LazyHorizontalGrid(
         GridCells.Fixed(1),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
+//        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
+//        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
         modifier = modifier
     ) {
         this.items(items, itemContent = itemContent)

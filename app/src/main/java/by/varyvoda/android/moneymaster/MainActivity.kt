@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.lifecycle.lifecycleScope
+import by.varyvoda.android.moneymaster.config.initializeDependencies
 import by.varyvoda.android.moneymaster.config.appModule
 import by.varyvoda.android.moneymaster.config.database.AppRoomDatabase
 import by.varyvoda.android.moneymaster.config.database.initializeDatabase
@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
         GlobalScope.launch {
             val database: AppRoomDatabase by di.instance()
             initializeDatabase(database)
+            initializeDependencies(di)
         }
 
         setContent {

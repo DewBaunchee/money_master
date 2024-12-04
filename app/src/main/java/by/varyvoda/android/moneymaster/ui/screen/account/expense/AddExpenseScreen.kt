@@ -2,7 +2,6 @@ package by.varyvoda.android.moneymaster.ui.screen.account.expense
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -18,10 +17,11 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.ui.component.AccountSelect
 import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
 import by.varyvoda.android.moneymaster.ui.component.BalanceField
+import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 
 object AddExpenseDestination : NavigationDestination {
-    const val ACCOUNT_ID_ROUTE_ARG = "accountId"
+    private const val ACCOUNT_ID_ROUTE_ARG = "accountId"
     override val route = "expense/add?$ACCOUNT_ID_ROUTE_ARG={$ACCOUNT_ID_ROUTE_ARG}"
 
     fun route(accountId: Id?): String {
@@ -41,43 +41,47 @@ fun AddExpenseScreen(
 
     val account = viewModel.currentAccount
 
-    Column(modifier = modifier) {
-        Row {
-            AccountSelect(
-                accounts = accounts,
-                current = account,
-                onSelect = { viewModel.selectAccount(it.id) },
-                onCreateRequest = { },
-            )
-            BalanceField(
-                value = amount,
-                onValueChange = { viewModel.changeAmount(it) },
-                labelId = R.string.amount,
-                imeAction = ImeAction.Done
-            )
+    FormBox(
+        buttons = listOf {
+            Row {
+                OutlinedButton(onClick = { viewModel.onCancelClick() }) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+                Button(
+                    onClick = { viewModel.onSaveClick() },
+                    enabled = viewModel.canSave()
+                ) {
+                    Text(text = stringResource(R.string.save))
+                }
+            }
         }
-        TextField(
-            value = description,
-            onValueChange = { viewModel.changeDescription(it) }
-        )
-        AppDatePicker(
-            date = date,
-            onDateSelected = { viewModel.changeDate(it) },
-            R.string.select_date,
-            R.string.transaction_date_format
-        )
+    ) {
+        Column(modifier = modifier) {
+            Row {
+                AccountSelect(
+                    accounts = accounts,
+                    current = account,
+                    onSelect = { viewModel.selectAccount(it.id) },
+                    onCreateRequest = { },
+                )
+                BalanceField(
+                    value = amount,
+                    onValueChange = { viewModel.changeAmount(it) },
+                    labelId = R.string.amount,
+                    imeAction = ImeAction.Done
+                )
+            }
+            TextField(
+                value = description,
+                onValueChange = { viewModel.changeDescription(it) }
+            )
+            AppDatePicker(
+                date = date,
+                onDateSelected = { viewModel.changeDate(it) },
+                R.string.select_date,
+                R.string.transaction_date_format
+            )
 //        CategoryPicker()
-        Spacer(modifier = Modifier.weight(1f))
-        Row {
-            OutlinedButton(onClick = { viewModel.onCancelClick() }) {
-                Text(text = stringResource(R.string.cancel))
-            }
-            Button(
-                onClick = { viewModel.onSaveClick() },
-                enabled = viewModel.canSave()
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
         }
     }
 }

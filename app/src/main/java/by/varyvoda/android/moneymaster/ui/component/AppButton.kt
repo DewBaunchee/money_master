@@ -17,21 +17,24 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.util.toBrush
+import by.varyvoda.android.moneymaster.data.model.domain.toBrush
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef.Companion.toIconRef
 
 @Composable
 fun AppButton(
@@ -40,16 +43,14 @@ fun AppButton(
     isSecondary: Boolean = false,
     enabled: Boolean = true,
     shape: Shape = MaterialTheme.shapes.small,
-    colors: ButtonColors = if (isSecondary)
-        ButtonDefaults.buttonColors(
-            contentColor = MaterialTheme.colorScheme.onSecondary,
-            containerColor = MaterialTheme.colorScheme.secondary,
-        )
-    else
-        ButtonDefaults.buttonColors(
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            containerColor = MaterialTheme.colorScheme.primary,
-        ),
+    colors: ButtonColors = if (isSecondary) ButtonDefaults.buttonColors(
+        contentColor = MaterialTheme.colorScheme.onSecondary,
+        containerColor = MaterialTheme.colorScheme.secondary,
+    )
+    else ButtonDefaults.buttonColors(
+        contentColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.primary,
+    ),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
@@ -75,48 +76,51 @@ fun AppIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isSecondary: Boolean = true,
     isSelected: Boolean = false,
     text: String? = "",
-    imageVector: ImageVector? = null,
-    contentDescription: String? = text,
-    tint: Color = MaterialTheme.colorScheme.onSecondaryContainer,
-    background: Brush = MaterialTheme.colorScheme.secondaryContainer.toBrush(),
+    iconRef: IconRef? = if (isSelected) Icons.Filled.Done.toIconRef() else null,
+    tint: Color = if (isSecondary)
+        MaterialTheme.colorScheme.onSecondary
+    else
+        MaterialTheme.colorScheme.secondary,
+    background: Brush = if (isSecondary)
+        MaterialTheme.colorScheme.secondary.toBrush()
+    else
+        MaterialTheme.colorScheme.onSecondary.toBrush()
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_button_space)),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = modifier
-            .clickable(enabled = enabled, onClick = onClick),
+            .clip(MaterialTheme.shapes.small)
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(dimensionResource(R.dimen.icon_button_padding))
     ) {
-        Box(
-            modifier = Modifier
-                .background(background, MaterialTheme.shapes.small)
-                .size(dimensionResource(R.dimen.grid_picker_box_size)),
-            contentAlignment = Alignment.Center,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_button_space)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
         ) {
-            if (imageVector != null) {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = contentDescription,
-                    tint = tint,
-                    modifier = Modifier
-                        .padding(dimensionResource(R.dimen.icon_button_padding)),
+            Box(
+                modifier = Modifier
+                    .background(background, MaterialTheme.shapes.small)
+                    .size(dimensionResource(R.dimen.grid_picker_box_size)),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (iconRef != null) {
+                    AppIcon(
+                        iconRef = iconRef,
+                        tint = tint,
+                        modifier = Modifier.padding(dimensionResource(R.dimen.icon_button_padding)),
+                    )
+                }
+            }
+            if (!text.isNullOrBlank()) {
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.labelSmall,
+                    textAlign = TextAlign.Center,
                 )
             }
-            if (isSelected) {
-                Icon(
-                    imageVector = Icons.Filled.Done,
-                    contentDescription = stringResource(R.string.selected_theme),
-                    tint = tint,
-                )
-            }
-        }
-        if (!text.isNullOrBlank()) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 1,
-            )
         }
     }
 }

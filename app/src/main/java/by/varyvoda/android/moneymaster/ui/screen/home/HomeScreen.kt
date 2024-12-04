@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,11 +34,13 @@ import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef.Companion.toIconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
+import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
-import by.varyvoda.android.moneymaster.util.makeMoneyString
+import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -91,9 +92,8 @@ fun HomeTopBar(
                 .padding(dimensionResource(R.dimen.icon_button_padding))
                 .clip(ProfileIconShape),
         ) {
-            Icon(
-                imageVector = Icons.Filled.Person,
-                contentDescription = stringResource(R.string.profile_icon),
+            AppIcon(
+                iconRef = Icons.Filled.Person.toIconRef(stringResource(R.string.profile_icon)),
                 modifier = Modifier
                     .background(Color.LightGray)
                     .padding(dimensionResource(R.dimen.icon_button_padding))
@@ -112,8 +112,7 @@ fun HomeTopBar(
         Spacer(modifier = Modifier.weight(1f))
         AppIconButton(
             onClick = {},
-            imageVector = Icons.Filled.Notifications,
-            contentDescription = null
+            iconRef = Icons.Filled.Notifications.toIconRef(),
         )
     }
 }
@@ -151,8 +150,8 @@ fun CardGallery(
             items(accountDetails) {
                 Spacer(modifier = Modifier.width(dimensionResource(R.dimen.card_gallery_space)))
                 AccountCard(
-                    icon = Icons.Filled.ShoppingCart,
-                    theme = it.theme,
+                    iconRef = Icons.Filled.ShoppingCart.toIconRef(),
+                    theme = it.account.theme,
                     title = it.account.name,
                     balance = it.account.currentBalance.toString(),
                     currency = it.currency,
@@ -180,12 +179,12 @@ fun ActionBar(
     ) {
         AppIconButton(
             onClick = onAddIncome,
-            imageVector = Icons.Filled.KeyboardArrowUp,
+            iconRef = Icons.Filled.KeyboardArrowUp.toIconRef(),
             text = stringResource(R.string.add_income)
         )
         AppIconButton(
             onClick = onAddExpense,
-            imageVector = Icons.Filled.KeyboardArrowDown,
+            iconRef = Icons.Filled.KeyboardArrowDown.toIconRef(),
             text = stringResource(R.string.add_expense)
         )
     }

@@ -1,8 +1,9 @@
 package by.varyvoda.android.moneymaster.data.service.category
 
-import androidx.compose.ui.graphics.Color
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperation
 import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
+import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
 
 class AccountOperationCategoryServiceImpl(
@@ -12,15 +13,15 @@ class AccountOperationCategoryServiceImpl(
     override suspend fun createCategory(
         name: String,
         operationType: AccountOperation.Type,
-        icon: Int,
-        gradientColors: List<Color>
+        iconRef: IconRef,
+        colorTheme: ColorTheme
     ) {
         accountOperationCategoryRepository.insert(
             AccountOperationCategory(
                 name = name,
                 operationType = operationType,
-                icon = icon,
-                gradientColors = gradientColors,
+                iconRef = iconRef,
+                colorTheme = colorTheme,
             )
         )
     }

@@ -1,10 +1,9 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.creation
 
 import androidx.lifecycle.viewModelScope
-import by.varyvoda.android.moneymaster.data.model.account.theme.AccountTheme
+import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
-import by.varyvoda.android.moneymaster.data.model.domain.Id
-import by.varyvoda.android.moneymaster.data.repository.account.theme.AccountThemeRepository
+import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
@@ -22,36 +21,25 @@ import kotlin.collections.first
 class AccountEditViewModel(
     private val accountService: AccountService,
     currencyRepository: CurrencyRepository,
-    accountThemeRepository: AccountThemeRepository
+    colorThemeRepository: ColorThemeRepository
 ) : BaseViewModel() {
-
-    val currencies = currencyRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
-
-    val accountThemes = accountThemeRepository.getAll()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
 
     private val _uiState = MutableStateFlow(AccountCreationUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        combine(accountThemes, _uiState) { accountThemes, uiState ->
+    val currencies = currencyRepository.getAll().stateInThis()
+    val colorThemes = colorThemeRepository.getAll().stateInThis()
 
-            if (accountThemes.isEmpty()) {
+    init {
+        combine(colorThemes, _uiState) { colorThemes, uiState ->
+
+            if (colorThemes.isEmpty()) {
                 return@combine
             }
 
-            val currentThemeId: Id? = uiState.theme?.id
-            if (currentThemeId == null || accountThemes.all { it.id != currentThemeId }) {
-                val firstTheme = accountThemes.first()
+            val currentTheme = uiState.theme
+            if (currentTheme == null || colorThemes.all { it != currentTheme }) {
+                val firstTheme = colorThemes.first()
                 onSelectTheme(firstTheme)
             }
 
@@ -70,7 +58,7 @@ class AccountEditViewModel(
         this._uiState.update { it.copy(initialBalance = initialBalance) }
     }
 
-    fun onSelectTheme(theme: AccountTheme) {
+    fun onSelectTheme(theme: ColorTheme) {
         this._uiState.update { it.copy(theme = theme) }
     }
 
@@ -83,16 +71,15 @@ class AccountEditViewModel(
     }
 
     fun onSaveClick() {
-        if (!canSave())
-            throw IllegalStateException("Cannot create account")
+        if (!canSave()) throw IllegalStateException("Cannot create account")
 
-        uiState.value.let { (name, currency, initialBalance, theme) ->
-            viewModelScope.launch {
+        viewModelScope.launch {
+            with(_uiState.value) {
                 accountService.createAccount(
                     name = name,
                     currencyCode = currency!!.code,
                     initialBalance = initialBalance.toLong(),
-                    themeId = theme!!.id
+                    theme = theme!!
                 )
             }
         }
@@ -108,5 +95,5 @@ data class AccountCreationUiState(
     val name: String = "",
     val currency: Currency? = null,
     val initialBalance: String = "",
-    val theme: AccountTheme? = null
+    val theme: ColorTheme? = null
 )

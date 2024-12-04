@@ -2,17 +2,8 @@
 
 package by.varyvoda.android.moneymaster.util
 
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-
-fun makeMoneyString(money: String, currency: Currency?): String {
-    return if (currency == null) money else currency.symbol + money
-}
-
-fun Color.toBrush(): Brush = Brush.horizontalGradient(listOf(this, this))
 
 fun anyNull(value1: Any?, value2: Any?): Boolean {
     contract {
