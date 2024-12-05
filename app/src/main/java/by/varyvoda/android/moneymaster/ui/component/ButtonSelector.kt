@@ -6,8 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable

@@ -5,10 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
-interface EffectHandler<E : BaseEffect> {
-    fun handle(effect: E)
-}
-
 class EffectHandlerRegistry(handlers: EffectHandlerRegistry.() -> Unit) {
 
     private val _handlersMap: MutableMap<KClass<out BaseEffect>, (effect: BaseEffect) -> Unit> =
@@ -20,7 +16,7 @@ class EffectHandlerRegistry(handlers: EffectHandlerRegistry.() -> Unit) {
 
     @Suppress("UNCHECKED_CAST")
     fun <E : BaseEffect> addHandler(kClass: KClass<E>, handler: (effect: E) -> Unit) {
-        _handlersMap.put(kClass, handler as (BaseEffect) -> Unit)
+        _handlersMap[kClass] = handler as (BaseEffect) -> Unit
     }
 
     suspend fun from(effectFlow: Flow<BaseEffect>, scope: CoroutineScope) {

@@ -7,22 +7,22 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 
-fun colorToJson(color: Color) = Gson().toJson(color.value)
-fun jsonToColor(json: String) = Color(Gson().fromJson<ULong>(json, ULong::class.java))
+fun colorToJson(color: Color): String = Gson().toJson(color.value)
+fun jsonToColor(json: String) = Color(Gson().fromJson(json, ULong::class.java))
 
-fun colorListToJson(colors: List<Color>) = Gson().toJson(colors.map { it.value })
+fun colorListToJson(colors: List<Color>): String = Gson().toJson(colors.map { it.value })
 fun jsonToColorList(json: String) =
     Gson().fromJson<List<ULong>>(json, object : TypeToken<List<ULong>>() {}.type)
         .map { Color(it) }
 
-fun colorThemeToJson(theme: ColorTheme) = JsonObject().let { jsonObject ->
+fun colorThemeToJson(theme: ColorTheme): String = JsonObject().let { jsonObject ->
     jsonObject.addProperty("name", theme.name)
     jsonObject.addProperty("colors", colorListToJson(theme.colors))
     jsonObject.toString()
 }
 
 fun jsonToColorTheme(json: String) =
-    Gson().fromJson<JsonObject>(json, JsonObject::class.java).let { jsonObject ->
+    Gson().fromJson(json, JsonObject::class.java).let { jsonObject ->
         ColorTheme(
             name = jsonObject.getAsJsonPrimitive("name").asString,
             colors = jsonToColorList(jsonObject.getAsJsonPrimitive("colors").asString)
