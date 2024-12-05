@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
@@ -31,6 +30,7 @@ import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
 private const val CARD_HEIGHT_TO_WIDTH_RATIO = 0.55f
@@ -63,7 +63,7 @@ fun AccountCard(
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.card_padding))
+                    .formPadding()
                     .fillMaxSize()
             ) {
                 Row(

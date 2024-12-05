@@ -76,7 +76,7 @@ fun viewModelModule() = DI.Module("viewModelModule") {
         HomeViewModel(instance())
     }
     bind<AccountEditViewModel>() with singleton {
-        AccountEditViewModel(instance(), instance(), instance())
+        AccountEditViewModel(instance(), instance(), instance(), instance())
     }
     bind<AddIncomeViewModel>() with singleton {
         AddIncomeViewModel(instance(), instance(), instance())

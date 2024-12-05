@@ -17,7 +17,7 @@ import by.varyvoda.android.moneymaster.ui.effect.handle
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationScreen
@@ -74,7 +74,7 @@ fun NavComponent(
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             AddExpenseScreen(viewModel = viewModel)
         }
-        composable(route = AccountOperationCategoryDestination.route) {
+        composable(route = AccountOperationCategoryEditDestination.route) {
             val viewModel: AccountOperationCategoryEditViewModel by di.instance()
             NavigationHandler(navController = navController, baseViewModel = viewModel)
             AccountOperationCategoryEditScreen(viewModel = viewModel)

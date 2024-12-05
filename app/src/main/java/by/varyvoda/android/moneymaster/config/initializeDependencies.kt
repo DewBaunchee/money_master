@@ -20,7 +20,7 @@ suspend fun initializeDependencies(di: DI) {
     insertThemes(colorThemeRepository)
 
     val accountRepository: AccountRepository by di.instance()
-    insertAccounts(accountRepository, colorThemeRepository)
+    insertAccounts(accountRepository, colorThemeRepository, iconsService)
 
     val accountOperationCategoryRepository: AccountOperationCategoryRepository by di.instance()
     insertCategories(accountOperationCategoryRepository, colorThemeRepository, iconsService)
@@ -61,7 +61,8 @@ private suspend fun insertThemes(repository: ColorThemeRepository) {
 
 private suspend fun insertAccounts(
     repository: AccountRepository,
-    colorThemeRepository: ColorThemeRepository
+    colorThemeRepository: ColorThemeRepository,
+    iconsService: IconsService,
 ) {
     val themes = colorThemeRepository.getAll().first()
     repository.insert(
@@ -70,6 +71,7 @@ private suspend fun insertAccounts(
             initialBalance = 1000,
             currentBalance = 1000,
             currencyCode = "USD",
+            iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
     )
@@ -79,6 +81,7 @@ private suspend fun insertAccounts(
             initialBalance = 2000,
             currentBalance = 2000,
             currencyCode = "BYN",
+            iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
     )
@@ -88,6 +91,7 @@ private suspend fun insertAccounts(
             initialBalance = 3000,
             currentBalance = 3000,
             currencyCode = "USD",
+            iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
     )

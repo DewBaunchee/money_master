@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -34,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
-import by.varyvoda.android.moneymaster.data.model.icon.IconRef.Companion.toIconRef
 
 @Composable
 fun AppButton(
@@ -78,8 +74,8 @@ fun AppIconButton(
     enabled: Boolean = true,
     isSecondary: Boolean = true,
     isSelected: Boolean = false,
-    text: String? = "",
-    iconRef: IconRef? = if (isSelected) Icons.Filled.Done.toIconRef() else null,
+    iconRef: IconRef? = if (isSelected) IconRef.Selected else null,
+    text: String? = iconRef?.label ?: "",
     tint: Color = if (isSecondary)
         MaterialTheme.colorScheme.onSecondary
     else
@@ -90,10 +86,11 @@ fun AppIconButton(
         MaterialTheme.colorScheme.onSecondary.toBrush()
 ) {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
             .clip(MaterialTheme.shapes.small)
             .clickable(enabled = enabled, onClick = onClick)
-            .padding(dimensionResource(R.dimen.icon_button_padding))
+            .padding(if (text.isNullOrBlank()) 0.dp else dimensionResource(R.dimen.icon_button_padding))
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_button_space)),
@@ -103,7 +100,7 @@ fun AppIconButton(
             Box(
                 modifier = Modifier
                     .background(background, MaterialTheme.shapes.small)
-                    .size(dimensionResource(R.dimen.grid_picker_box_size)),
+                    .size(dimensionResource(R.dimen.button_box_size)),
                 contentAlignment = Alignment.Center,
             ) {
                 if (iconRef != null) {

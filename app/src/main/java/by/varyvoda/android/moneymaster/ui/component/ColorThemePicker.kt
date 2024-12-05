@@ -1,19 +1,14 @@
 package by.varyvoda.android.moneymaster.ui.component
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
-import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
-fun FullScreenColorThemePicker(
+fun ColorThemePicker(
     themes: List<ColorTheme>,
     isSelected: (ColorTheme) -> Boolean,
     onSelect: (ColorTheme) -> Unit,
@@ -41,9 +36,9 @@ fun ColorThemeButton(
     AppIconButton(
         onClick = onClick,
         isSelected = isSelected,
-        modifier = modifier
-            .padding(formPadding()),
+        modifier = modifier,
         text = theme.name,
+        tint = MaterialTheme.colorScheme.secondary,
         background = theme.colors.toBrush(),
     )
 }
@@ -58,18 +53,12 @@ fun ColorThemePickerDialog(
     BottomDialog(
         onDismissRequest = onDismissRequest,
     ) {
-        Text(
-            text = stringResource(R.string.background),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(formPadding()),
-        )
-        FullScreenColorThemePicker(
-            themes = themes,
-            isSelected = isSelected,
-            onSelect = onSelect,
-            modifier = Modifier
-                .padding(formPadding()),
-        )
+        TitledContent(title = { AppTitle(textId = R.string.background) }) {
+            ColorThemePicker(
+                themes = themes,
+                isSelected = isSelected,
+                onSelect = onSelect,
+            )
+        }
     }
 }

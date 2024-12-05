@@ -34,7 +34,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
         AccountTransfer::class,
         AccountOperationCategory::class,
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(

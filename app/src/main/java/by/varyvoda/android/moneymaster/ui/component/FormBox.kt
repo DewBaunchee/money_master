@@ -27,7 +27,7 @@ fun FormBox(
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(formPadding())
+                .formPadding()
         ) {
             for (button in buttons) {
                 button()

@@ -24,7 +24,7 @@ fun rememberImageVector(
 @Composable
 fun rememberIconRef(
     icon: IconRef,
-    fallbackVector: ImageVector = IconRef.DEFAULT_VECTOR,
+    fallbackVector: ImageVector = IconRef.DefaultVector,
 ): ImageVector {
     return rememberImageVector(fallbackVector = fallbackVector) { icon.load() }
 }

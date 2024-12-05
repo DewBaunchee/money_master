@@ -11,12 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,12 +28,13 @@ import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
-import by.varyvoda.android.moneymaster.data.model.icon.IconRef.Companion.toIconRef
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
 import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
 object HomeDestination : NavigationDestination {
@@ -56,11 +51,10 @@ fun HomeScreen(
 
     if (accounts == null) return
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = { HomeTopBar() }
+    ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {
-            HomeTopBar(
-
-            )
             CardGallery(
                 accountDetails = accounts,
                 totalBalance = 2000,
@@ -70,7 +64,7 @@ fun HomeScreen(
                 onAddIncome = { viewModel.onAddIncomeClick() },
                 onAddExpense = { viewModel.onAddExpenseClick() },
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.homescreen_padding))
+                    .formPadding()
                     .fillMaxWidth()
             )
         }
@@ -83,23 +77,21 @@ fun HomeTopBar(
 ) {
     Row(
         modifier = modifier
-            .padding(dimensionResource(R.dimen.homescreen_padding))
+            .formPadding()
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .padding(dimensionResource(R.dimen.icon_button_padding))
                 .clip(ProfileIconShape),
         ) {
             AppIcon(
-                iconRef = Icons.Filled.Person.toIconRef(stringResource(R.string.profile_icon)),
+                iconRef = IconRef.Profile,
                 modifier = Modifier
                     .background(Color.LightGray)
-                    .padding(dimensionResource(R.dimen.icon_button_padding))
             )
         }
-        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.profile_icon_greeting_space)))
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.icon_and_label_row_padding)))
         Column {
             Text(
                 text = stringResource(R.string.home_greeting),
@@ -112,7 +104,8 @@ fun HomeTopBar(
         Spacer(modifier = Modifier.weight(1f))
         AppIconButton(
             onClick = {},
-            iconRef = Icons.Filled.Notifications.toIconRef(),
+            iconRef = IconRef.Notifications,
+            text = "",
         )
     }
 }
@@ -127,7 +120,7 @@ fun CardGallery(
     Column(modifier = modifier) {
         Column(
             modifier = Modifier
-                .padding(dimensionResource(R.dimen.homescreen_padding))
+                .formPadding()
         ) {
             Text(
                 text = stringResource(R.string.total_balance),
@@ -148,9 +141,9 @@ fun CardGallery(
                 .fillMaxWidth(),
         ) {
             items(accountDetails) {
-                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.card_gallery_space)))
+                Spacer(modifier = Modifier.width(formPadding()))
                 AccountCard(
-                    iconRef = Icons.Filled.ShoppingCart.toIconRef(),
+                    iconRef = it.account.iconRef,
                     theme = it.account.theme,
                     title = it.account.name,
                     balance = it.account.currentBalance.toString(),
@@ -160,7 +153,7 @@ fun CardGallery(
                 )
             }
             item(null) {
-                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.card_gallery_space)))
+                Spacer(modifier = Modifier.width(formPadding()))
             }
         }
     }
@@ -179,13 +172,11 @@ fun ActionBar(
     ) {
         AppIconButton(
             onClick = onAddIncome,
-            iconRef = Icons.Filled.KeyboardArrowUp.toIconRef(),
-            text = stringResource(R.string.add_income)
+            iconRef = IconRef.AddIncome,
         )
         AppIconButton(
             onClick = onAddExpense,
-            iconRef = Icons.Filled.KeyboardArrowDown.toIconRef(),
-            text = stringResource(R.string.add_expense)
+            iconRef = IconRef.AddExpense,
         )
     }
 }

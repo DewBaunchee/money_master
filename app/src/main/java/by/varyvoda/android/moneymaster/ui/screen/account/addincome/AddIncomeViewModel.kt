@@ -10,7 +10,7 @@ import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditDestination
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,7 +81,7 @@ class AddIncomeViewModel(
     }
 
     fun onAddCategoryClick() {
-        navigateTo(AccountOperationCategoryDestination.route)
+        navigateTo(AccountOperationCategoryEditDestination.route)
     }
 
     fun isAccountSelected(): Boolean {

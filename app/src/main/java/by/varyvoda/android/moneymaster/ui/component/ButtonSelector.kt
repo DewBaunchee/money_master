@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import by.varyvoda.android.moneymaster.R
+import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
 fun <T> ButtonSelector(
@@ -18,7 +19,7 @@ fun <T> ButtonSelector(
     itemContent: @Composable (T) -> Unit,
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.button_selector_space)),
+        horizontalArrangement = Arrangement.formSpacedBy(),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
