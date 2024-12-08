@@ -15,15 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
+import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun CategoryPicker(
-    categories: List<AccountOperationCategory>,
-    isSelected: (AccountOperationCategory) -> Boolean,
-    onSelect: (AccountOperationCategory) -> Unit,
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     GridPicker(
@@ -42,7 +42,7 @@ fun CategoryPicker(
 fun CategoryButton(
     onClick: () -> Unit,
     isSelected: Boolean,
-    category: AccountOperationCategory,
+    category: Category,
     modifier: Modifier = Modifier
 ) {
     AppIconButton(
@@ -58,9 +58,9 @@ fun CategoryButton(
 
 @Composable
 fun CompactCategoryPicker(
-    categories: List<AccountOperationCategory>,
-    isSelected: (AccountOperationCategory) -> Boolean,
-    onSelect: (AccountOperationCategory) -> Unit,
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CompactGridPicker(
@@ -78,9 +78,9 @@ fun CompactCategoryPicker(
 
 @Composable
 fun TitledCategoryPicker(
-    categories: List<AccountOperationCategory>,
-    isSelected: (AccountOperationCategory) -> Boolean,
-    onSelect: (AccountOperationCategory) -> Unit,
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
     modifier: Modifier = Modifier,
     onViewAllClick: () -> Unit = {},
 ) {
@@ -118,9 +118,9 @@ fun TitledCategoryPicker(
 
 @Composable
 fun CategoryPickerDialog(
-    categories: List<AccountOperationCategory>,
-    isSelected: (AccountOperationCategory) -> Boolean,
-    onSelect: (AccountOperationCategory) -> Unit,
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
     onAddCategoryClick: () -> Unit,
     onClose: () -> Unit,
     searchString: String,

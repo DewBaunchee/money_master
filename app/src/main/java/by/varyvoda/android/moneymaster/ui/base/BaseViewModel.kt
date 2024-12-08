@@ -1,5 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.base
 
+import androidx.core.util.Predicate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.ui.effect.BaseEffect
@@ -9,12 +10,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel<D> : ViewModel() {
 
     companion object {
         const val DEFAULT_TIMEOUT_MILLIS = 5000L
@@ -27,6 +30,8 @@ abstract class BaseViewModel : ViewModel() {
 
     open fun onError(context: CoroutineContext, throwable: Throwable) = Unit
 
+    abstract fun applyDestination(destination: D)
+
     protected fun emitEffect(effect: BaseEffect) {
         launchOnMain {
             _effect.send(effect)
@@ -37,13 +42,18 @@ abstract class BaseViewModel : ViewModel() {
         return viewModelScope.launch(exceptionHandler, block = block)
     }
 
-    protected fun navigateTo(route: String) {
+    protected fun navigateTo(route: Any) {
         emitEffect(NavigateToEffect(route))
     }
 
     protected fun navigateUp() {
         emitEffect(NavigateUpEffect)
     }
+
+    protected fun <T> Flow<T>.launchInThis() =
+        this.launchIn(
+            scope = this@BaseViewModel.viewModelScope,
+        )
 
     protected fun <T> Flow<T>.stateInThis(initialValue: T) =
         this.stateIn(
@@ -65,4 +75,27 @@ abstract class BaseViewModel : ViewModel() {
             started = SharingStarted.WhileSubscribed(DEFAULT_TIMEOUT_MILLIS),
             initialValue = initialValue
         )
+
+    protected fun <T, C> Flow<List<T>?>.
+            alwaysSelected(
+        currentFlow: Flow<C?>,
+        itemEqualsCurrent: T.(C) -> Boolean,
+        selector: (T) -> Unit,
+        defaultValue: C? = null,
+        ifEmpty: () -> Unit = {},
+    ) {
+        combine(this, currentFlow) { list, current ->
+
+            if (list == null) return@combine
+
+            list.ifEmpty { return@combine ifEmpty() }
+
+            if (current == null
+                || current == defaultValue
+                || list.all { !it.itemEqualsCurrent(current) }
+            ) {
+                selector(list.first())
+            }
+        }.launchInThis()
+    }
 }

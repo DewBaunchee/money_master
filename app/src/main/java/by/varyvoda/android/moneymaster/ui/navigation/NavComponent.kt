@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.base.NavigateBackEffect
 import by.varyvoda.android.moneymaster.ui.base.NavigateBackToEffect
@@ -14,21 +16,19 @@ import by.varyvoda.android.moneymaster.ui.base.NavigateToEffect
 import by.varyvoda.android.moneymaster.ui.base.NavigateUpEffect
 import by.varyvoda.android.moneymaster.ui.effect.appEffects
 import by.varyvoda.android.moneymaster.ui.effect.handle
-import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountCreationScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountEditDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
+import org.kodein.di.DI
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
 
@@ -41,49 +41,39 @@ fun NavComponent(
 
     NavHost(
         navController = navController,
-        startDestination = HomeDestination.route,
+        startDestination = HomeDestination,
         modifier = modifier
     ) {
-        composable(route = HomeDestination.route) {
-            val viewModel: HomeViewModel by di.instance()
-            NavigationHandler(navController = navController, baseViewModel = viewModel)
-            HomeScreen(viewModel = viewModel)
+        route<HomeDestination, HomeViewModel>(di, navController) {
+            HomeScreen(viewModel = it)
         }
-        composable(route = AccountEditDestination.route) {
-            val viewModel: AccountEditViewModel by di.instance()
-            NavigationHandler(navController = navController, baseViewModel = viewModel)
-            AccountCreationScreen(viewModel = viewModel)
+        route<AccountEditDestination, AccountEditViewModel>(di, navController) {
+            AccountEditScreen(viewModel = it)
         }
-        composable(route = AddIncomeDestination.route) {
-            val accountId = it.arguments?.getString(AddIncomeDestination.ACCOUNT_ID_ROUTE_ARG)
-
-            val viewModel: AddIncomeViewModel by di.instance()
-
-            viewModel.applyNavigationArguments(accountId?.toLongOrNull())
-
-            NavigationHandler(navController = navController, baseViewModel = viewModel)
-            AddIncomeScreen(viewModel = viewModel)
+        route<EditOperationDestination, EditOperationViewModel>(di, navController) {
+            EditOperationScreen(viewModel = it)
         }
-        composable(route = AddExpenseDestination.route) {
-            val accountId = it.arguments?.getString(AddIncomeDestination.ACCOUNT_ID_ROUTE_ARG)
-
-            val viewModel: AddExpenseViewModel by di.instance()
-
-            viewModel.applyNavigationArguments(accountId?.toLong())
-
-            NavigationHandler(navController = navController, baseViewModel = viewModel)
-            AddExpenseScreen(viewModel = viewModel)
-        }
-        composable(route = AccountOperationCategoryEditDestination.route) {
-            val viewModel: AccountOperationCategoryEditViewModel by di.instance()
-            NavigationHandler(navController = navController, baseViewModel = viewModel)
-            AccountOperationCategoryEditScreen(viewModel = viewModel)
+        route<CategoryEditDestination, CategoryEditViewModel>(di, navController) {
+            CategoryEditScreen(viewModel = it)
         }
     }
 }
 
+private inline fun <reified D : Any, reified VM : BaseViewModel<D>> NavGraphBuilder.route(
+    di: DI,
+    navController: NavHostController,
+    crossinline screen: @Composable (VM) -> Unit
+) {
+    composable<D> {
+        val viewModel: VM by di.instance()
+        viewModel.applyDestination(it.toRoute())
+        NavigationHandler(navController = navController, baseViewModel = viewModel)
+        screen(viewModel)
+    }
+}
+
 @Composable
-fun NavigationHandler(navController: NavHostController, baseViewModel: BaseViewModel) {
+fun <D> NavigationHandler(navController: NavHostController, baseViewModel: BaseViewModel<D>) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         appEffects {

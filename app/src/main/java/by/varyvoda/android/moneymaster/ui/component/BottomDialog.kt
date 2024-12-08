@@ -1,5 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,8 +22,13 @@ fun BottomDialog(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = rememberModalBottomSheetState(),
-        modifier = modifier
-            .heightIn(min = (screenHeight * 0.3f).dp, max = (screenHeight * 0.5f).dp),
-        content = content,
-    )
+        modifier = modifier,
+    ) {
+        Column(
+            modifier = modifier
+//                .nestedScroll(rememberNestedScrollInteropConnection())
+                .heightIn(min = (screenHeight * 0.3f).dp, max = (screenHeight * 0.5f).dp),
+            content = content,
+        )
+    }
 }

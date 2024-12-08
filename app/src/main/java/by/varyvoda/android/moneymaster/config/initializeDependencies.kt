@@ -2,11 +2,11 @@ package by.varyvoda.android.moneymaster.config
 
 import androidx.compose.ui.graphics.Color
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperation
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
+import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import kotlinx.coroutines.flow.first
@@ -22,8 +22,8 @@ suspend fun initializeDependencies(di: DI) {
     val accountRepository: AccountRepository by di.instance()
     insertAccounts(accountRepository, colorThemeRepository, iconsService)
 
-    val accountOperationCategoryRepository: AccountOperationCategoryRepository by di.instance()
-    insertCategories(accountOperationCategoryRepository, colorThemeRepository, iconsService)
+    val categoryRepository: CategoryRepository by di.instance()
+    insertCategories(categoryRepository, colorThemeRepository, iconsService)
 }
 
 private suspend fun insertThemes(repository: ColorThemeRepository) {
@@ -98,71 +98,71 @@ private suspend fun insertAccounts(
 }
 
 private suspend fun insertCategories(
-    repository: AccountOperationCategoryRepository,
+    repository: CategoryRepository,
     colorThemeRepository: ColorThemeRepository,
     iconsService: IconsService,
 ) {
     val themes = colorThemeRepository.getAll().first()
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Clothes",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Car",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Fuel",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Groceries",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Loan",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Debts",
-            operationType = AccountOperation.Type.EXPENSE,
+            operationType = Operation.Type.EXPENSE,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Tech",
-            operationType = AccountOperation.Type.INCOME,
+            operationType = Operation.Type.INCOME,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )
     )
     repository.insert(
-        AccountOperationCategory(
+        Category(
             name = "Cafe",
-            operationType = AccountOperation.Type.INCOME,
+            operationType = Operation.Type.INCOME,
             iconRef = iconsService.load("RocketLaunch")!!,
             colorTheme = themes.random(),
         )

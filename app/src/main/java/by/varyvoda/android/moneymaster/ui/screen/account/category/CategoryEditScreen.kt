@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.lifecycle.viewmodel.compose.viewModel
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperation
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
+import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
@@ -22,18 +22,12 @@ import by.varyvoda.android.moneymaster.ui.component.ButtonSelector
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
-import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
-object AccountOperationCategoryEditDestination : NavigationDestination {
-    override val route = "operation/category/edit"
-
-}
-
 @Composable
-fun AccountOperationCategoryEditScreen(
+fun CategoryEditScreen(
+    viewModel: CategoryEditViewModel,
     modifier: Modifier = Modifier,
-    viewModel: AccountOperationCategoryEditViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
@@ -55,7 +49,7 @@ fun AccountOperationCategoryEditScreen(
 @Composable
 private fun Body(
     modifier: Modifier = Modifier,
-    viewModel: AccountOperationCategoryEditViewModel
+    viewModel: CategoryEditViewModel
 ) {
     val icons = viewModel.icons.collectAsState().value
     val colorThemes = viewModel.colorThemes.collectAsState().value
@@ -89,8 +83,8 @@ private fun Body(
             TitledContent(title = { AppTitle(textId = R.string.category_type) }) {
                 ButtonSelector(
                     items = listOf(
-                        AccountOperation.Type.EXPENSE to R.string.expense,
-                        AccountOperation.Type.INCOME to R.string.income
+                        Operation.Type.EXPENSE to R.string.expense,
+                        Operation.Type.INCOME to R.string.income
                     ),
                     isSelected = { it.first == operationType },
                     onSelect = { viewModel.changeOperationType(it.first) },

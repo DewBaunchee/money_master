@@ -4,13 +4,17 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 
-interface AccountOperation {
+interface Operation {
 
     enum class Type {
         BALANCE_EDIT,
         INCOME,
         EXPENSE,
-        TRANSFER,
+        TRANSFER;
+
+        companion object {
+            val DEFAULT = EXPENSE
+        }
     }
 
     val id: Id

@@ -1,19 +1,19 @@
 package by.varyvoda.android.moneymaster.data.service.account
 
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpense
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
+import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
+import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.AccountOperationRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
 
 class AccountServiceImpl(
     private val accountRepository: AccountRepository,
-    private val accountOperationRepository: AccountOperationRepository
+    private val operationRepository: OperationRepository
 ) : AccountService {
 
     override suspend fun createAccount(
@@ -43,8 +43,8 @@ class AccountServiceImpl(
         description: String,
         images: List<Int>
     ) {
-        accountOperationRepository.insert(
-            AccountIncome(
+        operationRepository.insert(
+            Income(
                 accountId = accountId,
                 amount = amount,
                 categoryId = categoryId,
@@ -63,8 +63,8 @@ class AccountServiceImpl(
         description: String,
         images: List<Int>
     ) {
-        accountOperationRepository.insert(
-            AccountExpense(
+        operationRepository.insert(
+            Expense(
                 accountId = accountId,
                 amount = amount,
                 categoryId = categoryId,

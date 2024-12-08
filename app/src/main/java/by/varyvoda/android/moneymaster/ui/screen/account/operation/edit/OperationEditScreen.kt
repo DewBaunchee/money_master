@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.addincome
+package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,10 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.lifecycle.viewmodel.compose.viewModel
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
-import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.domain.plusHours
 import by.varyvoda.android.moneymaster.ui.component.AccountListPickerDialog
 import by.varyvoda.android.moneymaster.ui.component.AppButton
@@ -38,22 +36,12 @@ import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.TitledCategoryPicker
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
-import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
-object AddIncomeDestination : NavigationDestination {
-    const val ACCOUNT_ID_ROUTE_ARG = "accountId"
-    override val route = "income/add?$ACCOUNT_ID_ROUTE_ARG={$ACCOUNT_ID_ROUTE_ARG}"
-
-    fun route(accountId: Id?): String {
-        return "income/add?$ACCOUNT_ID_ROUTE_ARG=$accountId"
-    }
-}
-
 @Composable
-fun AddIncomeScreen(
+fun EditOperationScreen(
+    viewModel: EditOperationViewModel,
     modifier: Modifier = Modifier,
-    viewModel: AddIncomeViewModel = viewModel()
 ) {
     Scaffold(
         topBar = {
@@ -74,7 +62,7 @@ fun AddIncomeScreen(
 
 @Composable
 fun AddIncomeBody(
-    viewModel: AddIncomeViewModel,
+    viewModel: EditOperationViewModel,
     modifier: Modifier = Modifier,
 ) {
     val accounts =
@@ -83,7 +71,7 @@ fun AddIncomeBody(
         viewModel.dateSuggestions.collectAsState().value
     val categories =
         viewModel.categories.collectAsState().value
-    val (_, amount, date, categoryId, description, images, categorySearchString) =
+    val (_, _, amount, date, categoryId, description, _, categorySearchString) =
         viewModel.uiState.collectAsState().value
 
     val accountDetails = viewModel.currentAccount
@@ -201,9 +189,9 @@ fun AddIncomeBody(
 
 @Composable
 fun CategoryPickerSection(
-    categories: List<AccountOperationCategory>,
-    isSelected: (AccountOperationCategory) -> Boolean,
-    onSelect: (AccountOperationCategory) -> Unit,
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
     onAddCategoryClick: () -> Unit,
     searchString: String,
     onSearchStringChange: (String) -> Unit,

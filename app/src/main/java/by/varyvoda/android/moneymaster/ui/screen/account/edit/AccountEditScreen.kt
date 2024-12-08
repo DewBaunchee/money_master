@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.creation
+package by.varyvoda.android.moneymaster.ui.screen.account.edit
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.lifecycle.viewmodel.compose.viewModel
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
@@ -34,19 +33,14 @@ import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
 import by.varyvoda.android.moneymaster.ui.component.CurrencyListPickerDialog
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
-import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
-object AccountEditDestination : NavigationDestination {
-    override val route = "account/edit" // TODO arguments to edit
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountCreationScreen(
+fun AccountEditScreen(
     modifier: Modifier = Modifier,
-    viewModel: AccountEditViewModel = viewModel()
+    viewModel: AccountEditViewModel
 ) {
     Scaffold(
         topBar = {
@@ -63,7 +57,7 @@ fun AccountCreationScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        AccountCreationBody(
+        AccountEditBody(
             modifier = Modifier
                 .padding(innerPadding),
             viewModel = viewModel
@@ -72,9 +66,9 @@ fun AccountCreationScreen(
 }
 
 @Composable
-fun AccountCreationBody(
+fun AccountEditBody(
+    viewModel: AccountEditViewModel,
     modifier: Modifier = Modifier,
-    viewModel: AccountEditViewModel = viewModel()
 ) {
     val currencies = viewModel.currencies.collectAsState().value
     val icons = viewModel.icons.collectAsState().value

@@ -7,8 +7,8 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 
-@Entity(tableName = "account_income")
-data class AccountIncome(
+@Entity(tableName = "expense")
+data class Expense(
     @PrimaryKey(autoGenerate = true)
     override val id: Id = 0,
     override val accountId: Id,
@@ -16,16 +16,16 @@ data class AccountIncome(
     val amount: Money,
     val categoryId: Id,
     val description: String,
-) : AccountOperation {
+) : Operation {
 
     @Ignore
-    override val type = AccountOperation.Type.INCOME
+    override val type = Operation.Type.EXPENSE
 
     override fun mutate(balance: Money): Money {
-        return balance + amount
+        return balance - amount
     }
 
     override fun undo(balance: Money): Money {
-        return balance - amount
+        return balance + amount
     }
 }

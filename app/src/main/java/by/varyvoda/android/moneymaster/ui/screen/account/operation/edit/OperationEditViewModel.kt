@@ -1,35 +1,40 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.addincome
+package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
 
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddIncomeViewModel(
-    private val accountService: AccountService,
-    private val categoryRepository: AccountOperationCategoryRepository,
-    accountRepository: AccountRepository
-) : BaseViewModel() {
+data class EditOperationDestination(
+    val operationId: Id?,
+    val operationType: Operation.Type?,
+    val accountId: Id?,
+)
 
-    private val _uiState = MutableStateFlow(AddIncomeUiState())
+class EditOperationViewModel(
+    private val accountService: AccountService,
+    private val categoryRepository: CategoryRepository,
+    accountRepository: AccountRepository
+) : BaseViewModel<EditOperationDestination>() {
+
+    private val _uiState = MutableStateFlow(EditOperationUiState())
     val uiState = _uiState.asStateFlow()
 
     val accounts = accountRepository.getAllDetails().stateInThis()
@@ -43,17 +48,20 @@ class AddIncomeViewModel(
         .flatMapLatest { categoryRepository.getAll(it) }
         .stateInThis()
 
-    var currentAccount: AccountDetails? = null
+    val currentAccount: AccountDetails? get() = accounts.value.find { it.id == uiState.value.accountId }
 
-    init {
-        combine(accounts, _uiState) { accounts, uiState ->
-            currentAccount = accounts.find { it.id == uiState.accountId }
-        }.launchIn(viewModelScope)
+    override fun applyDestination(destination: EditOperationDestination) {
+        val (operationId, operationType, accountId) = destination
+        if (operationId == null) {
+            accountId?.let { selectAccount(accountId) }
+            operationType?.let { changeOperationType(operationType) }
+        } else {
+            // TODO Load operation
+        }
     }
 
-    fun applyNavigationArguments(accountId: Id?) {
-        if (accountId == null) return
-        selectAccount(accountId)
+    fun changeOperationType(operationType: Operation.Type) {
+        _uiState.update { it.copy(operationType = operationType) }
     }
 
     fun selectAccount(accountId: Id) {
@@ -81,7 +89,7 @@ class AddIncomeViewModel(
     }
 
     fun onAddCategoryClick() {
-        navigateTo(AccountOperationCategoryEditDestination.route)
+        navigateTo(CategoryEditDestination())
     }
 
     fun isAccountSelected(): Boolean {
@@ -144,7 +152,8 @@ class AddIncomeViewModel(
     }
 }
 
-data class AddIncomeUiState(
+data class EditOperationUiState(
+    val operationType: Operation.Type? = Operation.Type.DEFAULT,
     val accountId: Id? = null,
     val amount: String = "",
     val date: PrimitiveDate? = null,

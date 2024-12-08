@@ -1,8 +1,9 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.creation
+package by.varyvoda.android.moneymaster.ui.screen.account.edit
 
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
+import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
@@ -12,20 +13,22 @@ import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+data class AccountEditDestination(
+    val accountId: Id? = null,
+)
 
 class AccountEditViewModel(
     private val accountService: AccountService,
     currencyRepository: CurrencyRepository,
     iconsService: IconsService,
     colorThemeRepository: ColorThemeRepository
-) : BaseViewModel() {
+) : BaseViewModel<AccountEditDestination>() {
 
     private val _uiState = MutableStateFlow(AccountCreationUiState())
     val uiState = _uiState.asStateFlow()
@@ -39,21 +42,17 @@ class AccountEditViewModel(
         .flatMapLatest { iconsService.getIconRefsBySearchString(it) }
         .stateInThis()
     val colorThemes = colorThemeRepository.getAll().stateInThis()
+        .apply {
+            alwaysSelected(
+                currentFlow = _uiState.map { it.theme },
+                itemEqualsCurrent = { this == it },
+                selector = { onSelectColorTheme(it) },
+                defaultValue = ColorTheme.DEFAULT,
+            )
+        }
 
-    init {
-        combine(colorThemes, _uiState) { colorThemes, uiState ->
+    override fun applyDestination(destination: AccountEditDestination) {
 
-            if (colorThemes.isEmpty()) {
-                return@combine
-            }
-
-            val currentTheme = uiState.theme
-            if (currentTheme == ColorTheme.DEFAULT || colorThemes.all { it != currentTheme }) {
-                val firstTheme = colorThemes.first()
-                onSelectColorTheme(firstTheme)
-            }
-
-        }.launchIn(scope = viewModelScope)
     }
 
     fun changeName(name: String) {

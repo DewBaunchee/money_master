@@ -1,6 +1,6 @@
 package by.varyvoda.android.moneymaster
 
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountBalanceEdit
+import by.varyvoda.android.moneymaster.data.model.account.operation.BalanceEdit
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
@@ -51,7 +51,7 @@ class AccountTests {
         val account =
             fastAccount().copy(
                 initialBalance = 100,
-                mutations = listOf(AccountBalanceEdit(expectedBalance, 100))
+                mutations = listOf(BalanceEdit(expectedBalance, 100))
             )
 
         assertEquals(expectedBalance, account.balance)

@@ -9,11 +9,11 @@ import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 
-@Entity(tableName = "account_operation_category")
-data class AccountOperationCategory(
+@Entity(tableName = "category")
+data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Id = 0,
-    val operationType: AccountOperation.Type,
+    val operationType: Operation.Type,
     val name: String,
     @TypeConverters(RoomIconConverter::class)
     val iconRef: IconRef,

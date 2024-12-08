@@ -7,18 +7,19 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 
-@Entity(tableName = "account_transfer")
-data class AccountTransfer(
+@Entity(tableName = "income")
+data class Income(
     @PrimaryKey(autoGenerate = true)
-    override val id: Id,
+    override val id: Id = 0,
     override val accountId: Id,
     override val date: PrimitiveDate,
-    val relatedAccountId: Id,
-    val amount: Money
-) : AccountOperation {
+    val amount: Money,
+    val categoryId: Id,
+    val description: String,
+) : Operation {
 
     @Ignore
-    override val type = AccountOperation.Type.TRANSFER
+    override val type = Operation.Type.INCOME
 
     override fun mutate(balance: Money): Money {
         return balance + amount

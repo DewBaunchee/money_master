@@ -10,29 +10,29 @@ import by.varyvoda.android.moneymaster.data.converter.ColorListConverters
 import by.varyvoda.android.moneymaster.data.converter.ColorThemeConverters
 import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountBalanceEditDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountExpenseDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountIncomeDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountOperationCategoryDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountTransferDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
 import by.varyvoda.android.moneymaster.data.model.account.Account
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountBalanceEdit
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountExpense
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountIncome
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountOperationCategory
-import by.varyvoda.android.moneymaster.data.model.account.operation.AccountTransfer
+import by.varyvoda.android.moneymaster.data.model.account.operation.BalanceEdit
+import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
+import by.varyvoda.android.moneymaster.data.model.account.operation.Income
+import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 
 @Database(
     entities = [
         Currency::class,
         Account::class,
-        AccountBalanceEdit::class,
-        AccountIncome::class,
-        AccountExpense::class,
-        AccountTransfer::class,
-        AccountOperationCategory::class,
+        BalanceEdit::class,
+        Income::class,
+        Expense::class,
+        Transfer::class,
+        Category::class,
     ],
     version = 10,
     exportSchema = false
@@ -49,15 +49,15 @@ abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun accountDao(): AccountDao
 
-    abstract fun accountBalanceEditDao(): AccountBalanceEditDao
+    abstract fun accountBalanceEditDao(): BalanceEditDao
 
-    abstract fun accountIncomeDao(): AccountIncomeDao
+    abstract fun accountIncomeDao(): IncomeDao
 
-    abstract fun accountExpenseDao(): AccountExpenseDao
+    abstract fun accountExpenseDao(): ExpenseDao
 
-    abstract fun accountTransferDao(): AccountTransferDao
+    abstract fun accountTransferDao(): TransferDao
 
-    abstract fun accountOperationCategoryDao(): AccountOperationCategoryDao
+    abstract fun accountOperationCategoryDao(): CategoryDao
 
     companion object {
 

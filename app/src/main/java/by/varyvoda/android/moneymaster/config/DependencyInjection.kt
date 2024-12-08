@@ -4,31 +4,31 @@ import android.content.Context
 import by.varyvoda.android.moneymaster.config.database.AppRoomDatabase
 import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountBalanceEditDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountExpenseDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountIncomeDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountOperationCategoryDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.AccountTransferDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.RoomAccountRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.AccountOperationRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.RoomAccountOperationRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.category.AccountOperationCategoryRepository
-import by.varyvoda.android.moneymaster.data.repository.account.operation.category.RoomAccountOperationCategoryRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.RoomOperationRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.RoomCategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.MemoryColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.RoomCurrencyRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.account.AccountServiceImpl
-import by.varyvoda.android.moneymaster.data.service.category.AccountOperationCategoryService
-import by.varyvoda.android.moneymaster.data.service.category.AccountOperationCategoryServiceImpl
+import by.varyvoda.android.moneymaster.data.service.category.CategoryService
+import by.varyvoda.android.moneymaster.data.service.category.CategoryServiceImpl
 import by.varyvoda.android.moneymaster.data.service.icons.GoogleIconsService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
-import by.varyvoda.android.moneymaster.ui.screen.account.addincome.AddIncomeViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.AccountOperationCategoryEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.creation.AccountEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import org.kodein.di.DI
@@ -52,11 +52,11 @@ fun appModule(context: Context) = DI.Module("appModule") {
     bind<ColorThemeRepository>() with singleton {
         MemoryColorThemeRepository()
     }
-    bind<AccountOperationRepository>() with singleton {
-        RoomAccountOperationRepository(instance(), instance(), instance())
+    bind<OperationRepository>() with singleton {
+        RoomOperationRepository(instance(), instance(), instance())
     }
-    bind<AccountOperationCategoryRepository>() with singleton {
-        RoomAccountOperationCategoryRepository(instance())
+    bind<CategoryRepository>() with singleton {
+        RoomCategoryRepository(instance())
     }
     bind<AccountRepository>() with singleton {
         RoomAccountRepository(instance())
@@ -64,8 +64,8 @@ fun appModule(context: Context) = DI.Module("appModule") {
     bind<AccountService>() with singleton {
         AccountServiceImpl(instance(), instance())
     }
-    bind<AccountOperationCategoryService>() with singleton {
-        AccountOperationCategoryServiceImpl(instance())
+    bind<CategoryService>() with singleton {
+        CategoryServiceImpl(instance())
     }
 
     import(viewModelModule())
@@ -78,14 +78,14 @@ fun viewModelModule() = DI.Module("viewModelModule") {
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())
     }
-    bind<AddIncomeViewModel>() with singleton {
-        AddIncomeViewModel(instance(), instance(), instance())
+    bind<EditOperationViewModel>() with singleton {
+        EditOperationViewModel(instance(), instance(), instance())
     }
     bind<AddExpenseViewModel>() with singleton {
         AddExpenseViewModel(instance(), instance())
     }
-    bind<AccountOperationCategoryEditViewModel>() with singleton {
-        AccountOperationCategoryEditViewModel(instance(), instance(), instance())
+    bind<CategoryEditViewModel>() with singleton {
+        CategoryEditViewModel(instance(), instance(), instance())
     }
 }
 
@@ -100,19 +100,19 @@ fun databaseModule(context: Context) = DI.Module("databaseModule") {
     bind<AccountDao>() with singleton {
         instance<AppRoomDatabase>().accountDao()
     }
-    bind<AccountBalanceEditDao>() with singleton {
+    bind<BalanceEditDao>() with singleton {
         instance<AppRoomDatabase>().accountBalanceEditDao()
     }
-    bind<AccountIncomeDao>() with singleton {
+    bind<IncomeDao>() with singleton {
         instance<AppRoomDatabase>().accountIncomeDao()
     }
-    bind<AccountExpenseDao>() with singleton {
+    bind<ExpenseDao>() with singleton {
         instance<AppRoomDatabase>().accountExpenseDao()
     }
-    bind<AccountTransferDao>() with singleton {
+    bind<TransferDao>() with singleton {
         instance<AppRoomDatabase>().accountTransferDao()
     }
-    bind<AccountOperationCategoryDao>() with singleton {
+    bind<CategoryDao>() with singleton {
         instance<AppRoomDatabase>().accountOperationCategoryDao()
     }
 }

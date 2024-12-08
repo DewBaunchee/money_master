@@ -32,19 +32,14 @@ import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
-import by.varyvoda.android.moneymaster.ui.navigation.NavigationDestination
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
-object HomeDestination : NavigationDestination {
-    override val route = "home"
-}
-
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
 ) {
     val accounts = viewModel.accountDetails.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
