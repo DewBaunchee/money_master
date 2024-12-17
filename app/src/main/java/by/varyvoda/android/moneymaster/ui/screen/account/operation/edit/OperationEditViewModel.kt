@@ -15,46 +15,47 @@ import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDe
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
-data class EditOperationDestination(
-    val operationId: Id?,
-    val operationType: Operation.Type?,
-    val accountId: Id?,
+@Serializable
+data class OperationEditDestination(
+    val operationId: Id? = null,
+    val operationType: Operation.Type? = null,
+    val accountId: Id? = null,
 )
 
-class EditOperationViewModel(
+class OperationEditViewModel(
     private val accountService: AccountService,
     private val categoryRepository: CategoryRepository,
-    accountRepository: AccountRepository
-) : BaseViewModel<EditOperationDestination>() {
+    accountRepository: AccountRepository,
+) : BaseViewModel<OperationEditDestination>() {
 
-    private val _uiState = MutableStateFlow(EditOperationUiState())
+    private val _uiState = MutableStateFlow(OperationEditUiState())
     val uiState = _uiState.asStateFlow()
 
-    val accounts = accountRepository.getAllDetails().stateInThis()
-
-    val dateSuggestions = MutableStateFlow(DateSuggestion.DEFAULT)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val categories = _uiState
-        .map { it.categorySearchString }
+    val operationType = uiState
+        .map { it.operationType }
         .distinctUntilChanged()
-        .flatMapLatest { categoryRepository.getAll(it) }
-        .stateInThis()
 
-    val currentAccount: AccountDetails? get() = accounts.value.find { it.id == uiState.value.accountId }
+    private val accounts = accountRepository.getAllDetails().stateInThis()
 
-    override fun applyDestination(destination: EditOperationDestination) {
+    private val dateSuggestions = MutableStateFlow(DateSuggestion.DEFAULT)
+
+    val incomeViewModel = createIncomeExpenseViewModel(true)
+    val expenseViewModel = createIncomeExpenseViewModel(false)
+
+    override fun applyDestination(destination: OperationEditDestination) {
         val (operationId, operationType, accountId) = destination
         if (operationId == null) {
-            accountId?.let { selectAccount(accountId) }
-            operationType?.let { changeOperationType(operationType) }
+//            accountId?.let { selectAccount(accountId) } TODO
+            changeOperationType(operationType ?: Operation.Type.EXPENSE)
         } else {
             // TODO Load operation
         }
@@ -63,6 +64,65 @@ class EditOperationViewModel(
     fun changeOperationType(operationType: Operation.Type) {
         _uiState.update { it.copy(operationType = operationType) }
     }
+
+    fun onBackClick() {
+        navigateUp()
+    }
+
+    private fun onSaveWrapper(logic: suspend () -> Unit) {
+        viewModelScope.launch {
+            logic()
+            navigateUp()
+        }
+    }
+
+    private fun createIncomeExpenseViewModel(income: Boolean): IncomeExpenseEditViewModel =
+        IncomeExpenseEditViewModel(
+            income = income,
+            accountService = accountService,
+            categoryRepository = categoryRepository,
+            onSaveClickWrapper = this::onSaveWrapper,
+            accounts = accounts,
+            dateSuggestions = dateSuggestions,
+            addCategoryClick = { navigateTo(CategoryEditDestination()) },
+        )
+}
+
+data class OperationEditUiState(
+    val operationType: Operation.Type? = Operation.Type.DEFAULT,
+)
+
+data class IncomeExpenseEditUiState(
+    val accountId: Id? = null,
+    val amount: String = "",
+    val date: PrimitiveDate? = null,
+    val categoryId: Id? = null,
+    val description: String = "",
+    val images: List<Int> = listOf(),
+    val categorySearchString: String = "",
+)
+
+class IncomeExpenseEditViewModel(
+    val income: Boolean,
+    private val accountService: AccountService,
+    private val categoryRepository: CategoryRepository,
+    private val onSaveClickWrapper: (logic: suspend () -> Unit) -> Unit,
+    val accounts: StateFlow<List<AccountDetails>>,
+    val dateSuggestions: StateFlow<List<DateSuggestion>>,
+    private val addCategoryClick: () -> Unit,
+) : BaseViewModel<Unit>() {
+
+    private val _uiState = MutableStateFlow(IncomeExpenseEditUiState())
+    val uiState = _uiState.asStateFlow()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categories = _uiState
+        .map { it.categorySearchString }
+        .distinctUntilChanged()
+        .flatMapLatest { categoryRepository.getAll(it) }
+        .stateInThis()
+
+    val currentAccount get() = accounts.value.find { it.id == uiState.value.accountId }
 
     fun selectAccount(accountId: Id) {
         _uiState.update { it.copy(accountId = accountId) }
@@ -89,16 +149,13 @@ class EditOperationViewModel(
     }
 
     fun onAddCategoryClick() {
-        navigateTo(CategoryEditDestination())
+        addCategoryClick()
     }
 
-    fun isAccountSelected(): Boolean {
-        return uiState.value.accountId != null
-    }
-
-    fun canCreateOperation(): Boolean {
+    fun canSave(): Boolean {
         return uiState.value.let {
             allNotNull(
+                it.accountId,
                 it.amount.toLongOrNull(),
                 it.date,
                 it.categoryId,
@@ -106,25 +163,27 @@ class EditOperationViewModel(
         }
     }
 
-    fun onBackClick() {
-        navigateUp()
-    }
-
-    fun canSave(): Boolean {
-        return isAccountSelected() && canCreateOperation()
-    }
-
     fun onSaveClick() {
-        viewModelScope.launch {
-            accountService.addIncome(
-                getAccountId(),
-                amount = getAmount(),
-                categoryId = getCategoryId(),
-                date = getDate(),
-                description = getDescription(),
-                images = listOf()
-            )
-            navigateUp()
+        onSaveClickWrapper {
+            if (income) {
+                accountService.addIncome(
+                    getAccountId(),
+                    amount = getAmount(),
+                    categoryId = getCategoryId(),
+                    date = getDate(),
+                    description = getDescription(),
+                    images = listOf()
+                )
+            } else {
+                accountService.addExpense(
+                    getAccountId(),
+                    amount = getAmount(),
+                    categoryId = getCategoryId(),
+                    date = getDate(),
+                    description = getDescription(),
+                    images = listOf()
+                )
+            }
         }
     }
 
@@ -151,14 +210,3 @@ class EditOperationViewModel(
         return uiState.value.categoryId ?: throw IllegalStateException("Category isn't selected")
     }
 }
-
-data class EditOperationUiState(
-    val operationType: Operation.Type? = Operation.Type.DEFAULT,
-    val accountId: Id? = null,
-    val amount: String = "",
-    val date: PrimitiveDate? = null,
-    val categoryId: Id? = null,
-    val description: String = "",
-    val images: List<Int> = listOf(),
-    val categorySearchString: String = "",
-)

@@ -11,16 +11,16 @@ import by.varyvoda.android.moneymaster.data.converter.ColorThemeConverters
 import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.BalanceEdit
+import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
-import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 
@@ -34,7 +34,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
         Transfer::class,
         Category::class,
     ],
-    version = 10,
+    version = 11,
     exportSchema = false
 )
 @TypeConverters(

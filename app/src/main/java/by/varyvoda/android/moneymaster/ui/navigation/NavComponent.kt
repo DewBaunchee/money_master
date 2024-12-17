@@ -22,9 +22,9 @@ import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditVi
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
@@ -50,8 +50,8 @@ fun NavComponent(
         route<AccountEditDestination, AccountEditViewModel>(di, navController) {
             AccountEditScreen(viewModel = it)
         }
-        route<EditOperationDestination, EditOperationViewModel>(di, navController) {
-            EditOperationScreen(viewModel = it)
+        route<OperationEditDestination, OperationEditViewModel>(di, navController) {
+            OperationEditScreen(viewModel = it)
         }
         route<CategoryEditDestination, CategoryEditViewModel>(di, navController) {
             CategoryEditScreen(viewModel = it)

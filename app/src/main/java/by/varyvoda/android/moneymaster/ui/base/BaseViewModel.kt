@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.ui.base
 
-import androidx.core.util.Predicate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.ui.effect.BaseEffect
@@ -30,7 +29,7 @@ abstract class BaseViewModel<D> : ViewModel() {
 
     open fun onError(context: CoroutineContext, throwable: Throwable) = Unit
 
-    abstract fun applyDestination(destination: D)
+    open fun applyDestination(destination: D) {}
 
     protected fun emitEffect(effect: BaseEffect) {
         launchOnMain {
@@ -76,8 +75,7 @@ abstract class BaseViewModel<D> : ViewModel() {
             initialValue = initialValue
         )
 
-    protected fun <T, C> Flow<List<T>?>.
-            alwaysSelected(
+    protected fun <T, C> Flow<List<T>?>.alwaysSelected(
         currentFlow: Flow<C?>,
         itemEqualsCurrent: T.(C) -> Boolean,
         selector: (T) -> Unit,

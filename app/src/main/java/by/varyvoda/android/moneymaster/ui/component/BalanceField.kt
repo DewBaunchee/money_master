@@ -1,7 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ fun BalanceField(
             keyboardType = KeyboardType.Number,
             imeAction = imeAction
         ),
-        keyboardActions = KeyboardActions { },
-        modifier = modifier
+        modifier = modifier,
     )
 }

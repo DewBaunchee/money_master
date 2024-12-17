@@ -49,4 +49,6 @@
     <string name="appearance_description">Choose an icon and background for the new category</string>
     <string name="background">Background</string>
     <string name="icon">Icon</string>
+    <string name="add_expense_title">Add expense</string>
+    <string name="empty_string" />
 </resources>

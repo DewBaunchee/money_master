@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.plusHours
 import by.varyvoda.android.moneymaster.ui.component.AccountListPickerDialog
 import by.varyvoda.android.moneymaster.ui.component.AppButton
@@ -39,30 +40,46 @@ import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
-fun EditOperationScreen(
-    viewModel: EditOperationViewModel,
+fun OperationEditScreen(
+    viewModel: OperationEditViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val operationType = viewModel.operationType.collectAsState(null).value
     Scaffold(
         topBar = {
             MainTopBar(
-                titleId = R.string.add_income_title,
+                titleId = when (operationType) {
+                    Operation.Type.INCOME -> R.string.add_income_title
+                    Operation.Type.EXPENSE -> R.string.add_expense_title
+                    else -> R.string.empty_string
+                },
                 onBackClick = { viewModel.onBackClick() }
             )
         },
         modifier = modifier
     ) { innerPadding ->
-        AddIncomeBody(
-            viewModel = viewModel,
-            modifier = Modifier
-                .padding(innerPadding)
-        )
+        when (operationType) {
+            Operation.Type.INCOME -> IncomeExpenseEditBody(
+                viewModel = viewModel.incomeViewModel,
+                modifier = Modifier
+                    .padding(innerPadding)
+            )
+
+            Operation.Type.EXPENSE -> IncomeExpenseEditBody(
+                viewModel = viewModel.expenseViewModel,
+                modifier = Modifier
+                    .padding(innerPadding)
+            )
+
+            else -> Text("Not implemented")
+        }
+
     }
 }
 
 @Composable
-fun AddIncomeBody(
-    viewModel: EditOperationViewModel,
+fun IncomeExpenseEditBody(
+    viewModel: IncomeExpenseEditViewModel,
     modifier: Modifier = Modifier,
 ) {
     val accounts =
@@ -71,7 +88,7 @@ fun AddIncomeBody(
         viewModel.dateSuggestions.collectAsState().value
     val categories =
         viewModel.categories.collectAsState().value
-    val (_, _, amount, date, categoryId, description, _, categorySearchString) =
+    val ( _, amount, date, categoryId, description, _, categorySearchString) =
         viewModel.uiState.collectAsState().value
 
     val accountDetails = viewModel.currentAccount

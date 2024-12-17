@@ -5,9 +5,9 @@ import by.varyvoda.android.moneymaster.config.database.AppRoomDatabase
 import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
-import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
@@ -26,10 +26,9 @@ import by.varyvoda.android.moneymaster.data.service.category.CategoryService
 import by.varyvoda.android.moneymaster.data.service.category.CategoryServiceImpl
 import by.varyvoda.android.moneymaster.data.service.icons.GoogleIconsService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.EditOperationViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.expense.AddExpenseViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -78,11 +77,8 @@ fun viewModelModule() = DI.Module("viewModelModule") {
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())
     }
-    bind<EditOperationViewModel>() with singleton {
-        EditOperationViewModel(instance(), instance(), instance())
-    }
-    bind<AddExpenseViewModel>() with singleton {
-        AddExpenseViewModel(instance(), instance())
+    bind<OperationEditViewModel>() with singleton {
+        OperationEditViewModel(instance(), instance(), instance())
     }
     bind<CategoryEditViewModel>() with singleton {
         CategoryEditViewModel(instance(), instance(), instance())
