@@ -50,11 +50,16 @@ class OperationEditViewModel(
 
     val incomeViewModel = createIncomeExpenseViewModel(true)
     val expenseViewModel = createIncomeExpenseViewModel(false)
+    val transferViewModel = createTransferViewModel()
 
     override fun applyDestination(destination: OperationEditDestination) {
         val (operationId, operationType, accountId) = destination
         if (operationId == null) {
-//            accountId?.let { selectAccount(accountId) } TODO
+            accountId?.let {
+                incomeViewModel.selectAccount(it)
+                expenseViewModel.selectAccount(it)
+                transferViewModel.selectSourceAccount(it)
+            }
             changeOperationType(operationType ?: Operation.Type.EXPENSE)
         } else {
             // TODO Load operation
@@ -85,6 +90,15 @@ class OperationEditViewModel(
             accounts = accounts,
             dateSuggestions = dateSuggestions,
             addCategoryClick = { navigateTo(CategoryEditDestination()) },
+        )
+
+    private fun createTransferViewModel(): TransferViewModel =
+        TransferViewModel(
+            accountService = accountService,
+            categoryRepository = categoryRepository,
+            onSaveClickWrapper = this::onSaveWrapper,
+            accounts = accounts,
+            dateSuggestions = dateSuggestions,
         )
 }
 
@@ -187,26 +201,128 @@ class IncomeExpenseEditViewModel(
         }
     }
 
-    private fun getAccountId(): Id {
-        if (uiState.value.accountId == null)
-            throw IllegalStateException("Account isn't selected")
+    private fun getAccountId(): Id =
+        requireNotNull(uiState.value.accountId) {
+            "Account isn't selected"
+        }
 
-        return uiState.value.accountId!!
+    private fun getAmount(): Money =
+        requireNotNull(uiState.value.amount.toLongOrNull()) {
+            "Invalid amount"
+        }
+
+    private fun getDate(): PrimitiveDate =
+        requireNotNull(uiState.value.date) {
+            "Date isn't selected"
+        }
+
+    private fun getDescription(): String =
+        uiState.value.description
+
+    private fun getCategoryId(): Id =
+        requireNotNull(uiState.value.categoryId) {
+            "Category isn't selected"
+        }
+}
+
+data class TransferEditUiState(
+    val date: PrimitiveDate? = null,
+    val sourceAccountId: Id? = null,
+    val destinationAccountId: Id? = null,
+    val sentAmount: String = "",
+    val receivedAmount: String = "",
+    val description: String = "",
+)
+
+class TransferViewModel(
+    private val accountService: AccountService,
+    private val categoryRepository: CategoryRepository,
+    private val onSaveClickWrapper: (logic: suspend () -> Unit) -> Unit,
+    val accounts: StateFlow<List<AccountDetails>>,
+    val dateSuggestions: StateFlow<List<DateSuggestion>>,
+) : BaseViewModel<Unit>() {
+
+    private val _uiState = MutableStateFlow(TransferEditUiState())
+    val uiState = _uiState.asStateFlow()
+
+    val sourceAccount get() = accounts.value.find { it.id == uiState.value.sourceAccountId }
+    val destinationAccount get() = accounts.value.find { it.id == uiState.value.destinationAccountId }
+
+    fun changeDate(date: PrimitiveDate?) {
+        _uiState.update { it.copy(date = date) }
     }
 
-    private fun getAmount(): Money {
-        return uiState.value.amount.toLongOrNull() ?: throw IllegalStateException("Invalid amount")
+    fun selectSourceAccount(accountId: Id) {
+        _uiState.update { it.copy(sourceAccountId = accountId) }
     }
 
-    private fun getDate(): PrimitiveDate {
-        return uiState.value.date ?: throw IllegalStateException("Date isn't selected")
+    fun selectDestinationAccount(accountId: Id) {
+        _uiState.update { it.copy(destinationAccountId = accountId) }
     }
+
+    fun changeSentAmount(amount: String) {
+        _uiState.update { it.copy(sentAmount = amount) }
+    }
+
+    fun changeReceivedAmount(amount: String) {
+        _uiState.update { it.copy(receivedAmount = amount) }
+    }
+
+    fun changeDescription(description: String) {
+        _uiState.update { it.copy(description = description) }
+    }
+
+    fun canSave(): Boolean {
+        return with(uiState.value) {
+            allNotNull(
+                date,
+                sourceAccountId,
+                destinationAccountId,
+                sentAmount.toLongOrNull(),
+                receivedAmount.toLongOrNull(),
+            )
+        }
+    }
+
+    fun onSaveClick() {
+        onSaveClickWrapper {
+            accountService.addTransfer(
+                date = getDate(),
+                sourceAccountId = getSourceAccountId(),
+                destinationAccountId = getDestinationAccountId(),
+                sentAmount = getSentAmount(),
+                receivedAmount = getReceivedAmount(),
+                description = getDescription(),
+            )
+        }
+    }
+
+    private fun getDate(): PrimitiveDate =
+        requireNotNull(uiState.value.date) {
+            "Date isn't selected"
+        }
+
+    private fun getSourceAccountId(): Id =
+        requireNotNull(uiState.value.sourceAccountId) {
+            "Source account isn't selected"
+        }
+
+    private fun getDestinationAccountId(): Id =
+        requireNotNull(uiState.value.destinationAccountId) {
+            "Destination account isn't selected"
+        }
+
+    private fun getSentAmount(): Money =
+        requireNotNull(uiState.value.sentAmount.toLongOrNull()) {
+            "Invalid sent amount"
+        }
+
+    private fun getReceivedAmount(): Money =
+        requireNotNull(uiState.value.sentAmount.toLongOrNull()) {
+            "Invalid received amount"
+        }
 
     private fun getDescription(): String {
         return uiState.value.description
-    }
-
-    private fun getCategoryId(): Id {
-        return uiState.value.categoryId ?: throw IllegalStateException("Category isn't selected")
     }
 }

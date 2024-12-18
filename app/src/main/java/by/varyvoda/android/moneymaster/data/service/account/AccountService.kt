@@ -5,6 +5,7 @@ import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import java.time.temporal.TemporalAmount
 
 interface AccountService {
 
@@ -32,5 +33,14 @@ interface AccountService {
         date: PrimitiveDate,
         description: String,
         images: List<Int>
+    )
+
+    suspend fun addTransfer(
+        date: PrimitiveDate,
+        sourceAccountId: Id,
+        destinationAccountId: Id,
+        sentAmount: Money,
+        receivedAmount: Money,
+        description: String,
     )
 }

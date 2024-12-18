@@ -6,6 +6,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
+import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.now
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
@@ -205,6 +206,19 @@ private suspend fun insertOperations(
                 amount = (1L..200L).random(),
                 categoryId = categories.random().id,
                 description = "Description",
+            )
+        )
+    }
+    repeat(6) {
+        operationRepository.insert(
+            Transfer(
+                id = UUID.randomUUID(),
+                date = now(),
+                sourceAccountId = accounts.random().id,
+                destinationAccountId = accounts.random().id,
+                sentAmount = 400,
+                receivedAmount = 400,
+                description = "TODO()"
             )
         )
     }

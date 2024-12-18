@@ -5,15 +5,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.ExpenseDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.IncomeDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.OperationDetails
+import by.varyvoda.android.moneymaster.data.details.account.operation.TransferDetails
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
@@ -25,6 +28,7 @@ import by.varyvoda.android.moneymaster.util.valueOrNull
 
 @Composable
 fun OperationList(
+    accordingToAccount: AccountDetails,
     operations: List<OperationDetails>,
     modifier: Modifier = Modifier,
 ) {
@@ -32,12 +36,16 @@ fun OperationList(
         items = operations,
         modifier = modifier,
     ) {
-        OperationListItem(it)
+        OperationListItem(
+            accordingToAccount = accordingToAccount,
+            operation = it,
+        )
     }
 }
 
 @Composable
 fun OperationListItem(
+    accordingToAccount: AccountDetails,
     operation: OperationDetails,
     modifier: Modifier = Modifier,
 ) {
@@ -71,6 +79,40 @@ fun OperationListItem(
                 modifier = modifier,
             )
         }
+
+        is TransferDetails -> TransferOperationListItem(
+            accordingToAccount = accordingToAccount,
+            operation = operation,
+        )
+    }
+}
+
+@Composable
+fun TitledOperationList(
+    accordingToAccount: AccountDetails,
+    operations: List<OperationDetails>,
+    onViewAllClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TitledContent(
+        applyFormPadding = false,
+        title = {
+            AppTitleAndViewAll(
+                titleId = R.string.operations,
+                onViewAllClick = onViewAllClick,
+                modifier = Modifier.padding(
+                    top = formPadding(),
+                    start = formPadding(),
+                    end = formPadding(),
+                ),
+            )
+        },
+        modifier = modifier,
+    ) {
+        OperationList(
+            accordingToAccount = accordingToAccount,
+            operations = operations,
+        )
     }
 }
 
@@ -123,28 +165,54 @@ fun IncomeExpenseOperationListItem(
 }
 
 @Composable
-fun TitledOperationList(
-    operations: List<OperationDetails>,
-    onViewAllClick: () -> Unit,
+fun TransferOperationListItem(
+    accordingToAccount: AccountDetails,
+    operation: TransferDetails,
     modifier: Modifier = Modifier,
 ) {
-    TitledContent(
-        applyFormPadding = false,
-        title = {
-            AppTitleAndViewAll(
-                titleId = R.string.operations,
-                onViewAllClick = onViewAllClick,
-                modifier = Modifier.padding(
-                    top = formPadding(),
-                    start = formPadding(),
-                    end = formPadding(),
-                ),
-            )
-        },
-        modifier = modifier,
+    val showLikeSent = accordingToAccount.id == operation.model.sourceAccountId
+    val currency = accordingToAccount.currency.valueOrNull()
+    val relatedAccount =
+        (if (showLikeSent)
+            operation.destinationAccount
+        else
+            operation.sourceAccount
+                ).valueOrNull()
+
+    Surface(
+        shadowElevation = dimensionResource(R.dimen.soft_elevation),
+        shape = MaterialTheme.shapes.small,
     ) {
-        OperationList(
-            operations = operations,
-        )
+        ListPickerOption(
+            item = operation,
+            isSelected = false,
+            onClick = {},
+            modifier = modifier,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.formSpacedBy(),
+                modifier = Modifier
+            ) {
+                val textPrefix = stringResource(
+                    if (showLikeSent)
+                        R.string.to
+                    else
+                        R.string.from
+                ) + ":"
+                IconAndText(
+                    icon = { AccountIcon(account = relatedAccount) },
+                    text = { Text(text = "$textPrefix ${relatedAccount?.run { model.name } ?: ""}") },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                MoneyText(
+                    currency = currency,
+                    amount = operation.model.sentAmount.let { if (showLikeSent) -it else it },
+                    color = if (showLikeSent) Negative else Positive,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+        }
     }
 }

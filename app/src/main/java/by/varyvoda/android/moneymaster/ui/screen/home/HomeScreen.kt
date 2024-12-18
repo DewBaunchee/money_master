@@ -23,8 +23,8 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountGallery
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
-import by.varyvoda.android.moneymaster.ui.component.IconAndText
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
+import by.varyvoda.android.moneymaster.ui.component.IconAndText
 import by.varyvoda.android.moneymaster.ui.component.MoneyText
 import by.varyvoda.android.moneymaster.ui.component.TitledOperationList
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
@@ -72,15 +72,19 @@ fun HomeScreen(
         ActionBar(
             onAddIncome = { viewModel.onAddIncomeClick() },
             onAddExpense = { viewModel.onAddExpenseClick() },
+            onAddTransfer = { viewModel.onAddTransferClick() },
             modifier = Modifier
                 .fillMaxWidth()
         )
-        TitledOperationList(
-            operations = operations ?: listOf(),
-            onViewAllClick = {},
-            modifier = Modifier
-                .weight(1f)
-        )
+        currentAccount?.let {
+            TitledOperationList(
+                accordingToAccount = currentAccount,
+                operations = operations ?: listOf(),
+                onViewAllClick = {},
+                modifier = Modifier
+                    .weight(1f)
+            )
+        }
     }
 }
 
@@ -132,6 +136,7 @@ fun HomeTopBar(
 fun ActionBar(
     onAddIncome: () -> Unit,
     onAddExpense: () -> Unit,
+    onAddTransfer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -146,6 +151,10 @@ fun ActionBar(
         AppIconButton(
             onClick = onAddExpense,
             iconRef = IconRef.AddExpense,
+        )
+        AppIconButton(
+            onClick = onAddTransfer,
+            iconRef = IconRef.AddTransfer,
         )
     }
 }

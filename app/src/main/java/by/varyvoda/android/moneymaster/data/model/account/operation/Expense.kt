@@ -22,11 +22,4 @@ data class Expense(
     @Ignore
     override val type = Operation.Type.EXPENSE
 
-    override fun mutate(balance: Money): Money {
-        return balance - amount
-    }
-
-    override fun undo(balance: Money): Money {
-        return balance + amount
-    }
 }

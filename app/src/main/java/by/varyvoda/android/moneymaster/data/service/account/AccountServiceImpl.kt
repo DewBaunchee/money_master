@@ -3,6 +3,7 @@ package by.varyvoda.android.moneymaster.data.service.account
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
+import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
@@ -74,6 +75,27 @@ class AccountServiceImpl(
                 date = date,
                 description = description,
 //                images = images
+            )
+        )
+    }
+
+    override suspend fun addTransfer(
+        date: PrimitiveDate,
+        sourceAccountId: Id,
+        destinationAccountId: Id,
+        sentAmount: Money,
+        receivedAmount: Money,
+        description: String
+    ) {
+        operationRepository.insert(
+            Transfer(
+                id = UUID.randomUUID(),
+                date = date,
+                sourceAccountId = sourceAccountId,
+                destinationAccountId = destinationAccountId,
+                sentAmount = sentAmount,
+                receivedAmount = receivedAmount,
+                description = description,
             )
         )
     }

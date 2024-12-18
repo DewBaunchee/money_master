@@ -45,12 +45,12 @@ fun AccountOptionButton(
 
 @Composable
 fun AccountIcon(
-    account: AccountDetails,
+    account: AccountDetails?,
     modifier: Modifier = Modifier,
 ) {
     SquareBox(
-        background = account.model.theme.colors.toBrush(),
-        iconRef = account.model.iconRef,
+        background = account?.run { model.theme.colors.toBrush() },
+        iconRef = account?.run { model.iconRef },
         tint = MaterialTheme.colorScheme.secondary,
         modifier = modifier,
     )

@@ -52,10 +52,6 @@ class HomeViewModel(
 
     val currentAccount get() = accounts.value?.find { it.id == uiState.value.currentAccountId }
 
-    init {
-        navigateTo(AccountEditDestination())
-    }
-
     fun changeCurrentAccount(accountId: Id) {
         this._uiState.update { it.copy(currentAccountId = accountId) }
     }
@@ -73,6 +69,15 @@ class HomeViewModel(
         navigateTo(
             OperationEditDestination(
                 operationType = Operation.Type.EXPENSE,
+                accountId = uiState.value.currentAccountId
+            )
+        )
+    }
+
+    fun onAddTransferClick() {
+        navigateTo(
+            OperationEditDestination(
+                operationType = Operation.Type.TRANSFER,
                 accountId = uiState.value.currentAccountId
             )
         )

@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.data.model.account.operation
 
-import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import java.util.UUID
 
@@ -24,8 +23,5 @@ interface Operation {
 
     val type: Type
 
-    fun mutate(balance: Money): Money
-
-    fun undo(balance: Money): Money
 }
 

@@ -56,4 +56,6 @@
     <string name="history">History</string>
     <string name="statistics">Statistics</string>
     <string name="operations">Operations</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 </resources>

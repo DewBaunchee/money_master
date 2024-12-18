@@ -15,17 +15,12 @@ data class Transfer(
     override val date: PrimitiveDate,
     val sourceAccountId: Id,
     val destinationAccountId: Id,
-    val amount: Money
+    val sentAmount: Money,
+    val receivedAmount: Money,
+    val description: String,
 ) : Operation {
 
     @Ignore
     override val type = Operation.Type.TRANSFER
 
-    override fun mutate(balance: Money): Money {
-        return balance + amount
-    }
-
-    override fun undo(balance: Money): Money {
-        return balance - amount
-    }
 }

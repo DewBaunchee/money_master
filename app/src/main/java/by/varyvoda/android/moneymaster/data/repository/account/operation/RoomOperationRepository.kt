@@ -4,6 +4,7 @@ import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.OperationDao
+import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.details.account.operation.BalanceEditDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.ExpenseDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.IncomeDetails
@@ -28,11 +29,13 @@ class RoomOperationRepository(
     private val balanceEditDao: BalanceEditDao,
     private val incomeDao: IncomeDao,
     private val expenseDao: ExpenseDao,
+    private val transferDao: TransferDao,
     private val categoryRepository: CategoryRepository,
     private val accountRepository: AccountRepository,
 ) : OperationRepository {
 
-    private val daoProvider = OperationDaoProvider(balanceEditDao, incomeDao, expenseDao)
+    private val daoProvider =
+        OperationDaoProvider(balanceEditDao, incomeDao, expenseDao, transferDao)
 
     override suspend fun insert(operation: Operation) =
         daoProvider.getDaoFor(operation).insert(operation)
@@ -91,7 +94,11 @@ class RoomOperationRepository(
         )
 
     private fun Transfer.details(): TransferDetails =
-        TransferDetails(this)
+        TransferDetails(
+            model = this,
+            sourceAccount = accountRepository.getDetailsById(sourceAccountId).notNull(),
+            destinationAccount = accountRepository.getDetailsById(destinationAccountId).notNull(),
+        )
 
     private fun Flow<Array<List<Operation>>>.combineListsAndSort() = map { combineLists(it).sort() }
 
@@ -104,6 +111,7 @@ class RoomOperationRepository(
             action(balanceEditDao),
             action(expenseDao),
             action(incomeDao),
+            action(transferDao),
         )
 
     private inline fun <reified R> combineDaoResults(action: (OperationDao<out Operation>) -> Flow<R>) =
@@ -111,6 +119,7 @@ class RoomOperationRepository(
             action(balanceEditDao),
             action(expenseDao),
             action(incomeDao),
+            action(transferDao),
             transform = ::arrayOf,
         )
 
@@ -125,12 +134,14 @@ private class OperationDaoProvider(
     balanceEditDao: BalanceEditDao,
     incomeDao: IncomeDao,
     expenseDao: ExpenseDao,
+    transferDao: TransferDao,
 ) {
 
     private val operationTypeToDao: Map<Operation.Type, OperationDao<out Operation>> = mapOf(
         Operation.Type.BALANCE_EDIT to balanceEditDao,
         Operation.Type.INCOME to incomeDao,
         Operation.Type.EXPENSE to expenseDao,
+        Operation.Type.TRANSFER to transferDao,
     )
 
     fun getDaoFor(operation: Operation): OperationDao<Operation> =

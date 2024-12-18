@@ -21,11 +21,4 @@ data class BalanceEdit(
     @Ignore
     override val type = Operation.Type.BALANCE_EDIT
 
-    override fun mutate(balance: Money): Money {
-        return newValue
-    }
-
-    override fun undo(balance: Money): Money {
-        return oldValue
-    }
 }

@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.History
@@ -53,6 +54,7 @@ data class IconRef(
         val Notifications = Icons.Filled.Notifications.toIconRef("Notifications")
         val AddIncome = Icons.Filled.KeyboardArrowUp.toIconRef("Add income")
         val AddExpense = Icons.Filled.KeyboardArrowDown.toIconRef("Add expense")
+        val AddTransfer = Icons.Filled.CurrencyExchange.toIconRef("Add transfer")
         val Statistics = Icons.Filled.QueryStats.toIconRef("Statistics")
         val History = Icons.Filled.History.toIconRef("History")
         val More = Icons.Filled.MoreHoriz.toIconRef("More")

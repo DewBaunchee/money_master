@@ -4,6 +4,9 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,13 +18,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
+import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,7 +38,7 @@ fun AppDatePicker(
     onDateSelected: (PrimitiveDate?) -> Unit,
     @StringRes labelId: Int,
     @StringRes dateFormatId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showModal by remember { mutableStateOf(false) }
 
@@ -66,6 +72,30 @@ fun AppDatePicker(
             onDateSelected = onDateSelected,
             onDismiss = { showModal = false }
         )
+    }
+}
+
+@Composable
+fun DateSuggestions(
+    dateSuggestions: List<DateSuggestion>,
+    date: PrimitiveDate?,
+    onDateSelected: (PrimitiveDate?) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.formSpacedBy(),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    ) {
+        items(dateSuggestions) {
+            val isSelected = it.date == date
+            AppButton(
+                onClick = { onDateSelected(it.date) },
+                isSecondary = !isSelected,
+            ) {
+                Text(text = it.label)
+            }
+        }
     }
 }
 

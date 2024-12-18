@@ -53,7 +53,14 @@ fun appModule(context: Context) = DI.Module("appModule") {
         MemoryColorThemeRepository()
     }
     bind<OperationRepository>() with singleton {
-        RoomOperationRepository(instance(), instance(), instance(), instance(), instance())
+        RoomOperationRepository(
+            instance(),
+            instance(),
+            instance(),
+            instance(),
+            instance(),
+            instance()
+        )
     }
     bind<CategoryRepository>() with singleton {
         RoomCategoryRepository(instance())
