@@ -42,33 +42,26 @@ fun AppearanceBuilder(
 ) {
     Column(
         verticalArrangement = Arrangement.formSpacedBy(),
-        modifier = modifier
-            .formPadding(),
+        modifier = modifier,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.formSpacedBy(),
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.button_box_size))
-                    .background(currentTheme.colors.toBrush(), MaterialTheme.shapes.small)
-            ) {
-                AppIcon(
+        IconAndText(
+            icon = {
+                SquareBox(
+                    background = currentTheme.colors.toBrush(),
                     iconRef = currentIconRef,
-                    tint = MaterialTheme.colorScheme.secondary,
+                    tint = MaterialTheme.colorScheme.surfaceContainerHighest,
+                )
+            },
+            text = {
+                TitleAndText(
+                    stringResource(R.string.appearance),
+                    stringResource(R.string.appearance_description)
                 )
             }
-            TitleAndText(
-                stringResource(R.string.appearance),
-                stringResource(R.string.appearance_description)
-            )
-        }
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.medium)
                 .clip(MaterialTheme.shapes.medium),
         ) {
             var backgroundShown by remember { mutableStateOf(false) }
@@ -89,6 +82,7 @@ fun AppearanceBuilder(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.formSpacedBy(),
                     modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                         .formPadding()
                 ) {
                     Box(
@@ -125,6 +119,7 @@ fun AppearanceBuilder(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.formSpacedBy(),
                     modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                         .formPadding()
                 ) {
                     AppIcon(

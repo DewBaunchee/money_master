@@ -3,15 +3,15 @@ package by.varyvoda.android.moneymaster.ui.screen.account.edit
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,45 +23,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppButton
-import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
 import by.varyvoda.android.moneymaster.ui.component.CurrencyListPickerDialog
 import by.varyvoda.android.moneymaster.ui.component.FormBox
+import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountEditScreen(
     modifier: Modifier = Modifier,
     viewModel: AccountEditViewModel
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.account_create_title)) },
-                navigationIcon = {
-                    IconButton(onClick = { viewModel.onBackClick() }) {
-                        AppIcon(
-                            iconRef = IconRef.Back,
-                        )
-                    }
-                },
-            )
-        },
-        modifier = modifier
-    ) { innerPadding ->
-        AccountEditBody(
-            modifier = Modifier
-                .padding(innerPadding),
-            viewModel = viewModel
+    Column(
+        modifier = modifier,
+    ) {
+        MainTopBar(
+            titleId = R.string.create_account,
+            onBackClick = { viewModel.onBackClick() }
         )
+        AccountEditBody(viewModel = viewModel)
     }
 }
 
@@ -73,7 +59,7 @@ fun AccountEditBody(
     val currencies = viewModel.currencies.collectAsState().value
     val icons = viewModel.icons.collectAsState().value
     val colorThemes = viewModel.colorThemes.collectAsState().value
-    val (name, currency, initialBalance, icon, theme, iconSearchString) = viewModel.uiState.collectAsState().value
+    val (name, currency, initialBalance, iconRef, theme, iconSearchString) = viewModel.uiState.collectAsState().value
     var currencySelectionShown by remember { mutableStateOf(false) }
 
     FormBox(
@@ -88,86 +74,93 @@ fun AccountEditBody(
             }
         },
         modifier = modifier,
-    ) {
+    ) { buttonColumnHeightDp ->
         Column(
+            verticalArrangement = Arrangement.formSpacedBy(),
             modifier = Modifier
-                .formPadding(),
-            verticalArrangement = Arrangement.formSpacedBy()
+                .verticalScroll(rememberScrollState()),
         ) {
             AccountCard(
-                IconRef.Home,
+                iconRef = iconRef,
                 theme = theme,
                 title = name,
                 balance = initialBalance,
                 currency = currency,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .formPadding()
             )
-        }
-        TitledContent(title = { AppTitle(textId = R.string.general_information) }) {
-            AppTextField(
-                value = name,
-                label = { Text(text = stringResource(R.string.account_creation_name_field_label)) },
-                onValueChange = { viewModel.changeName(it) },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            AppTextField(
-                value = initialBalance,
-                onValueChange = { viewModel.changeInitialBalance(it) },
-                label = { Text(text = stringResource(R.string.account_creation_balance_field_label)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions { },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            AppTextField(
-                value = currency?.name ?: "",
-                onValueChange = {},
-                asButton = true,
-                label = {
-                    Text(
-                        text = stringResource(
-                            if (currency == null)
-                                R.string.select_currency
-                            else
-                                R.string.currency
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = { currencySelectionShown = true }),
-            )
-            if (currencySelectionShown) {
-                CurrencyListPickerDialog(
-                    currencies = currencies,
-                    isSelected = { it.code == currency?.code },
-                    onSelect = {
-                        currencySelectionShown = false
-                        viewModel.changeCurrency(it)
-                    },
-                    onDismissRequest = { currencySelectionShown = false },
+            TitledContent(
+                applyFormPadding = false,
+                title = { AppTitle(textId = R.string.general_information) },
+                modifier = Modifier.padding(horizontal = formPadding())
+            ) {
+                AppTextField(
+                    value = name,
+                    label = { Text(text = stringResource(R.string.account_creation_name_field_label)) },
+                    onValueChange = { viewModel.changeName(it) },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
+                AppTextField(
+                    value = initialBalance,
+                    onValueChange = { viewModel.changeInitialBalance(it) },
+                    label = { Text(text = stringResource(R.string.account_creation_balance_field_label)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                AppTextField(
+                    value = currency?.name ?: "",
+                    onValueChange = {},
+                    asButton = true,
+                    label = {
+                        Text(
+                            text = stringResource(
+                                if (currency == null)
+                                    R.string.select_currency
+                                else
+                                    R.string.currency
+                            )
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = { currencySelectionShown = true }),
+                )
+                if (currencySelectionShown) {
+                    CurrencyListPickerDialog(
+                        currencies = currencies,
+                        isSelected = { it.code == currency?.code },
+                        onSelect = {
+                            currencySelectionShown = false
+                            viewModel.changeCurrency(it)
+                        },
+                        onDismissRequest = { currencySelectionShown = false },
+                    )
+                }
             }
-        }
 
-        AppearanceBuilder(
-            icons = icons,
-            themes = colorThemes,
-            currentIconRef = icon,
-            currentTheme = theme,
-            onIconRefSelect = { viewModel.onSelectIcon(it) },
-            onThemeSelect = { viewModel.onSelectColorTheme(it) },
-            iconSearchString = iconSearchString,
-            onIconSearchStringChange = { viewModel.changeIconSearchString(it) }
-        )
+            AppearanceBuilder(
+                icons = icons,
+                themes = colorThemes,
+                currentIconRef = iconRef,
+                currentTheme = theme,
+                onIconRefSelect = { viewModel.onSelectIcon(it) },
+                onThemeSelect = { viewModel.onSelectColorTheme(it) },
+                iconSearchString = iconSearchString,
+                onIconSearchStringChange = { viewModel.changeIconSearchString(it) },
+                modifier = modifier
+                    .formPadding(),
+            )
+            Spacer(Modifier.height(buttonColumnHeightDp))
+        }
     }
 }
 

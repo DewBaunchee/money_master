@@ -13,11 +13,7 @@ import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 fun TitledContent(
     applyFormPadding: Boolean = true,
     modifier: Modifier = Modifier,
-    verticalArrangement: Arrangement.Vertical =
-        if (applyFormPadding)
-            Arrangement.formSpacedBy()
-        else
-            Arrangement.Top,
+    verticalArrangement: Arrangement.Vertical = Arrangement.formSpacedBy(),
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     title: @Composable ColumnScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,

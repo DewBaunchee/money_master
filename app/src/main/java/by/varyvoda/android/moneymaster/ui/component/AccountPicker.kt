@@ -1,14 +1,11 @@
 package by.varyvoda.android.moneymaster.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
-import by.varyvoda.android.moneymaster.ui.util.formPadding
+import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 
 @Composable
 fun AccountListPicker(
@@ -22,7 +19,7 @@ fun AccountListPicker(
         modifier = modifier,
     ) {
         AccountOptionButton(
-            accounts = it,
+            account = it,
             isSelected = isSelected(it),
             onClick = { onSelect(it) }
         )
@@ -31,23 +28,44 @@ fun AccountListPicker(
 
 @Composable
 fun AccountOptionButton(
-    accounts: AccountDetails,
+    account: AccountDetails,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ListPickerOption(
-        item = accounts,
+        item = account,
         isSelected = isSelected,
         onClick = onClick,
         modifier = modifier,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_and_label_row_padding))
-        ) {
-            Text(text = accounts.model.name)
-        }
+        AccountIconAndName(it)
     }
+}
+
+@Composable
+fun AccountIcon(
+    account: AccountDetails,
+    modifier: Modifier = Modifier,
+) {
+    SquareBox(
+        background = account.model.theme.colors.toBrush(),
+        iconRef = account.model.iconRef,
+        tint = MaterialTheme.colorScheme.secondary,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun AccountIconAndName(
+    account: AccountDetails,
+    modifier: Modifier = Modifier,
+) {
+    IconAndText(
+        icon = { AccountIcon(account = account) },
+        text = { Text(text = account.model.name) },
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -61,21 +79,17 @@ fun AccountListPickerDialog(
     searchString: String = "",
     onSearchStringChange: (String) -> Unit = {},
 ) {
-    BottomDialog(onDismissRequest) {
-        TitledContent(title = { AppTitle(R.string.account) }) {
-            SearchableContent(
-                searchEnabled = searchEnabled,
-                searchString = searchString,
-                onSearchStringChange = onSearchStringChange,
-                modifier = modifier
-                    .formPadding(),
-            ) {
-                AccountListPicker(
-                    accounts = accounts,
-                    isSelected = isSelected,
-                    onSelect = onSelect,
-                )
-            }
-        }
+    TitledSearchableBottomDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        searchEnabled = searchEnabled,
+        searchString = searchString,
+        onSearchStringChange = onSearchStringChange,
+    ) {
+        AccountListPicker(
+            accounts = accounts,
+            isSelected = isSelected,
+            onSelect = onSelect,
+        )
     }
 }

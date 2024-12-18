@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
+import by.varyvoda.android.moneymaster.ui.screen.more.MoreDestination
 import kotlin.reflect.KClass
 
 fun NavController.isCurrent(kClass: KClass<out Any>) =
@@ -50,8 +51,8 @@ fun MainBottomBar(
             textId = R.string.history,
         )
         MainBottomBarButton(
-            isSelected = false,
-            onClick = {},
+            isSelected = navController.isCurrent(MoreDestination::class),
+            onClick = { navController.navigate(MoreDestination) },
             iconRef = IconRef.More,
             textId = R.string.more,
         )

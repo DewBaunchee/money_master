@@ -65,27 +65,28 @@ fun AccountCard(
                     .formPadding()
                     .fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.small),
-                    ) {
-                        AppIcon(
-                            iconRef = iconRef,
-                            tint = Color.White,
+                IconAndText(
+                    icon = {
+                        Box(
                             modifier = Modifier
-                                .background(Color(1f, 1f, 1f, 0.2f))
-                                .padding(4.dp)
+                                .clip(MaterialTheme.shapes.small),
+                        ) {
+                            AppIcon(
+                                iconRef = iconRef,
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .background(Color(1f, 1f, 1f, 0.2f))
+                                    .padding(4.dp)
+                            )
+                        }
+                    },
+                    text = {
+                        Text(
+                            text = title.ifBlank { stringResource(R.string.account_creation_default_card_title) },
+                            color = Color.White
                         )
                     }
-                    Text(
-                        text = title.ifBlank { stringResource(R.string.account_creation_default_card_title) },
-                        color = Color.White
-                    )
-                }
+                )
                 Row(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -95,7 +96,7 @@ fun AccountCard(
                     Column {
                         Text(
                             text = if (balance.isBlank()) "" else stringResource(R.string.amount),
-                            color = Color(0xFFF1F3F6),
+                            color = Color.White,
                             style = MaterialTheme.typography.labelMedium
                         )
                         MoneyText(
@@ -108,7 +109,7 @@ fun AccountCard(
                     if (currency != null) {
                         Text(
                             text = currency.code,
-                            color = Color(0xFFF1F3F6),
+                            color = Color.White,
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

@@ -1,18 +1,14 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.ExpenseDetails
@@ -31,16 +27,12 @@ import by.varyvoda.android.moneymaster.util.valueOrNull
 fun OperationList(
     operations: List<OperationDetails>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_item_space)),
+    ListPicker(
+        items = operations,
         modifier = modifier,
-        contentPadding = contentPadding
     ) {
-        items(operations) {
-            OperationListItem(it)
-        }
+        OperationListItem(it)
     }
 }
 
@@ -55,6 +47,7 @@ fun OperationListItem(
             val accounts = accounts.valueOrNull()
             val currency = accounts?.currency?.valueOrNull()
             IncomeExpenseOperationListItem(
+                operation = operation,
                 income = true,
                 category = category,
                 accounts = accounts,
@@ -69,6 +62,7 @@ fun OperationListItem(
             val accounts = accounts.valueOrNull()
             val currency = accounts?.currency?.valueOrNull()
             IncomeExpenseOperationListItem(
+                operation = operation,
                 income = false,
                 category = category,
                 accounts = accounts,
@@ -82,6 +76,7 @@ fun OperationListItem(
 
 @Composable
 fun IncomeExpenseOperationListItem(
+    operation: OperationDetails,
     income: Boolean,
     category: Category?,
     accounts: AccountDetails?,
@@ -93,30 +88,36 @@ fun IncomeExpenseOperationListItem(
         shadowElevation = dimensionResource(R.dimen.soft_elevation),
         shape = MaterialTheme.shapes.small,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .padding(dimensionResource(R.dimen.operation_list_item_space))
+        ListPickerOption(
+            item = operation,
+            isSelected = false,
+            onClick = {},
+            modifier = modifier,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.formSpacedBy(),
                 modifier = Modifier
-                    .weight(1f)
             ) {
-                CategoryView(category = category, onlyIcon = true)
-                if (category != null)
-                    TitleAndText(
-                        category.name,
-                        accounts?.model?.name ?: ""
-                    )
+                IconAndText(
+                    icon = { CategoryBox(category = category, onlyIcon = true) },
+                    text = {
+                        if (category != null)
+                            TitleAndText(
+                                category.name,
+                                accounts?.model?.name ?: ""
+                            )
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                MoneyText(
+                    currency = currency,
+                    amount = if (income) amount else -amount,
+                    color = if (income) Positive else Negative,
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
-            MoneyText(
-                currency = currency,
-                amount = if (income) amount else -amount,
-                color = if (income) Positive else Negative,
-                style = MaterialTheme.typography.titleMedium,
-            )
         }
     }
 }
@@ -144,7 +145,6 @@ fun TitledOperationList(
     ) {
         OperationList(
             operations = operations,
-            contentPadding = PaddingValues(formPadding()),
         )
     }
 }

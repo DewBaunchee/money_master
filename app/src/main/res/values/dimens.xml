@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="small_padding">8.dp</dimen>
+
     <dimen name="form_padding">16.dp</dimen>
     <dimen name="form_spaced_by">16.dp</dimen>
 
-    <dimen name="icon_button_padding">8.dp</dimen>
+    <dimen name="square_box_icon_padding">8.dp</dimen>
     <dimen name="icon_button_space">4.dp</dimen>
 
     <dimen name="list_item_padding">8.dp</dimen>
     <dimen name="list_item_space">4.dp</dimen>
-    <dimen name="operation_list_item_space">8.dp</dimen>
 
     <dimen name="icon_and_label_row_padding">8.dp</dimen>
 
@@ -16,7 +17,7 @@
 
     <dimen name="full_screen_dialog_bottom_padding">32.dp</dimen>
 
-    <dimen name="button_box_size">48.dp</dimen>
+    <dimen name="square_box_size">48.dp</dimen>
 
     <dimen name="icon_size">16.dp</dimen>
     <dimen name="large_icon_size">24.dp</dimen>
@@ -26,5 +27,4 @@
 
     <dimen name="dot_indicator_dot_size">8.dp</dimen>
     <dimen name="dot_indicator_space">8.dp</dimen>
-    <dimen name="small_padding">8.dp</dimen>
 </resources>

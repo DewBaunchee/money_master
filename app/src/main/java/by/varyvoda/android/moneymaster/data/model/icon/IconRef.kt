@@ -3,6 +3,7 @@ package by.varyvoda.android.moneymaster.data.model.icon
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.History
@@ -55,6 +56,7 @@ data class IconRef(
         val Statistics = Icons.Filled.QueryStats.toIconRef("Statistics")
         val History = Icons.Filled.History.toIconRef("History")
         val More = Icons.Filled.MoreHoriz.toIconRef("More")
+        val CreateAccount = Icons.Filled.AddCard.toIconRef()
     }
 
     suspend fun load() = loader()

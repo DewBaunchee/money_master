@@ -1,7 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -94,30 +92,18 @@ fun AppIconButton(
                     clickable(enabled = enabled, onClick = onClick)
                 else this
             }
-            .padding(if (text.isNullOrBlank()) 0.dp else dimensionResource(R.dimen.icon_button_padding))
+            .padding(if (text.isNullOrBlank()) 0.dp else dimensionResource(R.dimen.square_box_icon_padding))
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_button_space)),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        background ?: MaterialTheme.colorScheme.background.toBrush(),
-                        MaterialTheme.shapes.small
-                    )
-                    .size(dimensionResource(R.dimen.button_box_size)),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (iconRef != null) {
-                    AppIcon(
-                        iconRef = iconRef,
-                        tint = tint,
-                        modifier = Modifier.padding(dimensionResource(R.dimen.icon_button_padding)),
-                    )
-                }
-            }
+            SquareBox(
+                background,
+                iconRef = iconRef,
+                tint = tint,
+            )
             if (!text.isNullOrBlank()) {
                 Text(
                     text = text,

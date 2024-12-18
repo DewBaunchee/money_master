@@ -26,7 +26,7 @@ fun CategoryPicker(
         items = categories,
         modifier = modifier,
     ) {
-        CategoryView(
+        CategoryBox(
             category = it,
             onClick = { onSelect(it) },
             isSelected = isSelected(it),
@@ -35,7 +35,7 @@ fun CategoryPicker(
 }
 
 @Composable
-fun CategoryView(
+fun CategoryBox(
     category: Category?,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
@@ -65,7 +65,7 @@ fun CompactCategoryPicker(
         modifier = modifier
             .height(100.dp)
     ) {
-        CategoryView(
+        CategoryBox(
             category = it,
             onClick = { onSelect(it) },
             isSelected = isSelected(it),

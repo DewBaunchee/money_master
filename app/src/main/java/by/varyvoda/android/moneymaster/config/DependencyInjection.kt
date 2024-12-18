@@ -30,6 +30,7 @@ import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditVi
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
+import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -74,6 +75,10 @@ fun viewModelModule() = DI.Module("viewModelModule") {
     bind<HomeViewModel>() with singleton {
         HomeViewModel(instance(), instance())
     }
+    bind<MoreViewModel>() with singleton {
+        MoreViewModel()
+    }
+
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())
     }

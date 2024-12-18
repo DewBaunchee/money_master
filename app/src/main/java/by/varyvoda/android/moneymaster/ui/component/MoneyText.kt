@@ -15,13 +15,14 @@ fun MoneyText(
     currency: Currency?,
     amount: Money?,
     modifier: Modifier = Modifier,
+    defaultAmountString: String = "",
     color: Color = Color.Unspecified,
     style: TextStyle = LocalTextStyle.current,
 ) {
     val sign = if (amount != null && amount < 0) "-" else ""
     val symbol = currency?.symbol ?: ""
     Text(
-        text = "$sign$symbol${amount?.absoluteValue ?: 0}",
+        text = "$sign$symbol${amount?.absoluteValue ?: defaultAmountString}",
         color = color,
         style = style,
         modifier = modifier,

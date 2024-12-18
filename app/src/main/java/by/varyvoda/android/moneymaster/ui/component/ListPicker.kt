@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,16 +18,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun <T> ListPicker(
     items: List<T>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(formPadding()),
     itemContent: @Composable LazyItemScope.(item: T) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_item_space)),
-        modifier = modifier
+        modifier = modifier,
+        contentPadding = contentPadding,
     ) {
         this.items(items, itemContent = itemContent)
     }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.service.icons.IconRefMap
 
@@ -73,25 +72,22 @@ fun IconPickerDialog(
     isSelected: (IconRef) -> Boolean,
     onSelect: (IconRef) -> Unit,
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     searchEnabled: Boolean = true,
     searchString: String = "",
     onSearchStringChange: (String) -> Unit = {},
 ) {
-    BottomDialog(
+    TitledSearchableBottomDialog(
         onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        searchEnabled = searchEnabled,
+        searchString = searchString,
+        onSearchStringChange = onSearchStringChange,
     ) {
-        TitledContent(title = { AppTitle(textId = R.string.icon) }) {
-            SearchableContent(
-                searchEnabled = searchEnabled,
-                searchString = searchString,
-                onSearchStringChange = onSearchStringChange,
-            ) {
-                CategorizedIconPicker(
-                    iconRefMap = iconRefMap,
-                    isSelected = isSelected,
-                    onSelect = onSelect
-                )
-            }
-        }
+        CategorizedIconPicker(
+            iconRefMap = iconRefMap,
+            isSelected = isSelected,
+            onSelect = onSelect
+        )
     }
 }

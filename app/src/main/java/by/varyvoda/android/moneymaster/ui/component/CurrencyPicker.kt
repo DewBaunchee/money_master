@@ -1,12 +1,8 @@
 package by.varyvoda.android.moneymaster.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 
 @Composable
@@ -23,7 +19,7 @@ fun CurrencyListPicker(
         CurrencyOptionButton(
             currency = it,
             isSelected = isSelected(it),
-            onClick = { onSelect(it) }
+            onClick = { onSelect(it) },
         )
     }
 }
@@ -41,11 +37,10 @@ fun CurrencyOptionButton(
         onClick = onClick,
         modifier = modifier,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_and_label_row_padding))
-        ) {
-            Text(text = currency.name)
-        }
+        IconAndText(
+            icon = {},
+            text = { Text(text = "${currency.name} (${currency.symbol})") }
+        )
     }
 }
 
@@ -60,19 +55,17 @@ fun CurrencyListPickerDialog(
     searchString: String = "",
     onSearchStringChange: (String) -> Unit = {},
 ) {
-    BottomDialog(onDismissRequest) {
-        TitledContent(title = { AppTitle(R.string.currency) }) {
-            SearchableContent(
-                searchEnabled = searchEnabled,
-                searchString = searchString,
-                onSearchStringChange = onSearchStringChange,
-            ) {
-                CurrencyListPicker(
-                    currencies = currencies,
-                    isSelected = isSelected,
-                    onSelect = onSelect,
-                )
-            }
-        }
+    TitledSearchableBottomDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        searchEnabled = searchEnabled,
+        searchString = searchString,
+        onSearchStringChange = onSearchStringChange,
+    ) {
+        CurrencyListPicker(
+            currencies = currencies,
+            isSelected = isSelected,
+            onSelect = onSelect,
+        )
     }
 }

@@ -35,6 +35,9 @@ import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.Operatio
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
+import by.varyvoda.android.moneymaster.ui.screen.more.MoreDestination
+import by.varyvoda.android.moneymaster.ui.screen.more.MoreScreen
+import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
 import org.kodein.di.DI
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
@@ -59,6 +62,11 @@ fun NavComponent(
                 bottomBarVisible = true
                 HomeScreen(viewModel = it)
             }
+            route<MoreDestination, MoreViewModel>(di, navController) {
+                bottomBarVisible = true
+                MoreScreen(viewModel = it)
+            }
+
             route<AccountEditDestination, AccountEditViewModel>(di, navController) {
                 bottomBarVisible = false
                 AccountEditScreen(viewModel = it)

@@ -86,6 +86,7 @@ class AccountEditViewModel(
             name.isNotBlank()
                     && currency != null
                     && theme != ColorTheme.DEFAULT
+                    && iconRef != IconRef.Default
         }
     }
 
