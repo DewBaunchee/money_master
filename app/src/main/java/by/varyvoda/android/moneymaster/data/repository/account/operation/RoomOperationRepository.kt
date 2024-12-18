@@ -14,6 +14,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
+import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.util.anyNotNull
@@ -44,16 +45,25 @@ class RoomOperationRepository(
     }
 
     override fun getById(id: UUID): Flow<Operation?> =
-        combineDaoResults { it.getById(id) }.map { it.singleNotNullOperation() }
+        combineDaoResults { it.getById(id) }
+            .map { it.singleNotNullOperation() }
 
     override fun getAll(): Flow<List<Operation>> =
-        combineDaoResults { it.getAll() }.map { combineLists(it) }
+        combineDaoResults { it.getAll() }
+            .combineListsAndSort()
 
     override fun getDetailsById(id: UUID): Flow<OperationDetails?> =
-        getById(id).map { it?.details() }
+        getById(id)
+            .map { it?.details() }
 
     override fun getAllDetails(): Flow<List<OperationDetails>> =
-        getAll().map { list -> list.map { it.details() } }
+        getAll()
+            .mapToDetailsList()
+
+    override fun getAllDetailsByAccountId(accountId: Id): Flow<List<OperationDetails>> =
+        combineDaoResults { it.getByAccountId(accountId) }
+            .combineListsAndSort()
+            .mapToDetailsList()
 
     private fun Operation.details(): OperationDetails = when (this) {
         is BalanceEdit -> details()
@@ -83,6 +93,12 @@ class RoomOperationRepository(
     private fun Transfer.details(): TransferDetails =
         TransferDetails(this)
 
+    private fun Flow<Array<List<Operation>>>.combineListsAndSort() = map { combineLists(it).sort() }
+
+    private fun Flow<List<Operation>>.mapToDetailsList() = map { list -> list.map { it.details() } }
+
+    private fun List<Operation>.sort() = sortedBy { it.date }
+
     private inline fun <reified R> allDaoRun(action: (OperationDao<out Operation>) -> R) =
         arrayOf(
             action(balanceEditDao),
@@ -98,9 +114,8 @@ class RoomOperationRepository(
             transform = ::arrayOf,
         )
 
-    private fun combineLists(lists: Array<List<Operation>>): List<Operation> =
+    private fun combineLists(lists: Array<List<Operation>>) =
         lists.reduce { left, right -> left.plus(right) }
-            .sortedBy { it.date }
 
     private fun Array<Operation?>.singleNotNullOperation() =
         takeIf { anyNotNull(it) }?.single { it != null }

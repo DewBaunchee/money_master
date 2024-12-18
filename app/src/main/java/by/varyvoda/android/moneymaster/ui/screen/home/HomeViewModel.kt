@@ -7,8 +7,12 @@ import by.varyvoda.android.moneymaster.data.repository.account.operation.Operati
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
@@ -35,17 +39,21 @@ class HomeViewModel(
             )
         }
 
-    val operations = operationRepository.getAllDetails()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val operations = uiState
+        .map { it.currentAccountId }
+        .distinctUntilChanged()
+        .flatMapLatest {
+            it?.let {
+                operationRepository.getAllDetailsByAccountId(it)
+            } ?: flowOf(null)
+        }
         .stateInThis(null)
 
     val currentAccount get() = accounts.value?.find { it.id == uiState.value.currentAccountId }
 
     fun changeCurrentAccount(accountId: Id) {
         this._uiState.update { it.copy(currentAccountId = accountId) }
-    }
-
-    fun onAccountCreateClick() {
-        navigateTo(AccountEditDestination())
     }
 
     fun onAddIncomeClick() {

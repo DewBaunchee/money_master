@@ -12,8 +12,8 @@ import java.util.UUID
 data class Expense(
     @PrimaryKey
     override val id: UUID,
-    override val accountId: Id,
     override val date: PrimitiveDate,
+    val accountId: Id,
     val amount: Money,
     val categoryId: Id,
     val description: String,

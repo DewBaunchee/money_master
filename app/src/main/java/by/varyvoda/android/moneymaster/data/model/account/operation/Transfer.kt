@@ -12,9 +12,9 @@ import java.util.UUID
 data class Transfer(
     @PrimaryKey
     override val id: UUID,
-    override val accountId: Id,
     override val date: PrimitiveDate,
-    val relatedAccountId: Id,
+    val sourceAccountId: Id,
+    val destinationAccountId: Id,
     val amount: Money
 ) : Operation {
 

@@ -1,7 +1,5 @@
 package by.varyvoda.android.moneymaster.ui.navigation
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -12,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,7 +39,6 @@ import org.kodein.di.DI
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NavComponent(
     navController: NavHostController,
@@ -53,12 +49,11 @@ fun NavComponent(
 
     Scaffold(
         bottomBar = { MainBottomBar(visible = bottomBarVisible, navController = navController) },
-        contentWindowInsets = WindowInsets(0.dp),
-    ) {
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = HomeDestination,
-            modifier = modifier.padding(bottom = 60.dp),
+            modifier = modifier.padding(innerPadding),
         ) {
             route<HomeDestination, HomeViewModel>(di, navController) {
                 bottomBarVisible = true

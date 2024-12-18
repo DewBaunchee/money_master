@@ -2,7 +2,6 @@ package by.varyvoda.android.moneymaster.data.dao.account.operation
 
 import androidx.room.Dao
 import androidx.room.Query
-import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +19,6 @@ interface TransferDao : OperationDao<Transfer> {
     @Query("SELECT * FROM transfer")
     override fun getAll(): Flow<List<Transfer>>
 
-    @Query("SELECT * FROM transfer WHERE accountId = :accountId")
-    fun getByAccountId(accountId: Id): Flow<List<Transfer>>
+    @Query("SELECT * FROM transfer WHERE sourceAccountId = :accountId OR destinationAccountId = :accountId")
+    override fun getByAccountId(accountId: Id): Flow<List<Transfer>>
 }

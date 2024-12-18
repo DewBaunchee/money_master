@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,9 +23,9 @@ import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.ui.component.AccountGallery
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
-import by.varyvoda.android.moneymaster.ui.component.AccountGallery
 import by.varyvoda.android.moneymaster.ui.component.MoneyText
 import by.varyvoda.android.moneymaster.ui.component.TitledOperationList
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
@@ -38,50 +38,50 @@ fun HomeScreen(
 ) {
     val accounts = viewModel.accounts.collectAsState().value
     val operations = viewModel.operations.collectAsState().value
-    val uiState = viewModel.uiState.collectAsState().value
 
     if (accounts == null) return
 
     val currentAccount = viewModel.currentAccount
 
-    Scaffold(
-        topBar = { HomeTopBar() },
-    ) { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding)) {
-            Column(
-                modifier = Modifier
-                    .formPadding()
-            ) {
-                Text(
-                    text = stringResource(R.string.total_balance),
-                    style = MaterialTheme.typography.labelMedium
-                )
-                MoneyText(
-                    currency = Currency(code = "USD", "dollar", "$"),
-                    amount = 2000,
-                    style = MaterialTheme.typography.displaySmall
-                )
-            }
-
-            currentAccount?.let {
-                AccountGallery(
-                    accounts = accounts,
-                    currentAccount = currentAccount,
-                    onSelect = { viewModel.changeCurrentAccount(it.id) }
-                )
-            }
-            ActionBar(
-                onAddIncome = { viewModel.onAddIncomeClick() },
-                onAddExpense = { viewModel.onAddExpenseClick() },
-                modifier = Modifier
-                    .formPadding()
-                    .fillMaxWidth()
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        HomeTopBar()
+        Column(
+            modifier = Modifier
+                .padding(horizontal = formPadding())
+        ) {
+            Text(
+                text = stringResource(R.string.total_balance),
+                style = MaterialTheme.typography.labelMedium
             )
-            TitledOperationList(
-                operations = operations ?: listOf(),
-                onViewAllClick = {},
+            MoneyText(
+                currency = Currency(code = "USD", "dollar", "$"),
+                amount = 2000,
+                style = MaterialTheme.typography.displaySmall,
             )
         }
+
+        currentAccount?.let {
+            AccountGallery(
+                accounts = accounts,
+                currentAccount = currentAccount,
+                onSelect = { viewModel.changeCurrentAccount(it.id) }
+            )
+        }
+        ActionBar(
+            onAddIncome = { viewModel.onAddIncomeClick() },
+            onAddExpense = { viewModel.onAddExpenseClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        TitledOperationList(
+            operations = operations ?: listOf(),
+            onViewAllClick = {},
+            modifier = Modifier
+                .weight(1f)
+        )
     }
 }
 

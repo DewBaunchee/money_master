@@ -20,5 +20,5 @@ interface BalanceEditDao : OperationDao<BalanceEdit> {
     override fun getAll(): Flow<List<BalanceEdit>>
 
     @Query("SELECT * FROM balance_edit WHERE accountId = :accountId")
-    fun getByAccountId(accountId: Id): Flow<List<BalanceEdit>>
+    override fun getByAccountId(accountId: Id): Flow<List<BalanceEdit>>
 }

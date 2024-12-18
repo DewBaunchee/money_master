@@ -2,7 +2,6 @@ package by.varyvoda.android.moneymaster.data.dao.account.operation
 
 import androidx.room.Dao
 import androidx.room.Query
-import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
@@ -21,5 +20,5 @@ interface ExpenseDao : OperationDao<Expense> {
     override fun getAll(): Flow<List<Expense>>
 
     @Query("SELECT * FROM expense WHERE accountId = :accountId")
-    fun getByAccountId(accountId: Id): Flow<List<Expense>>
+    override fun getByAccountId(accountId: Id): Flow<List<Expense>>
 }

@@ -1,6 +1,7 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.ExpenseDetails
@@ -21,6 +23,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.ui.theme.Negative
 import by.varyvoda.android.moneymaster.ui.theme.Positive
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 import by.varyvoda.android.moneymaster.util.valueOrNull
 
@@ -28,10 +31,12 @@ import by.varyvoda.android.moneymaster.util.valueOrNull
 fun OperationList(
     operations: List<OperationDetails>,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_item_space)),
         modifier = modifier,
+        contentPadding = contentPadding
     ) {
         items(operations) {
             OperationListItem(it)
@@ -108,7 +113,7 @@ fun IncomeExpenseOperationListItem(
             }
             MoneyText(
                 currency = currency,
-                amount = if(income) amount else -amount,
+                amount = if (income) amount else -amount,
                 color = if (income) Positive else Negative,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -123,14 +128,23 @@ fun TitledOperationList(
     modifier: Modifier = Modifier,
 ) {
     TitledContent(
+        applyFormPadding = false,
         title = {
             AppTitleAndViewAll(
                 titleId = R.string.operations,
-                onViewAllClick = onViewAllClick
+                onViewAllClick = onViewAllClick,
+                modifier = Modifier.padding(
+                    top = formPadding(),
+                    start = formPadding(),
+                    end = formPadding(),
+                ),
             )
         },
         modifier = modifier,
     ) {
-        OperationList(operations = operations)
+        OperationList(
+            operations = operations,
+            contentPadding = PaddingValues(formPadding()),
+        )
     }
 }

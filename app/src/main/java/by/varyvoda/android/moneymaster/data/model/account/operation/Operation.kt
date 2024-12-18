@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.data.model.account.operation
 
-import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import java.util.UUID
@@ -20,8 +19,6 @@ interface Operation {
     }
 
     val id: UUID
-
-    val accountId: Id
 
     val date: PrimitiveDate
 

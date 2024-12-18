@@ -184,7 +184,7 @@ private suspend fun insertOperations(
 ) {
     val accounts = accountRepository.getAll().first()
     val categories = categoryRepository.getAll().first()
-    repeat(2) {
+    repeat(6) {
         operationRepository.insert(
             Income(
                 id = UUID.randomUUID(),
@@ -196,7 +196,7 @@ private suspend fun insertOperations(
             )
         )
     }
-    repeat(4) {
+    repeat(6) {
         operationRepository.insert(
             Expense(
                 id = UUID.randomUUID(),
