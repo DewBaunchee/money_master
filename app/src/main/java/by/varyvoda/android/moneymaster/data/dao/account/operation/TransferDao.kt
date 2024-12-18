@@ -6,18 +6,19 @@ import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
-interface TransferDao : BaseDao<Transfer> {
+interface TransferDao : OperationDao<Transfer> {
 
     @Query("DELETE FROM transfer WHERE id = :id")
-    suspend fun deleteById(id: Id)
+    override suspend fun deleteById(id: UUID)
 
     @Query("SELECT * FROM transfer WHERE id = :id")
-    fun getById(id: Id): Flow<Transfer>
+    override fun getById(id: UUID): Flow<Transfer?>
 
     @Query("SELECT * FROM transfer")
-    fun getAll(): Flow<List<Transfer>>
+    override fun getAll(): Flow<List<Transfer>>
 
     @Query("SELECT * FROM transfer WHERE accountId = :accountId")
     fun getByAccountId(accountId: Id): Flow<List<Transfer>>

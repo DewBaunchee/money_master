@@ -3,15 +3,20 @@ package by.varyvoda.android.moneymaster.config
 import androidx.compose.ui.graphics.Color
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
+import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
+import by.varyvoda.android.moneymaster.data.model.domain.now
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import kotlinx.coroutines.flow.first
 import org.kodein.di.DI
 import org.kodein.di.instance
+import java.util.UUID
 
 suspend fun initializeDependencies(di: DI) {
     val iconsService: IconsService by di.instance()
@@ -24,6 +29,9 @@ suspend fun initializeDependencies(di: DI) {
 
     val categoryRepository: CategoryRepository by di.instance()
     insertCategories(categoryRepository, colorThemeRepository, iconsService)
+
+    val operationRepository: OperationRepository by di.instance()
+    insertOperations(operationRepository, accountRepository, categoryRepository)
 }
 
 private suspend fun insertThemes(repository: ColorThemeRepository) {
@@ -167,4 +175,37 @@ private suspend fun insertCategories(
             colorTheme = themes.random(),
         )
     )
+}
+
+private suspend fun insertOperations(
+    operationRepository: OperationRepository,
+    accountRepository: AccountRepository,
+    categoryRepository: CategoryRepository
+) {
+    val accounts = accountRepository.getAll().first()
+    val categories = categoryRepository.getAll().first()
+    repeat(2) {
+        operationRepository.insert(
+            Income(
+                id = UUID.randomUUID(),
+                accountId = accounts.random().id,
+                date = now(),
+                amount = (1L..200L).random(),
+                categoryId = categories.random().id,
+                description = "Description",
+            )
+        )
+    }
+    repeat(4) {
+        operationRepository.insert(
+            Expense(
+                id = UUID.randomUUID(),
+                accountId = accounts.random().id,
+                date = now(),
+                amount = (1L..200L).random(),
+                categoryId = categories.random().id,
+                description = "Description",
+            )
+        )
+    }
 }

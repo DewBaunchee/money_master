@@ -118,7 +118,7 @@ fun IncomeExpenseEditBody(
                 ) {
                     var accountSelectionShown by remember { mutableStateOf(false) }
                     AppTextField(
-                        value = accountDetails?.account?.name ?: "",
+                        value = accountDetails?.model?.name ?: "",
                         onValueChange = {},
                         asButton = true,
                         label = {

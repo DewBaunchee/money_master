@@ -25,7 +25,7 @@ fun <T> ListPicker(
     itemContent: @Composable LazyItemScope.(item: T) -> Unit,
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_dialog_item_space)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.list_item_space)),
         modifier = modifier
     ) {
         this.items(items, itemContent = itemContent)
@@ -48,7 +48,7 @@ fun <T> ListPickerOption(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(enabled = true, onClick = onClick)
-                .padding(dimensionResource(R.dimen.list_dialog_item_padding))
+                .padding(dimensionResource(R.dimen.list_item_padding))
         ) {
             itemContent(item)
             if (isSelected) {

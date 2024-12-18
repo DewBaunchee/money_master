@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
@@ -45,7 +45,7 @@ fun AccountOptionButton(
         Row(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_and_label_row_padding))
         ) {
-            Text(text = accountDetails.account.name)
+            Text(text = accountDetails.model.name)
         }
     }
 }

@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
     background = Background,
 //    onBackground = ColorLightTokens.OnBackground,
 //
-//    surface = ColorLightTokens.Surface,
+    surface = Surface,
 //    onSurface = ColorLightTokens.OnSurface,
 //    surfaceVariant = ColorLightTokens.SurfaceVariant,
 //    onSurfaceVariant = ColorLightTokens.OnSurfaceVariant,

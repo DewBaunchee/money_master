@@ -20,7 +20,7 @@ class RoomCategoryRepository(
 
     override suspend fun deleteById(id: Id) = dao.deleteById(id)
 
-    override fun getById(id: Id): Flow<Category> = dao.getById(id)
+    override fun getById(id: Id): Flow<Category?> = dao.getById(id)
 
     override fun getAll(): Flow<List<Category>> = dao.getAll()
 

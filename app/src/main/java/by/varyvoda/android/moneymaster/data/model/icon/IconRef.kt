@@ -5,11 +5,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.SettingsInputSvideo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,6 +52,9 @@ data class IconRef(
         val Notifications = Icons.Filled.Notifications.toIconRef("Notifications")
         val AddIncome = Icons.Filled.KeyboardArrowUp.toIconRef("Add income")
         val AddExpense = Icons.Filled.KeyboardArrowDown.toIconRef("Add expense")
+        val Statistics = Icons.Filled.QueryStats.toIconRef("Statistics")
+        val History = Icons.Filled.History.toIconRef("History")
+        val More = Icons.Filled.MoreHoriz.toIconRef("More")
     }
 
     suspend fun load() = loader()

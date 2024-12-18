@@ -24,29 +24,31 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
+import by.varyvoda.android.moneymaster.ui.component.MoneyText
+import by.varyvoda.android.moneymaster.ui.component.TitledOperationList
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
 import by.varyvoda.android.moneymaster.ui.util.formPadding
-import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val accounts = viewModel.accountDetails.collectAsState().value
+    val accounts = viewModel.accounts.collectAsState().value
+    val operations = viewModel.operations.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
 
     if (accounts == null) return
 
     Scaffold(
-        topBar = { HomeTopBar() }
+        topBar = { HomeTopBar() },
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {
             CardGallery(
@@ -60,6 +62,10 @@ fun HomeScreen(
                 modifier = Modifier
                     .formPadding()
                     .fillMaxWidth()
+            )
+            TitledOperationList(
+                operations = operations ?: listOf(),
+                onViewAllClick = {},
             )
         }
     }
@@ -120,11 +126,9 @@ fun CardGallery(
                 text = stringResource(R.string.total_balance),
                 style = MaterialTheme.typography.labelMedium
             )
-            Text(
-                text = makeMoneyString(
-                    money = totalBalance.toString(),
-                    currency = totalBalanceCurrency
-                ),
+            MoneyText(
+                currency = totalBalanceCurrency,
+                amount = totalBalance,
                 style = MaterialTheme.typography.displaySmall
             )
         }
@@ -137,11 +141,11 @@ fun CardGallery(
             items(accountDetails) {
                 Spacer(modifier = Modifier.width(formPadding()))
                 AccountCard(
-                    iconRef = it.account.iconRef,
-                    theme = it.account.theme,
-                    title = it.account.name,
-                    balance = it.account.currentBalance.toString(),
-                    currency = it.currency,
+                    iconRef = it.model.iconRef,
+                    theme = it.model.theme,
+                    title = it.model.name,
+                    balance = it.model.currentBalance.toString(),
+                    currency = it.currency.collectAsState(null).value,
                     modifier = Modifier
                         .width(350.dp)
                 )

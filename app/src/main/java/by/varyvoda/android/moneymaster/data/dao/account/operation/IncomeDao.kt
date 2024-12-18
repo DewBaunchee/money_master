@@ -6,18 +6,19 @@ import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
-interface IncomeDao : BaseDao<Income> {
+interface IncomeDao : OperationDao<Income> {
 
     @Query("DELETE FROM income WHERE id = :id")
-    suspend fun deleteById(id: Id)
+    override suspend fun deleteById(id: UUID)
 
     @Query("SELECT * FROM income WHERE id = :id")
-    fun getById(id: Id): Flow<Income>
+    override fun getById(id: UUID): Flow<Income?>
 
     @Query("SELECT * FROM income")
-    fun getAll(): Flow<List<Income>>
+    override fun getAll(): Flow<List<Income>>
 
     @Query("SELECT * FROM income WHERE accountId = :accountId")
     fun getByAccountId(accountId: Id): Flow<List<Income>>

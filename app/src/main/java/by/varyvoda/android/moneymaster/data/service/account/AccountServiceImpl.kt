@@ -10,6 +10,7 @@ import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
+import java.util.UUID
 
 class AccountServiceImpl(
     private val accountRepository: AccountRepository,
@@ -45,6 +46,7 @@ class AccountServiceImpl(
     ) {
         operationRepository.insert(
             Income(
+                id = UUID.randomUUID(),
                 accountId = accountId,
                 amount = amount,
                 categoryId = categoryId,
@@ -65,6 +67,7 @@ class AccountServiceImpl(
     ) {
         operationRepository.insert(
             Expense(
+                id = UUID.randomUUID(),
                 accountId = accountId,
                 amount = amount,
                 categoryId = categoryId,

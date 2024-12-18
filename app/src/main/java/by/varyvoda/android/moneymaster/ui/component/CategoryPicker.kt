@@ -1,16 +1,12 @@
 package by.varyvoda.android.moneymaster.ui.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,29 +26,30 @@ fun CategoryPicker(
         items = categories,
         modifier = modifier,
     ) {
-        CategoryButton(
+        CategoryView(
+            category = it,
             onClick = { onSelect(it) },
             isSelected = isSelected(it),
-            category = it,
         )
     }
 }
 
 @Composable
-fun CategoryButton(
-    onClick: () -> Unit,
-    isSelected: Boolean,
-    category: Category,
-    modifier: Modifier = Modifier
+fun CategoryView(
+    category: Category?,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    isSelected: Boolean = false,
+    onlyIcon: Boolean = false,
 ) {
     AppIconButton(
         onClick = onClick,
         isSelected = isSelected,
         modifier = modifier,
-        text = category.name,
-        iconRef = category.iconRef,
+        text = if (onlyIcon) "" else category?.name,
+        iconRef = category?.iconRef,
         tint = MaterialTheme.colorScheme.secondary,
-        background = category.colorTheme.colors.toBrush(),
+        background = category?.run { colorTheme.colors.toBrush() },
     )
 }
 
@@ -68,10 +65,10 @@ fun CompactCategoryPicker(
         modifier = modifier
             .height(100.dp)
     ) {
-        CategoryButton(
+        CategoryView(
+            category = it,
             onClick = { onSelect(it) },
             isSelected = isSelected(it),
-            category = it,
         )
     }
 }
@@ -87,24 +84,11 @@ fun TitledCategoryPicker(
     TitledContent(
         applyFormPadding = false,
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .formPadding()
-            ) {
-                AppTitle(textId = R.string.category)
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(R.string.view_all),
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = null,
-                            indication = null,
-                            onClick = onViewAllClick,
-                        )
-                )
-            }
+            AppTitleAndViewAll(
+                titleId = R.string.category,
+                onViewAllClick = onViewAllClick,
+                modifier = Modifier.padding(horizontal = formPadding()),
+            )
         },
         modifier = modifier,
     ) {

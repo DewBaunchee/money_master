@@ -52,13 +52,13 @@ fun appModule(context: Context) = DI.Module("appModule") {
         MemoryColorThemeRepository()
     }
     bind<OperationRepository>() with singleton {
-        RoomOperationRepository(instance(), instance(), instance())
+        RoomOperationRepository(instance(), instance(), instance(), instance(), instance())
     }
     bind<CategoryRepository>() with singleton {
         RoomCategoryRepository(instance())
     }
     bind<AccountRepository>() with singleton {
-        RoomAccountRepository(instance())
+        RoomAccountRepository(instance(), instance())
     }
     bind<AccountService>() with singleton {
         AccountServiceImpl(instance(), instance())
@@ -72,7 +72,7 @@ fun appModule(context: Context) = DI.Module("appModule") {
 
 fun viewModelModule() = DI.Module("viewModelModule") {
     bind<HomeViewModel>() with singleton {
-        HomeViewModel(instance())
+        HomeViewModel(instance(), instance())
     }
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())

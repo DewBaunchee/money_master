@@ -69,7 +69,7 @@ fun AppButton(
 
 @Composable
 fun AppIconButton(
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isSecondary: Boolean = true,
@@ -80,7 +80,7 @@ fun AppIconButton(
         MaterialTheme.colorScheme.onSecondary
     else
         MaterialTheme.colorScheme.secondary,
-    background: Brush = if (isSecondary)
+    background: Brush? = if (isSecondary)
         MaterialTheme.colorScheme.secondary.toBrush()
     else
         MaterialTheme.colorScheme.onSecondary.toBrush()
@@ -89,7 +89,11 @@ fun AppIconButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clip(MaterialTheme.shapes.small)
-            .clickable(enabled = enabled, onClick = onClick)
+            .run {
+                if (onClick != null)
+                    clickable(enabled = enabled, onClick = onClick)
+                else this
+            }
             .padding(if (text.isNullOrBlank()) 0.dp else dimensionResource(R.dimen.icon_button_padding))
     ) {
         Column(
@@ -99,7 +103,10 @@ fun AppIconButton(
         ) {
             Box(
                 modifier = Modifier
-                    .background(background, MaterialTheme.shapes.small)
+                    .background(
+                        background ?: MaterialTheme.colorScheme.background.toBrush(),
+                        MaterialTheme.shapes.small
+                    )
                     .size(dimensionResource(R.dimen.button_box_size)),
                 contentAlignment = Alignment.Center,
             ) {

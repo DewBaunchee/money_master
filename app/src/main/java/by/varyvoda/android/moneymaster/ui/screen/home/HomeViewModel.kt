@@ -3,6 +3,7 @@ package by.varyvoda.android.moneymaster.ui.screen.home
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
+import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
@@ -16,13 +17,14 @@ import kotlinx.serialization.Serializable
 object HomeDestination
 
 class HomeViewModel(
-    accountRepository: AccountRepository
+    accountRepository: AccountRepository,
+    operationRepository: OperationRepository,
 ) : BaseViewModel<HomeDestination>() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    val accountDetails = accountRepository.getAllDetails()
+    val accounts = accountRepository.getAllDetails()
         .stateInThis(null)
         .apply {
             alwaysSelected(
@@ -33,10 +35,8 @@ class HomeViewModel(
             )
         }
 
-    override fun applyDestination(destination: HomeDestination) {
-        // Empty
-    }
-
+    val operations = operationRepository.getAllDetails()
+        .stateInThis(null)
 
     fun changeCurrentAccount(accountId: Id) {
         this._uiState.update { it.copy(currentAccountId = accountId) }

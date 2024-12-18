@@ -16,7 +16,7 @@ interface CategoryRepository {
 
     suspend fun deleteById(id: Id)
 
-    fun getById(id: Id): Flow<Category>
+    fun getById(id: Id): Flow<Category?>
 
     fun getAll(): Flow<List<Category>>
 

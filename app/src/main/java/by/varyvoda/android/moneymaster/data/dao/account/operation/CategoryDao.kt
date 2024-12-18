@@ -14,7 +14,7 @@ interface CategoryDao : BaseDao<Category> {
     suspend fun deleteById(id: Id)
 
     @Query("SELECT * FROM category WHERE id = :id")
-    fun getById(id: Id): Flow<Category>
+    fun getById(id: Id): Flow<Category?>
 
     @Query("SELECT * FROM category")
     fun getAll(): Flow<List<Category>>

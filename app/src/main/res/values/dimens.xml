@@ -6,8 +6,9 @@
     <dimen name="icon_button_padding">8.dp</dimen>
     <dimen name="icon_button_space">4.dp</dimen>
 
-    <dimen name="list_dialog_item_padding">8.dp</dimen>
-    <dimen name="list_dialog_item_space">4.dp</dimen>
+    <dimen name="list_item_padding">8.dp</dimen>
+    <dimen name="list_item_space">4.dp</dimen>
+    <dimen name="operation_list_item_space">8.dp</dimen>
 
     <dimen name="icon_and_label_row_padding">8.dp</dimen>
 
@@ -19,4 +20,7 @@
 
     <dimen name="icon_size">16.dp</dimen>
     <dimen name="large_icon_size">24.dp</dimen>
+
+    <dimen name="soft_elevation">2.dp</dimen>
+    <dimen name="medium_elevation">8.dp</dimen>
 </resources>

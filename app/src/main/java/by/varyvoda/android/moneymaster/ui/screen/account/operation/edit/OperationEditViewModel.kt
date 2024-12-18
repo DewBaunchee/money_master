@@ -1,7 +1,7 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
 
 import androidx.lifecycle.viewModelScope
-import by.varyvoda.android.moneymaster.data.model.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.Id

@@ -31,7 +31,6 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.util.formPadding
-import by.varyvoda.android.moneymaster.ui.util.makeMoneyString
 
 private const val CARD_HEIGHT_TO_WIDTH_RATIO = 0.55f
 
@@ -99,8 +98,9 @@ fun AccountCard(
                             color = Color(0xFFF1F3F6),
                             style = MaterialTheme.typography.labelMedium
                         )
-                        Text(
-                            text = makeMoneyString(balance, currency),
+                        MoneyText(
+                            currency = currency,
+                            amount = balance.toLongOrNull(),
                             color = Color.White,
                             style = MaterialTheme.typography.displaySmall
                         )

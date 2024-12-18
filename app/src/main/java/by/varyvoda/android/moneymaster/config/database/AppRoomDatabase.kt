@@ -9,6 +9,7 @@ import by.varyvoda.android.moneymaster.data.converter.ColorConverters
 import by.varyvoda.android.moneymaster.data.converter.ColorListConverters
 import by.varyvoda.android.moneymaster.data.converter.ColorThemeConverters
 import by.varyvoda.android.moneymaster.data.converter.RoomIconConverter
+import by.varyvoda.android.moneymaster.data.converter.UUIDConverters
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.BalanceEditDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
@@ -34,7 +35,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
         Transfer::class,
         Category::class,
     ],
-    version = 11,
+    version = 12,
     exportSchema = false
 )
 @TypeConverters(
@@ -42,6 +43,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
     ColorListConverters::class,
     ColorThemeConverters::class,
     RoomIconConverter::class,
+    UUIDConverters::class,
 )
 abstract class AppRoomDatabase : RoomDatabase() {
 

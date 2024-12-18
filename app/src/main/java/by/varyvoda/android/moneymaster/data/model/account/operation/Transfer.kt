@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
+import java.util.UUID
 
 @Entity(tableName = "transfer")
 data class Transfer(
-    @PrimaryKey(autoGenerate = true)
-    override val id: Id,
+    @PrimaryKey
+    override val id: UUID,
     override val accountId: Id,
     override val date: PrimitiveDate,
     val relatedAccountId: Id,

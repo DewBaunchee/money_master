@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
+import java.util.UUID
 
 @Entity(tableName = "balance_edit")
 data class BalanceEdit(
-    @PrimaryKey(autoGenerate = true)
-    override val id: Id = 0,
+    @PrimaryKey
+    override val id: UUID,
     override val accountId: Id,
     override val date: PrimitiveDate,
     val newValue: Money,

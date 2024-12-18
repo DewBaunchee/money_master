@@ -35,10 +35,6 @@ fun Arrangement.formSpacedBy(alignment: Alignment.Vertical = Alignment.Top) =
 fun Arrangement.formSpacedBy(alignment: Alignment.Horizontal = Alignment.Start) =
     spacedBy(by.varyvoda.android.moneymaster.ui.util.formSpacedBy(), alignment)
 
-fun makeMoneyString(money: String, currency: Currency?): String {
-    return if (currency == null) money else currency.symbol + money
-}
-
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues = PaddingValues(
     start = this.calculateStartPadding(LayoutDirection.Ltr) +
             other.calculateStartPadding(LayoutDirection.Ltr),
