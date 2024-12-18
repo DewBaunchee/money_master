@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Money
+import kotlin.math.absoluteValue
 
 @Composable
 fun MoneyText(
@@ -20,7 +21,7 @@ fun MoneyText(
     val sign = if (amount != null && amount < 0) "-" else ""
     val symbol = currency?.symbol ?: ""
     Text(
-        text = "$sign$symbol${amount ?: 0}",
+        text = "$sign$symbol${amount?.absoluteValue ?: 0}",
         color = color,
         style = style,
         modifier = modifier,

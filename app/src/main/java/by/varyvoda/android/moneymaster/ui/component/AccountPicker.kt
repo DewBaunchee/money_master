@@ -22,7 +22,7 @@ fun AccountListPicker(
         modifier = modifier,
     ) {
         AccountOptionButton(
-            accountDetails = it,
+            accounts = it,
             isSelected = isSelected(it),
             onClick = { onSelect(it) }
         )
@@ -31,13 +31,13 @@ fun AccountListPicker(
 
 @Composable
 fun AccountOptionButton(
-    accountDetails: AccountDetails,
+    accounts: AccountDetails,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ListPickerOption(
-        item = accountDetails,
+        item = accounts,
         isSelected = isSelected,
         onClick = onClick,
         modifier = modifier,
@@ -45,7 +45,7 @@ fun AccountOptionButton(
         Row(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.icon_and_label_row_padding))
         ) {
-            Text(text = accountDetails.model.name)
+            Text(text = accounts.model.name)
         }
     }
 }

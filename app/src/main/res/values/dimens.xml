@@ -23,4 +23,7 @@
 
     <dimen name="soft_elevation">2.dp</dimen>
     <dimen name="medium_elevation">8.dp</dimen>
+
+    <dimen name="dot_indicator_dot_size">8.dp</dimen>
+    <dimen name="dot_indicator_space">8.dp</dimen>
 </resources>

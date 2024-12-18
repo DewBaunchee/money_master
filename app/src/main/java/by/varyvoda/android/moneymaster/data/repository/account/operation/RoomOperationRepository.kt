@@ -70,14 +70,14 @@ class RoomOperationRepository(
         ExpenseDetails(
             model = this,
             category = categoryRepository.getById(categoryId).notNull(),
-            accountDetails = accountRepository.getDetailsById(accountId).notNull()
+            accounts = accountRepository.getDetailsById(accountId).notNull()
         )
 
     private fun Income.details(): IncomeDetails =
         IncomeDetails(
             model = this,
             category = categoryRepository.getById(categoryId).notNull(),
-            accountDetails = accountRepository.getDetailsById(accountId).notNull()
+            accounts = accountRepository.getDetailsById(accountId).notNull()
         )
 
     private fun Transfer.details(): TransferDetails =

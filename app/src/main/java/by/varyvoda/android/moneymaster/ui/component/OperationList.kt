@@ -47,12 +47,12 @@ fun OperationListItem(
     when (operation) {
         is IncomeDetails -> operation.apply {
             val category = category.valueOrNull()
-            val accountDetails = accountDetails.valueOrNull()
-            val currency = accountDetails?.currency?.valueOrNull()
+            val accounts = accounts.valueOrNull()
+            val currency = accounts?.currency?.valueOrNull()
             IncomeExpenseOperationListItem(
                 income = true,
                 category = category,
-                accountDetails = accountDetails,
+                accounts = accounts,
                 currency = currency,
                 amount = model.amount,
                 modifier = modifier,
@@ -61,12 +61,12 @@ fun OperationListItem(
 
         is ExpenseDetails -> operation.apply {
             val category = category.valueOrNull()
-            val accountDetails = accountDetails.valueOrNull()
-            val currency = accountDetails?.currency?.valueOrNull()
+            val accounts = accounts.valueOrNull()
+            val currency = accounts?.currency?.valueOrNull()
             IncomeExpenseOperationListItem(
                 income = false,
                 category = category,
-                accountDetails = accountDetails,
+                accounts = accounts,
                 currency = currency,
                 amount = model.amount,
                 modifier = modifier,
@@ -79,7 +79,7 @@ fun OperationListItem(
 fun IncomeExpenseOperationListItem(
     income: Boolean,
     category: Category?,
-    accountDetails: AccountDetails?,
+    accounts: AccountDetails?,
     currency: Currency?,
     amount: Money,
     modifier: Modifier = Modifier,
@@ -103,12 +103,12 @@ fun IncomeExpenseOperationListItem(
                 if (category != null)
                     TitleAndText(
                         category.name,
-                        accountDetails?.model?.name ?: ""
+                        accounts?.model?.name ?: ""
                     )
             }
             MoneyText(
                 currency = currency,
-                amount = amount,
+                amount = if(income) amount else -amount,
                 color = if (income) Positive else Negative,
                 style = MaterialTheme.typography.titleMedium,
             )

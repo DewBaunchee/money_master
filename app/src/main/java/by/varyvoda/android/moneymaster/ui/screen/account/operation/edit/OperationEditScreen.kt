@@ -91,7 +91,7 @@ fun IncomeExpenseEditBody(
     val ( _, amount, date, categoryId, description, _, categorySearchString) =
         viewModel.uiState.collectAsState().value
 
-    val accountDetails = viewModel.currentAccount
+    val currentAccount = viewModel.currentAccount
 
     FormBox(
         buttons = listOf {
@@ -118,13 +118,13 @@ fun IncomeExpenseEditBody(
                 ) {
                     var accountSelectionShown by remember { mutableStateOf(false) }
                     AppTextField(
-                        value = accountDetails?.model?.name ?: "",
+                        value = currentAccount?.model?.name ?: "",
                         onValueChange = {},
                         asButton = true,
                         label = {
                             Text(
                                 text = stringResource(
-                                    if (accountDetails == null)
+                                    if (currentAccount == null)
                                         R.string.select_account
                                     else
                                         R.string.account
@@ -138,7 +138,7 @@ fun IncomeExpenseEditBody(
                     if (accountSelectionShown) {
                         AccountListPickerDialog(
                             accounts = accounts,
-                            isSelected = { it.id == accountDetails?.id },
+                            isSelected = { it.id == currentAccount?.id },
                             onSelect = {
                                 accountSelectionShown = false
                                 viewModel.selectAccount(it.id)

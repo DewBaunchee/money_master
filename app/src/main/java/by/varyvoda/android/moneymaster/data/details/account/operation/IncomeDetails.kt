@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 data class IncomeDetails(
     val model: Income,
     val category: Flow<Category>,
-    val accountDetails: Flow<AccountDetails>,
+    val accounts: Flow<AccountDetails>,
 ) : OperationDetails {
     override val id get() = model.id
     override val type get() = model.type

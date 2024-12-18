@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,15 +20,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
-import by.varyvoda.android.moneymaster.data.model.domain.Money
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
-import by.varyvoda.android.moneymaster.ui.component.AccountCard
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
 import by.varyvoda.android.moneymaster.ui.component.AppIconButton
+import by.varyvoda.android.moneymaster.ui.component.AccountGallery
 import by.varyvoda.android.moneymaster.ui.component.MoneyText
 import by.varyvoda.android.moneymaster.ui.component.TitledOperationList
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
@@ -47,15 +42,34 @@ fun HomeScreen(
 
     if (accounts == null) return
 
+    val currentAccount = viewModel.currentAccount
+
     Scaffold(
         topBar = { HomeTopBar() },
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {
-            CardGallery(
-                accountDetails = accounts,
-                totalBalance = 2000,
-                totalBalanceCurrency = Currency(code = "USD", "dollar", "$"),
-            )
+            Column(
+                modifier = Modifier
+                    .formPadding()
+            ) {
+                Text(
+                    text = stringResource(R.string.total_balance),
+                    style = MaterialTheme.typography.labelMedium
+                )
+                MoneyText(
+                    currency = Currency(code = "USD", "dollar", "$"),
+                    amount = 2000,
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
+
+            currentAccount?.let {
+                AccountGallery(
+                    accounts = accounts,
+                    currentAccount = currentAccount,
+                    onSelect = { viewModel.changeCurrentAccount(it.id) }
+                )
+            }
             ActionBar(
                 onAddIncome = { viewModel.onAddIncomeClick() },
                 onAddExpense = { viewModel.onAddExpenseClick() },
@@ -107,53 +121,6 @@ fun HomeTopBar(
             iconRef = IconRef.Notifications,
             text = "",
         )
-    }
-}
-
-@Composable
-fun CardGallery(
-    accountDetails: List<AccountDetails>,
-    totalBalance: Money,
-    totalBalanceCurrency: Currency,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier) {
-        Column(
-            modifier = Modifier
-                .formPadding()
-        ) {
-            Text(
-                text = stringResource(R.string.total_balance),
-                style = MaterialTheme.typography.labelMedium
-            )
-            MoneyText(
-                currency = totalBalanceCurrency,
-                amount = totalBalance,
-                style = MaterialTheme.typography.displaySmall
-            )
-        }
-        LazyRow(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            items(accountDetails) {
-                Spacer(modifier = Modifier.width(formPadding()))
-                AccountCard(
-                    iconRef = it.model.iconRef,
-                    theme = it.model.theme,
-                    title = it.model.name,
-                    balance = it.model.currentBalance.toString(),
-                    currency = it.currency.collectAsState(null).value,
-                    modifier = Modifier
-                        .width(350.dp)
-                )
-            }
-            item(null) {
-                Spacer(modifier = Modifier.width(formPadding()))
-            }
-        }
     }
 }
 

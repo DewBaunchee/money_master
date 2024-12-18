@@ -38,6 +38,8 @@ class HomeViewModel(
     val operations = operationRepository.getAllDetails()
         .stateInThis(null)
 
+    val currentAccount get() = accounts.value?.find { it.id == uiState.value.currentAccountId }
+
     fun changeCurrentAccount(accountId: Id) {
         this._uiState.update { it.copy(currentAccountId = accountId) }
     }
