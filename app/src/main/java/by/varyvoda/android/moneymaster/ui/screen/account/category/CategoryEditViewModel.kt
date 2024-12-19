@@ -9,6 +9,7 @@ import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeR
 import by.varyvoda.android.moneymaster.data.service.category.CategoryService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
+import by.varyvoda.android.moneymaster.ui.component.SavableViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +29,7 @@ class CategoryEditViewModel(
     private val categoryService: CategoryService,
     iconsService: IconsService,
     colorThemeRepository: ColorThemeRepository,
-) : BaseViewModel<CategoryEditDestination>() {
+) : BaseViewModel<CategoryEditDestination>(), SavableViewModel {
 
     private val _uiState = MutableStateFlow(AccountOperationCategoryUiState())
     val uiState = _uiState.asStateFlow()
@@ -78,11 +79,11 @@ class CategoryEditViewModel(
         navigateUp()
     }
 
-    fun canSave(): Boolean {
+    override fun canSave(): Boolean {
         return with(_uiState.value) { name.isNotBlank() }
     }
 
-    fun onSaveClick() {
+    override fun save() {
         if (!canSave()) throw IllegalStateException("Cannot save category")
 
         viewModelScope.launch {

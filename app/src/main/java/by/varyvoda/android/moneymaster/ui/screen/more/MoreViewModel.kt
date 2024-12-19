@@ -5,6 +5,7 @@ import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesDestination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
@@ -27,7 +28,11 @@ class MoreViewModel : BaseViewModel<MoreDestination>() {
             MoreScreenOptionModel(
                 iconRef = IconRef.CreateAccount,
                 labelId = R.string.create_account,
-            ) { navigateTo(AccountEditDestination()) }
+            ) { navigateTo(AccountEditDestination()) },
+            MoreScreenOptionModel(
+                iconRef = IconRef.Currencies,
+                labelId = R.string.currencies,
+            ) { navigateTo(CurrenciesDestination) },
         )
     ))
     val uiState = _uiState.asStateFlow()

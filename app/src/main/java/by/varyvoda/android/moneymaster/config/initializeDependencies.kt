@@ -9,6 +9,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.now
+import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmount
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
@@ -77,8 +78,8 @@ private suspend fun insertAccounts(
     repository.insert(
         Account(
             name = "First",
-            initialBalance = 1000,
-            currentBalance = 1000,
+            initialBalance = 1000.toMoneyAmount(),
+            currentBalance = 1000.toMoneyAmount(),
             currencyCode = "USD",
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
@@ -87,8 +88,8 @@ private suspend fun insertAccounts(
     repository.insert(
         Account(
             name = "Second",
-            initialBalance = 2000,
-            currentBalance = 2000,
+            initialBalance = 2000.toMoneyAmount(),
+            currentBalance = 2000.toMoneyAmount(),
             currencyCode = "BYN",
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
@@ -97,8 +98,8 @@ private suspend fun insertAccounts(
     repository.insert(
         Account(
             name = "Third",
-            initialBalance = 3000,
-            currentBalance = 3000,
+            initialBalance = 3000.toMoneyAmount(),
+            currentBalance = 3000.toMoneyAmount(),
             currencyCode = "USD",
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
@@ -191,7 +192,7 @@ private suspend fun insertOperations(
                 id = UUID.randomUUID(),
                 accountId = accounts.random().id,
                 date = now(),
-                amount = (1L..200L).random(),
+                amount = (1L..200L).random().toMoneyAmount(),
                 categoryId = categories.random().id,
                 description = "Description",
             )
@@ -203,7 +204,7 @@ private suspend fun insertOperations(
                 id = UUID.randomUUID(),
                 accountId = accounts.random().id,
                 date = now(),
-                amount = (1L..200L).random(),
+                amount = (1L..200L).random().toMoneyAmount(),
                 categoryId = categories.random().id,
                 description = "Description",
             )
@@ -216,8 +217,8 @@ private suspend fun insertOperations(
                 date = now(),
                 sourceAccountId = accounts.random().id,
                 destinationAccountId = accounts.random().id,
-                sentAmount = 400,
-                receivedAmount = 400,
+                sentAmount = 400.toMoneyAmount(),
+                receivedAmount = 400.toMoneyAmount(),
                 description = "TODO()"
             )
         )

@@ -20,6 +20,7 @@ import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
 import by.varyvoda.android.moneymaster.ui.component.ButtonSelector
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
+import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
@@ -56,14 +57,7 @@ private fun Body(
 
     FormBox(
         buttons = listOf {
-            AppButton(
-                onClick = { viewModel.onSaveClick() },
-                enabled = viewModel.canSave(),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
+            SaveButton(viewModel = viewModel)
         },
         modifier = modifier,
     ) {

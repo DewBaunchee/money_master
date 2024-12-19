@@ -4,12 +4,15 @@ import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
+import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmountOrNull
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
+import by.varyvoda.android.moneymaster.ui.component.SavableViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +33,7 @@ class AccountEditViewModel(
     currencyRepository: CurrencyRepository,
     iconsService: IconsService,
     colorThemeRepository: ColorThemeRepository
-) : BaseViewModel<AccountEditDestination>() {
+) : BaseViewModel<AccountEditDestination>(), SavableViewModel {
 
     private val _uiState = MutableStateFlow(AccountCreationUiState())
     val uiState = _uiState.asStateFlow()
@@ -81,7 +84,11 @@ class AccountEditViewModel(
         this._uiState.update { it.copy(iconSearchString = searchString) }
     }
 
-    fun canSave(): Boolean {
+    fun onBackClick() {
+        navigateUp()
+    }
+
+    override fun canSave(): Boolean {
         return with(uiState.value) {
             name.isNotBlank()
                     && currency != null
@@ -90,15 +97,15 @@ class AccountEditViewModel(
         }
     }
 
-    fun onSaveClick() {
+    override fun save() {
         if (!canSave()) throw IllegalStateException("Cannot create account")
 
         viewModelScope.launch {
             with(_uiState.value) {
                 accountService.createAccount(
                     name = name,
-                    currencyCode = currency!!.code,
-                    initialBalance = initialBalance.toLong(),
+                    currencyCode = getCurrencyCode(),
+                    initialBalance = getMoneyAmount(),
                     iconRef = iconRef,
                     theme = theme,
                 )
@@ -107,9 +114,15 @@ class AccountEditViewModel(
         navigateUp()
     }
 
-    fun onBackClick() {
-        navigateUp()
-    }
+    private fun getCurrencyCode(): String =
+        requireNotNull(uiState.value.currency) {
+            "Date isn't selected"
+        }.code
+
+    private fun getMoneyAmount(): MoneyAmount =
+        requireNotNull(uiState.value.initialBalance.toMoneyAmountOrNull()) {
+            "Date isn't selected"
+        }
 }
 
 data class AccountCreationUiState(

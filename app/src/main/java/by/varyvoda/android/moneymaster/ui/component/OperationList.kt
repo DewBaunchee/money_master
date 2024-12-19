@@ -19,9 +19,7 @@ import by.varyvoda.android.moneymaster.data.details.account.operation.OperationD
 import by.varyvoda.android.moneymaster.data.details.account.operation.TransferDetails
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
-import by.varyvoda.android.moneymaster.data.model.domain.Money
-import by.varyvoda.android.moneymaster.ui.theme.Negative
-import by.varyvoda.android.moneymaster.ui.theme.Positive
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 import by.varyvoda.android.moneymaster.util.valueOrNull
@@ -123,7 +121,7 @@ fun IncomeExpenseOperationListItem(
     category: Category?,
     accounts: AccountDetails?,
     currency: Currency?,
-    amount: Money,
+    amount: MoneyAmount,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -155,8 +153,8 @@ fun IncomeExpenseOperationListItem(
                 )
                 MoneyText(
                     currency = currency,
-                    amount = if (income) amount else -amount,
-                    color = if (income) Positive else Negative,
+                    amount = amount,
+                    negative = !income,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -172,12 +170,14 @@ fun TransferOperationListItem(
 ) {
     val showLikeSent = accordingToAccount.id == operation.model.sourceAccountId
     val currency = accordingToAccount.currency.valueOrNull()
+
     val relatedAccount =
         (if (showLikeSent)
             operation.destinationAccount
         else
             operation.sourceAccount
                 ).valueOrNull()
+    val relatedCurrency = relatedAccount?.currency?.valueOrNull()
 
     Surface(
         shadowElevation = dimensionResource(R.dimen.soft_elevation),
@@ -202,14 +202,21 @@ fun TransferOperationListItem(
                 ) + ":"
                 IconAndText(
                     icon = { AccountIcon(account = relatedAccount) },
-                    text = { Text(text = "$textPrefix ${relatedAccount?.run { model.name } ?: ""}") },
+                    text = {
+                        Text(text = "$textPrefix ${relatedAccount?.run { model.name } ?: ""}")
+                        MoneyText(
+                            currency = relatedCurrency,
+                            amount = operation.model.receivedAmount,
+                            negative = !showLikeSent,
+                        )
+                    },
                     modifier = Modifier
                         .weight(1f)
                 )
                 MoneyText(
                     currency = currency,
-                    amount = operation.model.sentAmount.let { if (showLikeSent) -it else it },
-                    color = if (showLikeSent) Negative else Positive,
+                    amount = operation.model.sentAmount,
+                    negative = showLikeSent,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }

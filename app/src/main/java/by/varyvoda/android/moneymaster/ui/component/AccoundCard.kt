@@ -29,6 +29,7 @@ import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
+import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmountOrNull
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
@@ -101,7 +102,7 @@ fun AccountCard(
                         )
                         MoneyText(
                             currency = currency,
-                            amount = balance.toLongOrNull(),
+                            amount = balance.toMoneyAmountOrNull(),
                             color = Color.White,
                             style = MaterialTheme.typography.displaySmall
                         )

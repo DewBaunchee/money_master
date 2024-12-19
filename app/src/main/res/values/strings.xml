@@ -58,4 +58,7 @@
     <string name="operations">Operations</string>
     <string name="from">From</string>
     <string name="to">To</string>
+    <string name="currencies">Currencies</string>
+    <string name="first_to_second_rate">First to second rate</string>
+    <string name="second_to_first_rate">Second to first rate</string>
 </resources>

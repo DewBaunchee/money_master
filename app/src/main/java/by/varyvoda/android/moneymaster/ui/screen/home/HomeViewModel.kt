@@ -1,9 +1,12 @@
 package by.varyvoda.android.moneymaster.ui.screen.home
 
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
+import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmount
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
+import by.varyvoda.android.moneymaster.data.service.balance.BalanceService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
@@ -11,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -22,6 +26,7 @@ object HomeDestination
 
 class HomeViewModel(
     accountRepository: AccountRepository,
+    balanceService: BalanceService,
     operationRepository: OperationRepository,
 ) : BaseViewModel<HomeDestination>() {
 
@@ -38,6 +43,19 @@ class HomeViewModel(
                 ifEmpty = { navigateTo(AccountEditDestination()) }
             )
         }
+
+    val mainCurrency = MutableStateFlow(Currency(code = "USD", "dollar", "$")).asStateFlow()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val totalBalance = accounts
+        .filterNotNull()
+        .flatMapLatest {
+            balanceService.calculateTotalBalance(
+                targetCurrencyCode = mainCurrency.value.code,
+                accounts = it,
+            )
+        }
+        .stateInThis(0.toMoneyAmount())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val operations = uiState

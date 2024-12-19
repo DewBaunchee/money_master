@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.component.AccountGallery
 import by.varyvoda.android.moneymaster.ui.component.AppIcon
@@ -36,6 +35,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     val accounts = viewModel.accounts.collectAsState().value
+    val mainCurrency = viewModel.mainCurrency.collectAsState().value
+    val totalBalance = viewModel.totalBalance.collectAsState().value
     val operations = viewModel.operations.collectAsState().value
 
     if (accounts == null) return
@@ -56,8 +57,9 @@ fun HomeScreen(
                 style = MaterialTheme.typography.labelMedium
             )
             MoneyText(
-                currency = Currency(code = "USD", "dollar", "$"),
-                amount = 2000,
+                currency = mainCurrency,
+                amount = totalBalance,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.displaySmall,
             )
         }

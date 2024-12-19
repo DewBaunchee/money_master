@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.map
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-fun <T> Flow<T?>.notNull() = map { it!! }
+fun <T> Flow<T?>.notNull(lazyMessage: () -> Any = { "Required value is null" }) =
+    map { requireNotNull(it, lazyMessage) }
 
 @Composable
 fun <T> Flow<T?>.valueOrNull() = collectAsState(null).value

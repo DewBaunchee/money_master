@@ -5,12 +5,14 @@ import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.Id
-import by.varyvoda.android.moneymaster.data.model.domain.Money
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
+import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmountOrNull
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
+import by.varyvoda.android.moneymaster.ui.component.SavableViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -95,7 +97,6 @@ class OperationEditViewModel(
     private fun createTransferViewModel(): TransferViewModel =
         TransferViewModel(
             accountService = accountService,
-            categoryRepository = categoryRepository,
             onSaveClickWrapper = this::onSaveWrapper,
             accounts = accounts,
             dateSuggestions = dateSuggestions,
@@ -124,7 +125,7 @@ class IncomeExpenseEditViewModel(
     val accounts: StateFlow<List<AccountDetails>>,
     val dateSuggestions: StateFlow<List<DateSuggestion>>,
     private val addCategoryClick: () -> Unit,
-) : BaseViewModel<Unit>() {
+) : BaseViewModel<Unit>(), SavableViewModel {
 
     private val _uiState = MutableStateFlow(IncomeExpenseEditUiState())
     val uiState = _uiState.asStateFlow()
@@ -166,7 +167,7 @@ class IncomeExpenseEditViewModel(
         addCategoryClick()
     }
 
-    fun canSave(): Boolean {
+    override fun canSave(): Boolean {
         return uiState.value.let {
             allNotNull(
                 it.accountId,
@@ -177,7 +178,7 @@ class IncomeExpenseEditViewModel(
         }
     }
 
-    fun onSaveClick() {
+    override fun save() {
         onSaveClickWrapper {
             if (income) {
                 accountService.addIncome(
@@ -206,8 +207,8 @@ class IncomeExpenseEditViewModel(
             "Account isn't selected"
         }
 
-    private fun getAmount(): Money =
-        requireNotNull(uiState.value.amount.toLongOrNull()) {
+    private fun getAmount(): MoneyAmount =
+        requireNotNull(uiState.value.amount.toMoneyAmountOrNull()) {
             "Invalid amount"
         }
 
@@ -236,11 +237,10 @@ data class TransferEditUiState(
 
 class TransferViewModel(
     private val accountService: AccountService,
-    private val categoryRepository: CategoryRepository,
     private val onSaveClickWrapper: (logic: suspend () -> Unit) -> Unit,
     val accounts: StateFlow<List<AccountDetails>>,
     val dateSuggestions: StateFlow<List<DateSuggestion>>,
-) : BaseViewModel<Unit>() {
+) : BaseViewModel<Unit>(), SavableViewModel {
 
     private val _uiState = MutableStateFlow(TransferEditUiState())
     val uiState = _uiState.asStateFlow()
@@ -272,7 +272,7 @@ class TransferViewModel(
         _uiState.update { it.copy(description = description) }
     }
 
-    fun canSave(): Boolean {
+    override fun canSave(): Boolean {
         return with(uiState.value) {
             allNotNull(
                 date,
@@ -284,7 +284,7 @@ class TransferViewModel(
         }
     }
 
-    fun onSaveClick() {
+    override fun save() {
         onSaveClickWrapper {
             accountService.addTransfer(
                 date = getDate(),
@@ -312,13 +312,13 @@ class TransferViewModel(
             "Destination account isn't selected"
         }
 
-    private fun getSentAmount(): Money =
-        requireNotNull(uiState.value.sentAmount.toLongOrNull()) {
+    private fun getSentAmount(): MoneyAmount =
+        requireNotNull(uiState.value.sentAmount.toMoneyAmountOrNull()) {
             "Invalid sent amount"
         }
 
-    private fun getReceivedAmount(): Money =
-        requireNotNull(uiState.value.sentAmount.toLongOrNull()) {
+    private fun getReceivedAmount(): MoneyAmount =
+        requireNotNull(uiState.value.sentAmount.toMoneyAmountOrNull()) {
             "Invalid received amount"
         }
 

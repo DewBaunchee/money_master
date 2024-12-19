@@ -6,7 +6,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
-import by.varyvoda.android.moneymaster.data.model.domain.Money
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
@@ -21,7 +21,7 @@ class AccountServiceImpl(
     override suspend fun createAccount(
         name: String,
         currencyCode: String,
-        initialBalance: Money,
+        initialBalance: MoneyAmount,
         iconRef: IconRef,
         theme: ColorTheme,
     ) {
@@ -39,7 +39,7 @@ class AccountServiceImpl(
 
     override suspend fun addIncome(
         accountId: Id,
-        amount: Money,
+        amount: MoneyAmount,
         categoryId: Id,
         date: PrimitiveDate,
         description: String,
@@ -60,7 +60,7 @@ class AccountServiceImpl(
 
     override suspend fun addExpense(
         accountId: Id,
-        amount: Money,
+        amount: MoneyAmount,
         categoryId: Id,
         date: PrimitiveDate,
         description: String,
@@ -83,8 +83,8 @@ class AccountServiceImpl(
         date: PrimitiveDate,
         sourceAccountId: Id,
         destinationAccountId: Id,
-        sentAmount: Money,
-        receivedAmount: Money,
+        sentAmount: MoneyAmount,
+        receivedAmount: MoneyAmount,
         description: String
     ) {
         operationRepository.insert(

@@ -58,7 +58,8 @@ data class IconRef(
         val Statistics = Icons.Filled.QueryStats.toIconRef("Statistics")
         val History = Icons.Filled.History.toIconRef("History")
         val More = Icons.Filled.MoreHoriz.toIconRef("More")
-        val CreateAccount = Icons.Filled.AddCard.toIconRef()
+        val CreateAccount = Icons.Filled.AddCard.toIconRef("Create account")
+        val Currencies = Icons.Filled.CurrencyExchange.toIconRef("Currencies")
     }
 
     suspend fun load() = loader()

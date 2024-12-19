@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.edit
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,16 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,9 +22,10 @@ import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
-import by.varyvoda.android.moneymaster.ui.component.CurrencyListPickerDialog
+import by.varyvoda.android.moneymaster.ui.component.CurrencySelect
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
+import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
@@ -60,18 +55,10 @@ fun AccountEditBody(
     val icons = viewModel.icons.collectAsState().value
     val colorThemes = viewModel.colorThemes.collectAsState().value
     val (name, currency, initialBalance, iconRef, theme, iconSearchString) = viewModel.uiState.collectAsState().value
-    var currencySelectionShown by remember { mutableStateOf(false) }
 
     FormBox(
         buttons = listOf {
-            AppButton(
-                onClick = { viewModel.onSaveClick() },
-                enabled = viewModel.canSave(),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
+            SaveButton(viewModel = viewModel)
         },
         modifier = modifier,
     ) { buttonColumnHeightDp ->
@@ -116,35 +103,13 @@ fun AccountEditBody(
                     modifier = Modifier
                         .fillMaxWidth()
                 )
-                AppTextField(
-                    value = currency?.name ?: "",
-                    onValueChange = {},
-                    asButton = true,
-                    label = {
-                        Text(
-                            text = stringResource(
-                                if (currency == null)
-                                    R.string.select_currency
-                                else
-                                    R.string.currency
-                            )
-                        )
-                    },
+                CurrencySelect(
+                    currencies = currencies,
+                    selectedCurrency = currency,
+                    onSelect = { viewModel.changeCurrency(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = { currencySelectionShown = true }),
                 )
-                if (currencySelectionShown) {
-                    CurrencyListPickerDialog(
-                        currencies = currencies,
-                        isSelected = { it.code == currency?.code },
-                        onSelect = {
-                            currencySelectionShown = false
-                            viewModel.changeCurrency(it)
-                        },
-                        onDismissRequest = { currencySelectionShown = false },
-                    )
-                }
             }
 
             AppearanceBuilder(

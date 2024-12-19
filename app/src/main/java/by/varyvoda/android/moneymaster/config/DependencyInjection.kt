@@ -10,6 +10,7 @@ import by.varyvoda.android.moneymaster.data.dao.account.operation.ExpenseDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.IncomeDao
 import by.varyvoda.android.moneymaster.data.dao.account.operation.TransferDao
 import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyDao
+import by.varyvoda.android.moneymaster.data.dao.currency.CurrencyExchangeRateDao
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.RoomAccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
@@ -18,17 +19,24 @@ import by.varyvoda.android.moneymaster.data.repository.account.operation.categor
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.RoomCategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.MemoryColorThemeRepository
+import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyExchangeRateRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
+import by.varyvoda.android.moneymaster.data.repository.currency.RoomCurrencyExchangeRateRepository
 import by.varyvoda.android.moneymaster.data.repository.currency.RoomCurrencyRepository
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.account.AccountServiceImpl
+import by.varyvoda.android.moneymaster.data.service.balance.BalanceService
+import by.varyvoda.android.moneymaster.data.service.balance.BalanceServiceImpl
 import by.varyvoda.android.moneymaster.data.service.category.CategoryService
 import by.varyvoda.android.moneymaster.data.service.category.CategoryServiceImpl
+import by.varyvoda.android.moneymaster.data.service.currency.exchange.CurrencyExchangeService
+import by.varyvoda.android.moneymaster.data.service.currency.exchange.CurrencyExchangeServiceImpl
 import by.varyvoda.android.moneymaster.data.service.icons.GoogleIconsService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
 import org.kodein.di.DI
@@ -48,6 +56,9 @@ fun appModule(context: Context) = DI.Module("appModule") {
 
     bind<CurrencyRepository>() with singleton {
         RoomCurrencyRepository(instance())
+    }
+    bind<CurrencyExchangeRateRepository>() with singleton {
+        RoomCurrencyExchangeRateRepository(instance())
     }
     bind<ColorThemeRepository>() with singleton {
         MemoryColorThemeRepository()
@@ -71,6 +82,12 @@ fun appModule(context: Context) = DI.Module("appModule") {
     bind<AccountService>() with singleton {
         AccountServiceImpl(instance(), instance())
     }
+    bind<BalanceService>() with singleton {
+        BalanceServiceImpl(instance())
+    }
+    bind<CurrencyExchangeService>() with singleton {
+        CurrencyExchangeServiceImpl(instance())
+    }
     bind<CategoryService>() with singleton {
         CategoryServiceImpl(instance())
     }
@@ -80,7 +97,7 @@ fun appModule(context: Context) = DI.Module("appModule") {
 
 fun viewModelModule() = DI.Module("viewModelModule") {
     bind<HomeViewModel>() with singleton {
-        HomeViewModel(instance(), instance())
+        HomeViewModel(instance(), instance(), instance())
     }
     bind<MoreViewModel>() with singleton {
         MoreViewModel()
@@ -88,6 +105,9 @@ fun viewModelModule() = DI.Module("viewModelModule") {
 
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())
+    }
+    bind<CurrenciesViewModel>() with singleton {
+        CurrenciesViewModel(instance(), instance(), instance())
     }
     bind<OperationEditViewModel>() with singleton {
         OperationEditViewModel(instance(), instance(), instance())
@@ -104,6 +124,9 @@ fun databaseModule(context: Context) = DI.Module("databaseModule") {
     }
     bind<CurrencyDao>() with singleton {
         instance<AppRoomDatabase>().currencyDao()
+    }
+    bind<CurrencyExchangeRateDao>() with singleton {
+        instance<AppRoomDatabase>().currencyExchangeRateDao()
     }
     bind<AccountDao>() with singleton {
         instance<AppRoomDatabase>().accountDao()

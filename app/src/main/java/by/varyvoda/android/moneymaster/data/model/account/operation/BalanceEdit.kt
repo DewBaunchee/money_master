@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import by.varyvoda.android.moneymaster.data.model.domain.Id
-import by.varyvoda.android.moneymaster.data.model.domain.Money
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import java.util.UUID
 
@@ -14,8 +14,8 @@ data class BalanceEdit(
     override val id: UUID,
     override val date: PrimitiveDate,
     val accountId: Id,
-    val newValue: Money,
-    val oldValue: Money,
+    val newValue: MoneyAmount,
+    val oldValue: MoneyAmount,
 ) : Operation {
 
     @Ignore

@@ -1,9 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,22 +13,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
-import by.varyvoda.android.moneymaster.data.model.domain.plusHours
-import by.varyvoda.android.moneymaster.ui.component.AccountListPickerDialog
+import by.varyvoda.android.moneymaster.ui.component.AccountAndAmount
 import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
-import by.varyvoda.android.moneymaster.ui.component.BalanceField
 import by.varyvoda.android.moneymaster.ui.component.CategoryPickerDialog
 import by.varyvoda.android.moneymaster.ui.component.DateSuggestions
 import by.varyvoda.android.moneymaster.ui.component.FormBox
+import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledCategoryPicker
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
-import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 
 @Composable
@@ -52,14 +46,7 @@ fun IncomeExpenseEditBody(
 
     FormBox(
         buttons = listOf {
-            AppButton(
-                onClick = { viewModel.onSaveClick() },
-                enabled = viewModel.canSave(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-            ) {
-                Text(text = stringResource(R.string.save))
-            }
+            SaveButton(viewModel = viewModel)
         },
         modifier = modifier
     ) {
@@ -68,51 +55,13 @@ fun IncomeExpenseEditBody(
                 .verticalScroll(rememberScrollState())
         ) {
             TitledContent(title = { AppTitle(textId = R.string.general) }) {
-                Row(
-                    horizontalArrangement = Arrangement.formSpacedBy(),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    var accountSelectionShown by remember { mutableStateOf(false) }
-                    AppTextField(
-                        value = currentAccount?.model?.name ?: "",
-                        onValueChange = {},
-                        asButton = true,
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    if (currentAccount == null)
-                                        R.string.select_account
-                                    else
-                                        R.string.account
-                                )
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable(onClick = { accountSelectionShown = true }),
-                    )
-                    if (accountSelectionShown) {
-                        AccountListPickerDialog(
-                            accounts = accounts,
-                            isSelected = { it.id == currentAccount?.id },
-                            onSelect = {
-                                accountSelectionShown = false
-                                viewModel.selectAccount(it.id)
-                            },
-                            onDismissRequest = { accountSelectionShown = false }
-                        ) {
-                        }
-                    }
-                    BalanceField(
-                        value = amount,
-                        onValueChange = { viewModel.changeAmount(it) },
-                        labelId = R.string.amount,
-                        imeAction = ImeAction.Done,
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-                }
+                AccountAndAmount(
+                    accounts = accounts,
+                    account = currentAccount,
+                    onSelectAccount = { viewModel.selectAccount(it.id) },
+                    amount = amount,
+                    onAmountChange = { viewModel.changeAmount(it) },
+                )
                 AppDatePicker(
                     date = date,
                     onDateSelected = { viewModel.changeDate(it) },
