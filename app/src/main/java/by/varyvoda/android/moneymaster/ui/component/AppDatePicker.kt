@@ -26,11 +26,9 @@ import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
+import by.varyvoda.android.moneymaster.data.model.domain.toDateString
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun AppDatePicker(
@@ -43,7 +41,7 @@ fun AppDatePicker(
     var showModal by remember { mutableStateOf(false) }
 
     AppTextField(
-        value = date?.let { convertMillisToDate(it) } ?: "",
+        value = date?.toDateString() ?: "",
         onValueChange = { },
         asButton = true,
         label = { Text(stringResource(labelId)) },
@@ -128,9 +126,4 @@ fun AppDatePickerDialog(
     ) {
         DatePicker(state = datePickerState)
     }
-}
-
-fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return formatter.format(Date(millis))
 }

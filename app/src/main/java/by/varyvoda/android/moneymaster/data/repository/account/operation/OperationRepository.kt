@@ -12,6 +12,8 @@ interface OperationRepository {
 
     suspend fun update(operation: Operation)
 
+    suspend fun delete(operation: Operation)
+
     suspend fun delete(id: UUID, operationType: Operation.Type? = null)
 
     fun getById(id: UUID): Flow<Operation?>

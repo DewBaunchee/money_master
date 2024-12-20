@@ -43,6 +43,9 @@ class RoomOperationRepository(
     override suspend fun update(operation: Operation) =
         daoProvider.getDaoFor(operation).update(operation)
 
+    override suspend fun delete(operation: Operation) =
+        daoProvider.getDaoFor(operation).delete(operation)
+
     override suspend fun delete(id: UUID, operationType: Operation.Type?) {
         allDaoRun { it.deleteById(id) }
     }
@@ -104,7 +107,7 @@ class RoomOperationRepository(
 
     private fun Flow<List<Operation>>.mapToDetailsList() = map { list -> list.map { it.details() } }
 
-    private fun List<Operation>.sort() = sortedBy { it.date }
+    private fun List<Operation>.sort() = sortedByDescending { it.date }
 
     private inline fun <reified R> allDaoRun(action: (OperationDao<out Operation>) -> R) =
         arrayOf(

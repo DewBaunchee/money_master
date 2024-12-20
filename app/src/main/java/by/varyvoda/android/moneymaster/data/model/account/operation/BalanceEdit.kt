@@ -14,7 +14,7 @@ data class BalanceEdit(
     override val id: UUID,
     override val date: PrimitiveDate,
     val accountId: Id,
-    val newValue: MoneyAmount,
+    val correctionValue: MoneyAmount,
     val oldValue: MoneyAmount,
 ) : Operation {
 

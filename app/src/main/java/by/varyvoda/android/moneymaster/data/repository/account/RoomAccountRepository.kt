@@ -1,9 +1,10 @@
 package by.varyvoda.android.moneymaster.data.repository.account
 
 import by.varyvoda.android.moneymaster.data.dao.account.AccountDao
-import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.data.repository.currency.CurrencyRepository
 import by.varyvoda.android.moneymaster.util.notNull
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,9 @@ class RoomAccountRepository(
     override suspend fun insert(account: Account) = accountDao.insert(account)
 
     override suspend fun update(account: Account) = accountDao.update(account)
+
+    override suspend fun updateBalance(accountId: Id, balance: MoneyAmount) =
+        accountDao.updateBalance(accountId, balance)
 
     override suspend fun delete(id: Id) = accountDao.deleteById(id)
 

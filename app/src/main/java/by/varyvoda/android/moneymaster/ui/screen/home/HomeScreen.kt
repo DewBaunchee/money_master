@@ -34,6 +34,7 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val (_, selectedOperationId) = viewModel.uiState.collectAsState().value
     val accounts = viewModel.accounts.collectAsState().value
     val mainCurrency = viewModel.mainCurrency.collectAsState().value
     val totalBalance = viewModel.totalBalance.collectAsState().value
@@ -83,6 +84,10 @@ fun HomeScreen(
                 accordingToAccount = currentAccount,
                 operations = operations ?: listOf(),
                 onViewAllClick = {},
+                isSelected = { it.id == selectedOperationId },
+                onSelect = { viewModel.selectOperation(it.id) },
+                onEditClick = {},
+                onDeleteClick = { viewModel.onDeleteOperationClick(it.id) },
                 modifier = Modifier
                     .weight(1f)
             )

@@ -80,7 +80,7 @@ fun appModule(context: Context) = DI.Module("appModule") {
         RoomAccountRepository(instance(), instance())
     }
     bind<AccountService>() with singleton {
-        AccountServiceImpl(instance(), instance())
+        AccountServiceImpl(instance(), instance(), instance())
     }
     bind<BalanceService>() with singleton {
         BalanceServiceImpl(instance())
@@ -97,7 +97,7 @@ fun appModule(context: Context) = DI.Module("appModule") {
 
 fun viewModelModule() = DI.Module("viewModelModule") {
     bind<HomeViewModel>() with singleton {
-        HomeViewModel(instance(), instance(), instance())
+        HomeViewModel(instance(), instance(), instance(), instance())
     }
     bind<MoreViewModel>() with singleton {
         MoreViewModel()

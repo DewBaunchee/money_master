@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.domain.local
 import by.varyvoda.android.moneymaster.ui.component.AccountAndAmount
 import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
@@ -63,7 +64,7 @@ fun IncomeExpenseEditBody(
                     onAmountChange = { viewModel.changeAmount(it) },
                 )
                 AppDatePicker(
-                    date = date,
+                    date = date?.local(),
                     onDateSelected = { viewModel.changeDate(it) },
                     R.string.select_date,
                     R.string.transaction_date_format,

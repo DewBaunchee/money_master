@@ -6,7 +6,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -60,6 +62,8 @@ data class IconRef(
         val More = Icons.Filled.MoreHoriz.toIconRef("More")
         val CreateAccount = Icons.Filled.AddCard.toIconRef("Create account")
         val Currencies = Icons.Filled.CurrencyExchange.toIconRef("Currencies")
+        val EditOperation  = Icons.Filled.Edit.toIconRef("Edit operation")
+        val DeleteOperation = Icons.Filled.Delete.toIconRef("Delete operation")
     }
 
     suspend fun load() = loader()

@@ -39,7 +39,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.CurrencyExchangeRate
         Transfer::class,
         Category::class,
     ],
-    version = 16,
+    version = 17,
     exportSchema = false
 )
 @TypeConverters(

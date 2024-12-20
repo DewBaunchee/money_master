@@ -1,11 +1,13 @@
 package by.varyvoda.android.moneymaster.ui.screen.home
 
+import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmount
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
+import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.balance.BalanceService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
@@ -19,7 +21,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
 @Serializable
 object HomeDestination
@@ -28,6 +32,7 @@ class HomeViewModel(
     accountRepository: AccountRepository,
     balanceService: BalanceService,
     operationRepository: OperationRepository,
+    private val accountService: AccountService,
 ) : BaseViewModel<HomeDestination>() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -49,6 +54,7 @@ class HomeViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val totalBalance = accounts
         .filterNotNull()
+        .map { list -> list.map { it.model } }
         .flatMapLatest {
             balanceService.calculateTotalBalance(
                 targetCurrencyCode = mainCurrency.value.code,
@@ -72,6 +78,23 @@ class HomeViewModel(
 
     fun changeCurrentAccount(accountId: Id) {
         this._uiState.update { it.copy(currentAccountId = accountId) }
+    }
+
+    fun selectOperation(operationId: UUID) {
+        this._uiState.update {
+            it.copy(
+                selectedOperationId =
+                if (it.selectedOperationId != operationId)
+                    operationId
+                else null
+            )
+        }
+    }
+
+    fun onDeleteOperationClick(operationId: UUID){
+        viewModelScope.launch {
+            accountService.removeOperation(operationId)
+        }
     }
 
     fun onAddIncomeClick() {
@@ -104,4 +127,5 @@ class HomeViewModel(
 
 data class HomeUiState(
     val currentAccountId: Id? = null,
+    val selectedOperationId: UUID? = null,
 )

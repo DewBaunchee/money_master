@@ -11,4 +11,5 @@ data class TransferDetails(
 ) : OperationDetails {
     override val id get() = model.id
     override val type get() = model.type
+    override val date get() = model.date
 }

@@ -3,25 +3,24 @@ package by.varyvoda.android.moneymaster.config
 import androidx.compose.ui.graphics.Color
 import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
-import by.varyvoda.android.moneymaster.data.model.account.operation.Expense
-import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
-import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
-import by.varyvoda.android.moneymaster.data.model.domain.now
+import by.varyvoda.android.moneymaster.data.model.domain.plusDays
 import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmount
+import by.varyvoda.android.moneymaster.data.model.domain.today
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.OperationRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
+import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import kotlinx.coroutines.flow.first
 import org.kodein.di.DI
 import org.kodein.di.instance
-import java.util.UUID
 
 suspend fun initializeDependencies(di: DI) {
     val iconsService: IconsService by di.instance()
+    val accountService: AccountService by di.instance()
 
     val colorThemeRepository: ColorThemeRepository by di.instance()
     insertThemes(colorThemeRepository)
@@ -33,7 +32,7 @@ suspend fun initializeDependencies(di: DI) {
     insertCategories(categoryRepository, colorThemeRepository, iconsService)
 
     val operationRepository: OperationRepository by di.instance()
-    insertOperations(operationRepository, accountRepository, categoryRepository)
+    insertOperations(accountService, accountRepository, categoryRepository)
 }
 
 private suspend fun insertThemes(repository: ColorThemeRepository) {
@@ -180,47 +179,40 @@ private suspend fun insertCategories(
 }
 
 private suspend fun insertOperations(
-    operationRepository: OperationRepository,
+    accountService: AccountService,
     accountRepository: AccountRepository,
     categoryRepository: CategoryRepository
 ) {
     val accounts = accountRepository.getAll().first()
     val categories = categoryRepository.getAll().first()
     repeat(6) {
-        operationRepository.insert(
-            Income(
-                id = UUID.randomUUID(),
-                accountId = accounts.random().id,
-                date = now(),
-                amount = (1L..200L).random().toMoneyAmount(),
-                categoryId = categories.random().id,
-                description = "Description",
-            )
+        accountService.addIncome(
+            accountId = accounts.random().id,
+            date = today().plusDays((1..7).random()),
+            amount = (1L..200L).random().toMoneyAmount(),
+            categoryId = categories.random().id,
+            description = "Description",
+            images = listOf()
         )
     }
     repeat(6) {
-        operationRepository.insert(
-            Expense(
-                id = UUID.randomUUID(),
-                accountId = accounts.random().id,
-                date = now(),
-                amount = (1L..200L).random().toMoneyAmount(),
-                categoryId = categories.random().id,
-                description = "Description",
-            )
+        accountService.addExpense(
+            accountId = accounts.random().id,
+            date = today().plusDays((1..7).random()),
+            amount = (1L..200L).random().toMoneyAmount(),
+            categoryId = categories.random().id,
+            description = "Description",
+            images = listOf()
         )
     }
     repeat(6) {
-        operationRepository.insert(
-            Transfer(
-                id = UUID.randomUUID(),
-                date = now(),
-                sourceAccountId = accounts.random().id,
-                destinationAccountId = accounts.random().id,
-                sentAmount = 400.toMoneyAmount(),
-                receivedAmount = 400.toMoneyAmount(),
-                description = "TODO()"
-            )
+        accountService.addTransfer(
+            date = today().plusDays((1..7).random()),
+            sourceAccountId = accounts.random().id,
+            destinationAccountId = accounts.random().id,
+            sentAmount = 400.toMoneyAmount(),
+            receivedAmount = 400.toMoneyAmount(),
+            description = "TODO()"
         )
     }
 }

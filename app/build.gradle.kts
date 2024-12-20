@@ -30,6 +30,8 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -59,6 +61,8 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     //Room
     implementation(libs.androidx.room.runtime)

@@ -45,6 +45,10 @@ data class MoneyAmount(
         )
     }
 
+    operator fun unaryMinus(): MoneyAmount = copy(numerator = -numerator)
+
+    operator fun minus(amount: MoneyAmount) = this + -amount
+
     operator fun times(amount: MoneyAmount) =
         MoneyAmount(
             numerator * amount.numerator,
