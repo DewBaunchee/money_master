@@ -1,5 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.screen.account.category
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
-import by.varyvoda.android.moneymaster.ui.component.AppButton
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
@@ -23,6 +23,7 @@ import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formPadding
+import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
 fun CategoryEditScreen(
@@ -41,7 +42,7 @@ fun CategoryEditScreen(
         Body(
             modifier = Modifier
                 .padding(innerPadding),
-            viewModel = viewModel
+            viewModel = viewModel,
         )
     }
 }
@@ -53,7 +54,7 @@ private fun Body(
 ) {
     val icons = viewModel.icons.collectAsState().value
     val colorThemes = viewModel.colorThemes.collectAsState().value
-    val (name, operationType, icon, colorTheme, iconSearchString) = viewModel.uiState.collectAsState().value
+    val (_, name, operationType, icon, colorTheme, iconSearchString) = viewModel.uiState.collectAsState().value
 
     FormBox(
         buttons = listOf {
@@ -61,7 +62,10 @@ private fun Body(
         },
         modifier = modifier,
     ) {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.formSpacedBy(),
+            modifier = Modifier.formPadding()
+        ) {
             AppTextField(
                 value = name,
                 label = { Text(text = stringResource(R.string.category_edit_name_field_label)) },
@@ -70,10 +74,11 @@ private fun Body(
                     imeAction = ImeAction.Done,
                 ),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .formPadding(),
+                    .fillMaxWidth(),
             )
-            TitledContent(title = { AppTitle(textId = R.string.category_type) }) {
+            TitledContent(
+                applyFormPadding = false,
+                title = { AppTitle(textId = R.string.category_type) }) {
                 ButtonSelector(
                     items = listOf(
                         Operation.Type.EXPENSE to R.string.expense,

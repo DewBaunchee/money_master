@@ -36,6 +36,7 @@ import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
@@ -109,11 +110,14 @@ fun viewModelModule() = DI.Module("viewModelModule") {
     bind<CurrenciesViewModel>() with singleton {
         CurrenciesViewModel(instance(), instance(), instance())
     }
+    bind<CategoriesViewModel>() with singleton {
+        CategoriesViewModel(instance())
+    }
     bind<OperationEditViewModel>() with singleton {
         OperationEditViewModel(instance(), instance(), instance())
     }
     bind<CategoryEditViewModel>() with singleton {
-        CategoryEditViewModel(instance(), instance(), instance())
+        CategoryEditViewModel(instance(), instance(), instance(), instance())
     }
 }
 

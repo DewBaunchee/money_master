@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
@@ -62,6 +63,7 @@ data class IconRef(
         val More = Icons.Filled.MoreHoriz.toIconRef("More")
         val CreateAccount = Icons.Filled.AddCard.toIconRef("Create account")
         val Currencies = Icons.Filled.CurrencyExchange.toIconRef("Currencies")
+        val Categories = Icons.Filled.Category.toIconRef("Categories")
         val EditOperation  = Icons.Filled.Edit.toIconRef("Edit operation")
         val DeleteOperation = Icons.Filled.Delete.toIconRef("Delete operation")
     }

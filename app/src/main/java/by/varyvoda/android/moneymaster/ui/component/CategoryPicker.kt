@@ -101,6 +101,56 @@ fun TitledCategoryPicker(
 }
 
 @Composable
+fun CategoriesPickerForm(
+    categories: List<Category>,
+    isSelected: (Category) -> Boolean,
+    onSelect: (Category) -> Unit,
+    searchString: String,
+    onSearchStringChange: (String) -> Unit,
+    onAddCategoryClick: () -> Unit,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SearchableContent(
+        searchEnabled = true,
+        searchString = searchString,
+        onSearchStringChange = onSearchStringChange,
+        modifier = Modifier.formPadding(),
+    ) {
+        FormBox(
+            buttons = listOf(
+                {
+                    AppButton(
+                        onClick = onAddCategoryClick,
+                        isSecondary = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.add_category))
+                    }
+                },
+                {
+                    AppButton(
+                        onClick = onClose,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.close))
+                    }
+                }
+            ),
+            modifier = modifier,
+        ) {
+            CategoryPicker(
+                categories = categories,
+                isSelected = isSelected,
+                onSelect = onSelect,
+            )
+        }
+    }
+}
+
+@Composable
 fun CategoryPickerDialog(
     categories: List<Category>,
     isSelected: (Category) -> Boolean,
@@ -109,46 +159,22 @@ fun CategoryPickerDialog(
     onClose: () -> Unit,
     searchString: String,
     onSearchStringChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     FullScreenDialog(
         titleId = R.string.categories,
         onBackClick = onClose,
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            SearchableContent(
+        Box(modifier = modifier.padding(innerPadding)) {
+            CategoriesPickerForm(
+                categories = categories,
+                isSelected = isSelected,
+                onSelect = onSelect,
                 searchString = searchString,
                 onSearchStringChange = onSearchStringChange,
-            ) {
-                FormBox(
-                    buttons = listOf(
-                        {
-                            AppButton(
-                                onClick = onAddCategoryClick,
-                                isSecondary = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                Text(text = stringResource(R.string.add_category))
-                            }
-                        },
-                        {
-                            AppButton(
-                                onClick = onClose,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                Text(text = stringResource(R.string.close))
-                            }
-                        }
-                    )
-                ) {
-                    CategoryPicker(
-                        categories = categories,
-                        isSelected = isSelected,
-                        onSelect = onSelect,
-                    )
-                }
-            }
+                onAddCategoryClick = onAddCategoryClick,
+                onClose = onClose,
+            )
         }
     }
 }

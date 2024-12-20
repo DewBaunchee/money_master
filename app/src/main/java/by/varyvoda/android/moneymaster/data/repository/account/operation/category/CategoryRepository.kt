@@ -1,6 +1,7 @@
 package by.varyvoda.android.moneymaster.data.repository.account.operation.category
 
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
 
@@ -20,5 +21,5 @@ interface CategoryRepository {
 
     fun getAll(): Flow<List<Category>>
 
-    fun getAll(searchString: String): Flow<List<Category>>
+    fun getAll(searchString: String, operationType: Operation.Type): Flow<List<Category>>
 }

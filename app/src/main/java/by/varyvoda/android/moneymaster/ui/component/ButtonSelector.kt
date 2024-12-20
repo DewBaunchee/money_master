@@ -1,6 +1,7 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ fun <T> ButtonSelector(
     isSelected: (T) -> Boolean,
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
-    itemContent: @Composable (T) -> Unit,
+    itemContent: @Composable RowScope.(T) -> Unit,
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.formSpacedBy(),

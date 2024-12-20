@@ -134,7 +134,12 @@ class IncomeExpenseEditViewModel(
     val categories = _uiState
         .map { it.categorySearchString }
         .distinctUntilChanged()
-        .flatMapLatest { categoryRepository.getAll(it) }
+        .flatMapLatest {
+            categoryRepository.getAll(
+                searchString = it,
+                operationType = if (income) Operation.Type.INCOME else Operation.Type.EXPENSE
+            )
+        }
         .stateInThis()
 
     val currentAccount get() = accounts.value.find { it.id == uiState.value.accountId }

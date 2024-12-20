@@ -32,6 +32,9 @@ import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewMod
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesDestination
+import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesScreen
+import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesDestination
 import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesScreen
 import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
@@ -78,6 +81,10 @@ fun NavComponent(
             route<CurrenciesDestination, CurrenciesViewModel>(di, navController) {
                 bottomBarVisible = false
                 CurrenciesScreen(viewModel = it)
+            }
+            route<CategoriesDestination, CategoriesViewModel>(di, navController) {
+                bottomBarVisible = false
+                CategoriesScreen(viewModel = it)
             }
             route<OperationEditDestination, OperationEditViewModel>(di, navController) {
                 bottomBarVisible = false

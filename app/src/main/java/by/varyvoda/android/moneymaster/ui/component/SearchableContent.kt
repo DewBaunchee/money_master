@@ -1,10 +1,12 @@
 package by.varyvoda.android.moneymaster.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
 fun SearchableContent(
@@ -14,7 +16,7 @@ fun SearchableContent(
     onSearchStringChange: (String) -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(verticalArrangement = Arrangement.formSpacedBy(), modifier = modifier) {
         if (searchEnabled) {
             SearchField(
                 searchString = searchString,

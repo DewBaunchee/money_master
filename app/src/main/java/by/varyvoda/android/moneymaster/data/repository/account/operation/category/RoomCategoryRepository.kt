@@ -2,6 +2,7 @@ package by.varyvoda.android.moneymaster.data.repository.account.operation.catego
 
 import by.varyvoda.android.moneymaster.data.dao.account.operation.CategoryDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -24,8 +25,8 @@ class RoomCategoryRepository(
 
     override fun getAll(): Flow<List<Category>> = dao.getAll()
 
-    override fun getAll(searchString: String): Flow<List<Category>> =
-        dao.getAll()
+    override fun getAll(searchString: String, operationType: Operation.Type): Flow<List<Category>> =
+        dao.getAllByOperationType(operationType)
             .map { categories ->
                 categories.filter {
                     it.name.contains(

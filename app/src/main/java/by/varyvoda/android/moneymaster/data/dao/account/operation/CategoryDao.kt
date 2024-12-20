@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,7 @@ interface CategoryDao : BaseDao<Category> {
 
     @Query("SELECT * FROM category")
     fun getAll(): Flow<List<Category>>
+
+    @Query("SELECT * FROM category WHERE operationType = :operationType")
+    fun getAllByOperationType(operationType: Operation.Type): Flow<List<Category>>
 }

@@ -5,6 +5,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.data.repository.account.theme.ColorThemeRepository
 import by.varyvoda.android.moneymaster.data.service.category.CategoryService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
@@ -14,8 +15,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -26,12 +30,13 @@ data class CategoryEditDestination(
 )
 
 class CategoryEditViewModel(
+    private val categoryRepository: CategoryRepository,
     private val categoryService: CategoryService,
     iconsService: IconsService,
     colorThemeRepository: ColorThemeRepository,
 ) : BaseViewModel<CategoryEditDestination>(), SavableViewModel {
 
-    private val _uiState = MutableStateFlow(AccountOperationCategoryUiState())
+    private val _uiState = MutableStateFlow(CategoryEditUiState())
     val uiState = _uiState.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,7 +57,23 @@ class CategoryEditViewModel(
         }
 
     override fun applyDestination(destination: CategoryEditDestination) {
-
+        destination.categoryId?.let {
+            categoryRepository.getById(it)
+                .filterNotNull()
+                .take(1)
+                .onEach { category ->
+                    _uiState.update {  state ->
+                        state.copy(
+                            editableCategoryId = it,
+                            name = category.name,
+                            operationType = Operation.Type.INCOME,
+                            iconRef = category.iconRef,
+                            colorTheme = category.colorTheme,
+                        )
+                    }
+                }
+                .launchInThis()
+        }
     }
 
     fun changeName(name: String) {
@@ -88,19 +109,30 @@ class CategoryEditViewModel(
 
         viewModelScope.launch {
             with(_uiState.value) {
-                categoryService.createCategory(
-                    name = name,
-                    operationType = operationType,
-                    iconRef = iconRef,
-                    colorTheme = colorTheme,
-                )
+                if (editableCategoryId != null) {
+                    categoryService.updateCategory(
+                        categoryId = editableCategoryId,
+                        name = name,
+                        operationType = operationType,
+                        iconRef = iconRef,
+                        colorTheme = colorTheme,
+                    )
+                } else {
+                    categoryService.createCategory(
+                        name = name,
+                        operationType = operationType,
+                        iconRef = iconRef,
+                        colorTheme = colorTheme,
+                    )
+                }
             }
         }
         navigateUp()
     }
 }
 
-data class AccountOperationCategoryUiState(
+data class CategoryEditUiState(
+    val editableCategoryId: Id? = null,
     val name: String = "",
     val operationType: Operation.Type = Operation.Type.EXPENSE,
     val iconRef: IconRef = IconRef.Default,
