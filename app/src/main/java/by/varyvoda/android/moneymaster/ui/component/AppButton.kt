@@ -77,11 +77,11 @@ fun AppIconButton(
     tint: Color = if (isSecondary)
         MaterialTheme.colorScheme.onSecondary
     else
-        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.onPrimary,
     background: Brush? = if (isSecondary)
         MaterialTheme.colorScheme.secondary.toBrush()
     else
-        MaterialTheme.colorScheme.onSecondary.toBrush()
+        MaterialTheme.colorScheme.primary.toBrush()
 ) {
     Box(
         contentAlignment = Alignment.Center,

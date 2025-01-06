@@ -2,16 +2,14 @@ package by.varyvoda.android.moneymaster.ui.screen.categories
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.ui.component.CategoriesPickerForm
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
-import by.varyvoda.android.moneymaster.ui.component.TitleSelector
+import by.varyvoda.android.moneymaster.ui.component.TitleOperationTypeSelector
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
@@ -33,19 +31,17 @@ fun CategoriesScreenBody(viewModel: CategoriesViewModel, modifier: Modifier = Mo
         viewModel.uiState.collectAsState().value
     val categories = viewModel.categories.collectAsState().value
 
-    TitleSelector(
+    TitleOperationTypeSelector(
         options = listOf(
-            Operation.Type.INCOME to R.string.income,
-            Operation.Type.EXPENSE to R.string.expense,
+            Operation.Type.INCOME,
+            Operation.Type.EXPENSE,
         ),
-        isSelected = { it.first == operationType },
-        onSelect = { viewModel.selectOperationType(it.first) },
+        isSelected = { it == operationType },
+        onSelect = { viewModel.selectOperationType(it) },
         modifier = Modifier
             .fillMaxWidth()
             .formPadding()
-    ) {
-        Text(text = stringResource(it.second), modifier = Modifier.fillMaxWidth())
-    }
+    )
     CategoriesPickerForm(
         categories = categories,
         isSelected = { false },

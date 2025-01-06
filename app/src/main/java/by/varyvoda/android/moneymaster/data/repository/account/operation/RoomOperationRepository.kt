@@ -16,6 +16,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.operation.Transfer
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDateRange
 import by.varyvoda.android.moneymaster.data.repository.account.AccountRepository
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.util.anyNotNull
@@ -71,6 +72,14 @@ class RoomOperationRepository(
             .combineListsAndSort()
             .mapToDetailsList()
 
+    override fun getAllDetailsByTypeAndBetweenDateRange(
+        operationType: Operation.Type,
+        dateRange: PrimitiveDateRange
+    ): Flow<List<OperationDetails>> =
+        daoProvider.getDaoFor(operationType)
+            .getAllBetween(from = dateRange.first, to = dateRange.second)
+            .mapToDetailsList()
+
     private fun Operation.details(): OperationDetails = when (this) {
         is BalanceEdit -> details()
         is Expense -> details()
@@ -86,14 +95,14 @@ class RoomOperationRepository(
         ExpenseDetails(
             model = this,
             category = categoryRepository.getById(categoryId).notNull(),
-            accounts = accountRepository.getDetailsById(accountId).notNull()
+            account = accountRepository.getDetailsById(accountId).notNull()
         )
 
     private fun Income.details(): IncomeDetails =
         IncomeDetails(
             model = this,
             category = categoryRepository.getById(categoryId).notNull(),
-            accounts = accountRepository.getDetailsById(accountId).notNull()
+            account = accountRepository.getDetailsById(accountId).notNull()
         )
 
     private fun Transfer.details(): TransferDetails =
@@ -150,9 +159,12 @@ private class OperationDaoProvider(
     fun getDaoFor(operation: Operation): OperationDao<Operation> =
         getDaoFor(operation.type)
 
-    @Suppress("UNCHECKED_CAST")
     fun getDaoFor(operationType: Operation.Type): OperationDao<Operation> =
-        operationTypeToDao.getOrElse(operationType) {
-            throw IllegalArgumentException("Cannot find DAO for $operationType")
+        operationTypeToDao.getOrThrowAndCast(operationType)
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <K> Map<K, OperationDao<out Operation>>.getOrThrowAndCast(key: K) =
+        getOrElse(key) {
+            throw IllegalArgumentException("Cannot find DAO for $key")
         } as OperationDao<Operation>
 }

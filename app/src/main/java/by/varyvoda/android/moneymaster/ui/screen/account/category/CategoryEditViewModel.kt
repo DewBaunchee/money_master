@@ -62,11 +62,11 @@ class CategoryEditViewModel(
                 .filterNotNull()
                 .take(1)
                 .onEach { category ->
-                    _uiState.update {  state ->
+                    _uiState.update { state ->
                         state.copy(
                             editableCategoryId = it,
                             name = category.name,
-                            operationType = Operation.Type.INCOME,
+                            operationType = Operation.Type.DEFAULT,
                             iconRef = category.iconRef,
                             colorTheme = category.colorTheme,
                         )
@@ -134,7 +134,7 @@ class CategoryEditViewModel(
 data class CategoryEditUiState(
     val editableCategoryId: Id? = null,
     val name: String = "",
-    val operationType: Operation.Type = Operation.Type.EXPENSE,
+    val operationType: Operation.Type = Operation.Type.DEFAULT,
     val iconRef: IconRef = IconRef.Default,
     val colorTheme: ColorTheme = ColorTheme.DEFAULT,
     val iconSearchString: String = "",

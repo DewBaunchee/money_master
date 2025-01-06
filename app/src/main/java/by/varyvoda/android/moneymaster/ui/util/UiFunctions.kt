@@ -14,8 +14,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.data.model.domain.now
-import kotlin.random.Random
 
 @Composable
 fun smallPadding() = dimensionResource(R.dimen.small_padding)

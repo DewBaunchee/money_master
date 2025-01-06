@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import by.varyvoda.android.moneymaster.data.model.account.operation.Income
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -21,4 +22,7 @@ interface IncomeDao : OperationDao<Income> {
 
     @Query("SELECT * FROM income WHERE accountId = :accountId")
     override fun getByAccountId(accountId: Id): Flow<List<Income>>
+
+    @Query("SELECT * FROM income WHERE date BETWEEN :from AND :to")
+    override fun getAllBetween(from: PrimitiveDate, to: PrimitiveDate): Flow<List<Income>>
 }

@@ -3,6 +3,7 @@ package by.varyvoda.android.moneymaster.data.dao.account.operation
 import by.varyvoda.android.moneymaster.data.dao.BaseDao
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -15,4 +16,6 @@ interface OperationDao<T : Operation> : BaseDao<T> {
     fun getAll(): Flow<List<T>>
 
     fun getByAccountId(accountId: Id): Flow<List<T>>
+
+    fun getAllBetween(from: PrimitiveDate, to: PrimitiveDate): Flow<List<T>>
 }

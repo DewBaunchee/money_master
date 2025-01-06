@@ -18,7 +18,7 @@ fun MoneyText(
     amount: MoneyAmount?,
     modifier: Modifier = Modifier,
     defaultAmountString: String = "",
-    negative: Boolean? = amount?.isNegative(),
+    negative: Boolean? = null,
     color: Color = negative?.let { if (negative) Negative else Positive }
         ?: MaterialTheme.colorScheme.primary,
     style: TextStyle = LocalTextStyle.current,

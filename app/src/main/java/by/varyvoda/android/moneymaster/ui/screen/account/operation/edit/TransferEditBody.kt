@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.ui.component.AccountAndAmount
-import by.varyvoda.android.moneymaster.ui.component.AppDatePicker
+import by.varyvoda.android.moneymaster.ui.component.AppDatePickerField
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.DateSuggestions
@@ -67,7 +67,7 @@ fun TransferEditBody(viewModel: TransferViewModel, modifier: Modifier = Modifier
                 modifier = Modifier
                     .formPadding(),
             ) {
-                AppDatePicker(
+                AppDatePickerField(
                     date = date,
                     onDateSelected = { viewModel.changeDate(it) },
                     R.string.select_date,

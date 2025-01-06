@@ -49,16 +49,15 @@ class HomeViewModel(
             )
         }
 
-    val mainCurrency = MutableStateFlow(Currency(code = "USD", "dollar", "$")).asStateFlow()
+    val mainCurrency = MutableStateFlow(Currency.USD).asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val totalBalance = accounts
         .filterNotNull()
-        .map { list -> list.map { it.model } }
-        .flatMapLatest {
+        .flatMapLatest { list ->
             balanceService.calculateTotalBalance(
                 targetCurrencyCode = mainCurrency.value.code,
-                accounts = it,
+                accounts = list.map { it.model },
             )
         }
         .stateInThis(0.toMoneyAmount())

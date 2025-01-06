@@ -17,10 +17,10 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
-import by.varyvoda.android.moneymaster.ui.component.ButtonSelector
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
+import by.varyvoda.android.moneymaster.ui.component.TitleOperationTypeSelector
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
@@ -78,21 +78,19 @@ private fun Body(
             )
             TitledContent(
                 applyFormPadding = false,
-                title = { AppTitle(textId = R.string.category_type) }) {
-                ButtonSelector(
-                    items = listOf(
-                        Operation.Type.EXPENSE to R.string.expense,
-                        Operation.Type.INCOME to R.string.income
+                title = { AppTitle(textId = R.string.category_type) }
+            ) {
+                TitleOperationTypeSelector(
+                    options = listOf(
+                        Operation.Type.EXPENSE,
+                        Operation.Type.INCOME
                     ),
-                    isSelected = { it.first == operationType },
-                    onSelect = { viewModel.changeOperationType(it.first) },
+                    isSelected = { it == operationType },
+                    onSelect = { viewModel.changeOperationType(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                ) { item ->
-                    Text(
-                        text = stringResource(item.second),
-                    )
-                }
+                        .formPadding()
+                )
             }
             AppearanceBuilder(
                 icons = icons,

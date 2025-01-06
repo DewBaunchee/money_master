@@ -33,6 +33,8 @@ import by.varyvoda.android.moneymaster.data.service.currency.exchange.CurrencyEx
 import by.varyvoda.android.moneymaster.data.service.currency.exchange.CurrencyExchangeServiceImpl
 import by.varyvoda.android.moneymaster.data.service.icons.GoogleIconsService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
+import by.varyvoda.android.moneymaster.data.service.statistics.StatisticsService
+import by.varyvoda.android.moneymaster.data.service.statistics.StatisticsServiceImpl
 import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
@@ -40,6 +42,7 @@ import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
+import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -92,6 +95,9 @@ fun appModule(context: Context) = DI.Module("appModule") {
     bind<CategoryService>() with singleton {
         CategoryServiceImpl(instance())
     }
+    bind<StatisticsService>() with singleton {
+        StatisticsServiceImpl(instance(), instance())
+    }
 
     import(viewModelModule())
 }
@@ -99,6 +105,9 @@ fun appModule(context: Context) = DI.Module("appModule") {
 fun viewModelModule() = DI.Module("viewModelModule") {
     bind<HomeViewModel>() with singleton {
         HomeViewModel(instance(), instance(), instance(), instance())
+    }
+    bind<StatisticsViewModel>() with singleton {
+        StatisticsViewModel(instance())
     }
     bind<MoreViewModel>() with singleton {
         MoreViewModel()

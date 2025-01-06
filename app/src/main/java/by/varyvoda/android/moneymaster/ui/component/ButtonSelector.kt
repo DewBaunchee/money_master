@@ -11,7 +11,7 @@ import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
 fun <T> ButtonSelector(
-    items: List<T>,
+    options: List<T>,
     isSelected: (T) -> Boolean,
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -22,7 +22,7 @@ fun <T> ButtonSelector(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
-        items(items) { item ->
+        items(options) { item ->
             AppButton(
                 onClick = { onSelect(item) },
                 isSecondary = !isSelected(item),

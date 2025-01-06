@@ -48,7 +48,7 @@ class OperationEditViewModel(
 
     private val accounts = accountRepository.getAllDetails().stateInThis()
 
-    private val dateSuggestions = MutableStateFlow(DateSuggestion.DEFAULT)
+    private val dateSuggestions = MutableStateFlow(DateSuggestion.default())
 
     val incomeViewModel = createIncomeExpenseViewModel(true)
     val expenseViewModel = createIncomeExpenseViewModel(false)

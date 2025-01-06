@@ -4,6 +4,7 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import java.util.UUID
 
+// TODO SEALED
 interface OperationDetails {
 
     val id: UUID

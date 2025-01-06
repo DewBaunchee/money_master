@@ -5,9 +5,9 @@ import kotlin.math.absoluteValue
 import kotlin.math.pow
 
 data class MoneyAmount(
-    val numerator: Long,
+    val numerator: Long = 0,
     val denominatorPower: Int = 0,
-) {
+) : Comparable<MoneyAmount> {
 
     companion object {
         const val FRACTION_DELIMITER = "."
@@ -54,6 +54,10 @@ data class MoneyAmount(
             numerator * amount.numerator,
             denominatorPower + amount.denominatorPower,
         )
+
+    override fun compareTo(other: MoneyAmount): Int {
+        return doubleValue.compareTo(other.doubleValue)
+    }
 
     fun toString(
         fractionDelimiter: String = FRACTION_DELIMITER,

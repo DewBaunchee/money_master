@@ -37,80 +37,87 @@ class BalanceServiceImpl(
             amounts.reduce { acc, moneyAmount -> acc + moneyAmount }
         }
 
-    override fun calculateNextAccountBalance(
+    override fun calculateAccountBalance(
         account: Account,
-        operation: Operation
+        operation: Operation,
+        addOperation: Boolean,
     ): Flow<MoneyAmount> =
         flowOf(
             balanceCalculatorProvider.getCalculator(operation)
-                .calculateNextBalance(
+                .calculateBalance(
                     account = account,
                     operation = operation,
-                )
-        )
-
-    override fun calculatePrevAccountBalance(
-        account: Account,
-        operation: Operation
-    ): Flow<MoneyAmount> =
-        flowOf(
-            balanceCalculatorProvider.getCalculator(operation)
-                .calculatePrevBalance(
-                    account = account,
-                    operation = operation,
+                    addOperation = addOperation,
                 )
         )
 }
 
 private interface BalanceCalculator<T : Operation> {
 
-    fun calculateNextBalance(account: Account, operation: T): MoneyAmount
+    fun calculateBalance(account: Account, operation: T, addOperation: Boolean): MoneyAmount
 
-    fun calculatePrevBalance(account: Account, operation: T): MoneyAmount
 }
 
 private class BalanceCalculatorProvider {
 
     private val calculatorMap: Map<Operation.Type, BalanceCalculator<out Operation>> = mapOf(
         Operation.Type.INCOME to object : BalanceCalculator<Income> {
-            override fun calculateNextBalance(account: Account, operation: Income) =
-                account.currentBalance + operation.amount
-
-            override fun calculatePrevBalance(account: Account, operation: Income) =
-                account.currentBalance - operation.amount
+            override fun calculateBalance(
+                account: Account,
+                operation: Income,
+                addOperation: Boolean
+            ) =
+                if (addOperation)
+                    account.currentBalance + operation.amount
+                else
+                    account.currentBalance - operation.amount
         },
         Operation.Type.EXPENSE to object : BalanceCalculator<Expense> {
-            override fun calculateNextBalance(account: Account, operation: Expense) =
-                account.currentBalance - operation.amount
-
-            override fun calculatePrevBalance(account: Account, operation: Expense) =
-                account.currentBalance + operation.amount
+            override fun calculateBalance(
+                account: Account,
+                operation: Expense,
+                addOperation: Boolean
+            ) =
+                if (addOperation)
+                    account.currentBalance - operation.amount
+                else
+                    account.currentBalance + operation.amount
         },
         Operation.Type.TRANSFER to object : BalanceCalculator<Transfer> {
-            override fun calculateNextBalance(account: Account, operation: Transfer) =
+            override fun calculateBalance(
+                account: Account,
+                operation: Transfer,
+                addOperation: Boolean
+            ) =
                 when (account.id) {
-                    operation.sourceAccountId -> account.currentBalance - operation.sentAmount
-                    operation.destinationAccountId -> account.currentBalance + operation.receivedAmount
+                    operation.sourceAccountId ->
+                        if (addOperation)
+                            account.currentBalance - operation.sentAmount
+                        else
+                            account.currentBalance + operation.sentAmount
+
+                    operation.destinationAccountId ->
+                        if (addOperation)
+                            account.currentBalance + operation.receivedAmount
+                        else
+                            account.currentBalance - operation.receivedAmount
+
                     else -> throw IllegalArgumentException(
                         "Cannot calculate balance, because account is not part of transfer"
                     )
                 }
 
-            override fun calculatePrevBalance(account: Account, operation: Transfer) =
-                when (account.id) {
-                    operation.sourceAccountId -> account.currentBalance + operation.sentAmount
-                    operation.destinationAccountId -> account.currentBalance - operation.receivedAmount
-                    else -> throw IllegalArgumentException(
-                        "Cannot calculate balance, because account is not part of transfer"
-                    )
-                }
         },
         Operation.Type.BALANCE_EDIT to object : BalanceCalculator<BalanceEdit> {
-            override fun calculateNextBalance(account: Account, operation: BalanceEdit) =
-                account.currentBalance + operation.correctionValue
-
-            override fun calculatePrevBalance(account: Account, operation: BalanceEdit) =
-                account.currentBalance - operation.correctionValue
+            override fun calculateBalance(
+                account: Account,
+                operation: BalanceEdit,
+                addOperation: Boolean
+            ) =
+                if (addOperation)
+                    account.currentBalance + operation.correctionValue
+                else
+                    account.currentBalance - operation.correctionValue
         },
     )
 

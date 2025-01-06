@@ -44,6 +44,9 @@ import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreDestination
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreScreen
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
+import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsDestination
+import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsScreen
+import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsViewModel
 import org.kodein.di.DI
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
@@ -61,12 +64,16 @@ fun NavComponent(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = HomeDestination,
+            startDestination = StatisticsDestination,
             modifier = modifier.padding(innerPadding),
         ) {
             route<HomeDestination, HomeViewModel>(di, navController) {
                 bottomBarVisible = true
                 HomeScreen(viewModel = it)
+            }
+            route<StatisticsDestination, StatisticsViewModel>(di, navController) {
+                bottomBarVisible = true
+                StatisticsScreen(viewModel = it)
             }
             route<MoreDestination, MoreViewModel>(di, navController) {
                 bottomBarVisible = true

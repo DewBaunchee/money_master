@@ -3,9 +3,7 @@ package by.varyvoda.android.moneymaster.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,19 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
-import by.varyvoda.android.moneymaster.data.details.account.operation.ExpenseDetails
-import by.varyvoda.android.moneymaster.data.details.account.operation.IncomeDetails
+import by.varyvoda.android.moneymaster.data.details.account.operation.IncomeExpenseDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.OperationDetails
 import by.varyvoda.android.moneymaster.data.details.account.operation.TransferDetails
-import by.varyvoda.android.moneymaster.data.model.account.operation.Category
+import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.currency.Currency
-import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import by.varyvoda.android.moneymaster.data.model.domain.toDateString
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
 import by.varyvoda.android.moneymaster.ui.theme.Negative
@@ -44,19 +39,9 @@ fun TitledOperationList(
     onDeleteClick: (OperationDetails) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    TitledContent(
-        applyFormPadding = false,
-        title = {
-            AppTitleAndViewAll(
-                titleId = R.string.operations,
-                onViewAllClick = onViewAllClick,
-                modifier = Modifier.padding(
-                    top = formPadding(),
-                    start = formPadding(),
-                    end = formPadding(),
-                ),
-            )
-        },
+    TitledList(
+        titleId = R.string.operations,
+        onViewAllClick = onViewAllClick,
         modifier = modifier,
     ) {
         OperationList(
@@ -86,7 +71,7 @@ fun OperationList(
             val operation = operations[it]
 
             if (operation.date != prevOperation?.date) {
-                Text(text = operation.date.toDateString())
+                Text(text = operation.date.toDateString(stringResource(R.string.pretty_date_format)))
             }
 
             OperationListItem(
@@ -156,33 +141,10 @@ fun OperationListItem(
     modifier: Modifier = Modifier,
 ) {
     when (operation) {
-        is IncomeDetails -> operation.apply {
-            val category = category.valueOrNull()
-            val account = accounts.valueOrNull()
-            val currency = account?.currency?.valueOrNull()
+        is IncomeExpenseDetails -> operation.apply {
             IncomeExpenseOperationListItem(
                 operation = operation,
-                income = true,
-                category = category,
-                description = model.description,
-                currency = currency,
-                amount = model.amount,
-                onClick = onClick,
-                modifier = modifier,
-            )
-        }
-
-        is ExpenseDetails -> operation.apply {
-            val category = category.valueOrNull()
-            val account = accounts.valueOrNull()
-            val currency = account?.currency?.valueOrNull()
-            IncomeExpenseOperationListItem(
-                operation = operation,
-                income = false,
-                category = category,
-                description = model.description,
-                currency = currency,
-                amount = model.amount,
+                currency = operation.account.valueOrNull()?.currency?.valueOrNull(),
                 onClick = onClick,
                 modifier = modifier,
             )
@@ -197,44 +159,18 @@ fun OperationListItem(
 }
 
 @Composable
-fun OperationItemContainer(
-    operation: OperationDetails,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit,
-) {
-    Surface(
-        shadowElevation = dimensionResource(R.dimen.soft_elevation),
-        shape = MaterialTheme.shapes.small,
-    ) {
-        ListPickerOption(
-            item = operation,
-            isSelected = false,
-            onClick = onClick,
-            modifier = modifier,
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.formSpacedBy(),
-                content = content,
-            )
-        }
-    }
-}
-
-@Composable
 fun IncomeExpenseOperationListItem(
-    operation: OperationDetails,
-    income: Boolean,
-    category: Category?,
-    description: String,
+    operation: IncomeExpenseDetails,
     currency: Currency?,
-    amount: MoneyAmount,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    OperationItemContainer(
-        operation = operation,
+    val category = operation.category.valueOrNull()
+    val amount = operation.model.amount
+    val description = operation.model.description
+    val income = operation.type == Operation.Type.INCOME
+    ListPickerItemContainer(
+        item = operation,
         onClick = onClick,
         modifier = modifier,
     ) {
@@ -268,8 +204,8 @@ fun TransferOperationListItem(
     else operation.sourceAccount).valueOrNull()
     val relatedCurrency = relatedAccount?.currency?.valueOrNull()
 
-    OperationItemContainer(
-        operation = operation,
+    ListPickerItemContainer(
+        item = operation,
         onClick = onClick,
         modifier = modifier,
     ) {

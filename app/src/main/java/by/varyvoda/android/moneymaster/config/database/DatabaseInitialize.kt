@@ -14,22 +14,22 @@ suspend fun initializeDatabase(database: AppRoomDatabase) {
 }
 
 suspend fun insertCurrencies(dao: CurrencyDao) {
-    dao.insert(Currency(code = "USD", name = "American Dollar", symbol = "$"))
-    dao.insert(Currency(code = "BYN", name = "Belarusian Rouble", symbol = "BYN"))
+    dao.insert(Currency.USD)
+    dao.insert(Currency.BYN)
 }
 
 suspend fun insertCurrencyExchangeRates(dao: CurrencyExchangeRateDao) {
     dao.insert(
         CurrencyExchangeRate(
-            soldCurrencyCode = "USD",
-            boughtCurrencyCode = "BYN",
+            soldCurrencyCode = Currency.USD.code,
+            boughtCurrencyCode = Currency.BYN.code,
             MoneyAmount(numerator = 34405, denominatorPower = 4)
         )
     )
     dao.insert(
         CurrencyExchangeRate(
-            soldCurrencyCode = "BYN",
-            boughtCurrencyCode = "USD",
+            soldCurrencyCode = Currency.BYN.code,
+            boughtCurrencyCode = Currency.USD.code,
             MoneyAmount(numerator = 29, denominatorPower = 2)
         )
     )

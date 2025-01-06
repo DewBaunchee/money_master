@@ -7,7 +7,7 @@ data class DateSuggestion(
 
     companion object {
 
-        val DEFAULT = listOf(
+        fun default() = listOf(
             DateSuggestion(
                 "Today",
                 today()

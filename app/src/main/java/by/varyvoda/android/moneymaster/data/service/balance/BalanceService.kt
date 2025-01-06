@@ -12,13 +12,10 @@ interface BalanceService {
         accounts: List<Account>
     ): Flow<MoneyAmount>
 
-    fun calculateNextAccountBalance(
+    fun calculateAccountBalance(
         account: Account,
         operation: Operation,
+        addOperation: Boolean = true,
     ): Flow<MoneyAmount>
 
-    fun calculatePrevAccountBalance(
-        account: Account,
-        operation: Operation,
-    ): Flow<MoneyAmount>
 }

@@ -61,4 +61,8 @@
     <string name="currencies">Currencies</string>
     <string name="first_to_second_rate">First to second rate</string>
     <string name="second_to_first_rate">Second to first rate</string>
+    <string name="balance_edit">Balance edit</string>
+    <string name="transfer">Transfer</string>
+    <string name="select_period">Select period</string>
+    <string name="pretty_date_format">EEE, MMM d, yyyy</string>
 </resources>

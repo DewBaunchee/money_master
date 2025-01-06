@@ -1,7 +1,7 @@
 package by.varyvoda.android.moneymaster.data.repository.account
 
-import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
+import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 import kotlinx.coroutines.flow.Flow

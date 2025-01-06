@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import by.varyvoda.android.moneymaster.R
-import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun AppTitle(

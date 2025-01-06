@@ -4,9 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,10 +24,9 @@ import by.varyvoda.android.moneymaster.data.model.domain.DateSuggestion
 import by.varyvoda.android.moneymaster.data.model.domain.PrimitiveDate
 import by.varyvoda.android.moneymaster.data.model.domain.toDateString
 import by.varyvoda.android.moneymaster.data.model.icon.IconRef
-import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
-fun AppDatePicker(
+fun AppDatePickerField(
     date: PrimitiveDate?,
     onDateSelected: (PrimitiveDate?) -> Unit,
     @StringRes labelId: Int,
@@ -41,7 +36,7 @@ fun AppDatePicker(
     var showModal by remember { mutableStateOf(false) }
 
     AppTextField(
-        value = date?.toDateString() ?: "",
+        value = date?.toDateString(stringResource(R.string.pretty_date_format)) ?: "",
         onValueChange = { },
         asButton = true,
         label = { Text(stringResource(labelId)) },
@@ -80,20 +75,13 @@ fun DateSuggestions(
     onDateSelected: (PrimitiveDate?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyRow(
-        horizontalArrangement = Arrangement.formSpacedBy(),
-        verticalAlignment = Alignment.CenterVertically,
+    ButtonSelector(
+        options = dateSuggestions,
+        isSelected = { it.date == date },
+        onSelect = { onDateSelected(it.date) },
         modifier = modifier,
     ) {
-        items(dateSuggestions) {
-            val isSelected = it.date == date
-            AppButton(
-                onClick = { onDateSelected(it.date) },
-                isSecondary = !isSelected,
-            ) {
-                Text(text = it.label)
-            }
-        }
+        Text(text = it.label)
     }
 }
 

@@ -13,11 +13,11 @@ data class Expense(
     @PrimaryKey
     override val id: UUID,
     override val date: PrimitiveDate,
-    val accountId: Id,
-    val amount: MoneyAmount,
-    val categoryId: Id,
-    val description: String,
-) : Operation {
+    override val accountId: Id,
+    override val amount: MoneyAmount,
+    override val categoryId: Id,
+    override val description: String,
+) : IncomeExpense {
 
     @Ignore
     override val type = Operation.Type.EXPENSE

@@ -1,6 +1,5 @@
 package by.varyvoda.android.moneymaster.data.model.domain
 
-import androidx.compose.runtime.Composable
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.Calendar
@@ -39,7 +38,6 @@ fun PrimitiveDate.plusHours(amount: Int): PrimitiveDate {
     return toCalendar().also { it.add(Calendar.HOUR, amount) }.toPrimitiveDate()
 }
 
-@Composable
-fun PrimitiveDate.toDateString(): String =
-    SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
+fun PrimitiveDate.toDateString(format: String): String =
+    SimpleDateFormat(format, Locale.getDefault())
         .format(Date(this))

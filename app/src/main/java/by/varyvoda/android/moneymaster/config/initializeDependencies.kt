@@ -5,6 +5,7 @@ import by.varyvoda.android.moneymaster.data.model.account.Account
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.account.theme.ColorTheme
+import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.domain.plusDays
 import by.varyvoda.android.moneymaster.data.model.domain.toMoneyAmount
 import by.varyvoda.android.moneymaster.data.model.domain.today
@@ -79,7 +80,7 @@ private suspend fun insertAccounts(
             name = "First",
             initialBalance = 1000.toMoneyAmount(),
             currentBalance = 1000.toMoneyAmount(),
-            currencyCode = "USD",
+            currencyCode = Currency.USD.code,
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
@@ -89,7 +90,7 @@ private suspend fun insertAccounts(
             name = "Second",
             initialBalance = 2000.toMoneyAmount(),
             currentBalance = 2000.toMoneyAmount(),
-            currencyCode = "BYN",
+            currencyCode = Currency.BYN.code,
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
@@ -99,7 +100,7 @@ private suspend fun insertAccounts(
             name = "Third",
             initialBalance = 3000.toMoneyAmount(),
             currentBalance = 3000.toMoneyAmount(),
-            currencyCode = "USD",
+            currencyCode = Currency.USD.code,
             iconRef = iconsService.load("RocketLaunch")!!,
             theme = themes.random(),
         )
@@ -188,7 +189,7 @@ private suspend fun insertOperations(
     repeat(6) {
         accountService.addIncome(
             accountId = accounts.random().id,
-            date = today().plusDays((1..7).random()),
+            date = today().plusDays(-(1..7).random()),
             amount = (1L..200L).random().toMoneyAmount(),
             categoryId = categories.random().id,
             description = "Description",
@@ -198,7 +199,7 @@ private suspend fun insertOperations(
     repeat(6) {
         accountService.addExpense(
             accountId = accounts.random().id,
-            date = today().plusDays((1..7).random()),
+            date = today().plusDays(-(1..7).random()),
             amount = (1L..200L).random().toMoneyAmount(),
             categoryId = categories.random().id,
             description = "Description",
@@ -207,7 +208,7 @@ private suspend fun insertOperations(
     }
     repeat(6) {
         accountService.addTransfer(
-            date = today().plusDays((1..7).random()),
+            date = today().plusDays(-(1..7).random()),
             sourceAccountId = accounts.random().id,
             destinationAccountId = accounts.random().id,
             sentAmount = 400.toMoneyAmount(),
