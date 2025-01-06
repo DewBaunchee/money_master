@@ -47,7 +47,7 @@ class CurrenciesViewModel(
         combine(
             _uiState.mapNotNull { it.firstCurrencyCode }.distinctUntilChanged(),
             _uiState.mapNotNull { it.secondCurrencyCode }.distinctUntilChanged(),
-        ) { (firstCurrencyCode, secondCurrencyCode) ->
+        ) { firstCurrencyCode, secondCurrencyCode ->
             combine(
                 currencyExchangeRateRepository.getByCodes(
                     soldCurrencyCode = firstCurrencyCode,

@@ -1,6 +1,7 @@
 package by.varyvoda.android.moneymaster.data.service.statistics
 
 import by.varyvoda.android.moneymaster.data.details.account.operation.IncomeExpenseDetails
+import by.varyvoda.android.moneymaster.data.details.statistics.MoneyAmountAndRatio
 import by.varyvoda.android.moneymaster.data.details.statistics.Statistics
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
@@ -66,12 +67,16 @@ class StatisticsServiceImpl(
             dateRange = dateRange,
             total = total,
             currency = mainCurrency,
-            currencyStatistics = currencyCodesToAmount.mapValues {
-                Pair(it.value, (it.value.doubleValue / total.doubleValue).toFloat())
-            },
-            categoryStatistics = categoriesToAmount.mapValues {
-                Pair(it.value, (it.value.doubleValue / total.doubleValue).toFloat())
-            },
+            currencyStatistics = currencyCodesToAmount.toStatisticsList(total),
+            categoryStatistics = categoriesToAmount.toStatisticsList(total),
         )
     }
+
+    private fun <T> Map<T, MoneyAmount>.toStatisticsList(totalAmount: MoneyAmount) =
+        mapValues {
+            MoneyAmountAndRatio(
+                it.value,
+                (it.value.doubleValue / totalAmount.doubleValue).toFloat()
+            )
+        }.toList().sortedByDescending { it.second.ratio }
 }

@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "by.varyvoda.android.moneymaster"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ycharts)
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 

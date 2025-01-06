@@ -168,7 +168,7 @@ fun DateRangeSuggestions(
                     VerticalDivider(
                         color = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier
-                            .fillMaxHeight(0.8f),
+                            .fillMaxHeight(0.6f),
                     )
                 }
 

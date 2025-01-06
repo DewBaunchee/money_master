@@ -8,8 +8,14 @@ import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 
@@ -37,6 +43,17 @@ class StatisticsViewModel(
             }
         }
         .stateInThis(null)
+
+    init {
+        combine(
+            _uiState.map { it.dateRange }.distinctUntilChanged(),
+            dateRangeSuggestions.filterNotNull(),
+        ) { selectedDateRange, dateRangeSuggestions ->
+            if (selectedDateRange == null && dateRangeSuggestions.isNotEmpty()) {
+                changeDateRange(dateRangeSuggestions.first().range)
+            }
+        }.launchInThis()
+    }
 
     fun changeOperationType(operationType: Operation.Type) {
         _uiState.update { it.copy(operationType = operationType) }

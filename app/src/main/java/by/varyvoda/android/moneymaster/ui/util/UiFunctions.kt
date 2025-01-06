@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,10 @@ fun Arrangement.formSpacedBy(alignment: Alignment.Vertical = Alignment.Top) =
 @Composable
 fun Arrangement.formSpacedBy(alignment: Alignment.Horizontal = Alignment.Start) =
     spacedBy(by.varyvoda.android.moneymaster.ui.util.formSpacedBy(), alignment)
+
+@Composable
+fun ofScreenHeight(amount: Float) =
+    (LocalConfiguration.current.screenHeightDp * amount).dp
 
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues = PaddingValues(
     start = this.calculateStartPadding(LayoutDirection.Ltr) +
