@@ -28,6 +28,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            enableAndroidTestCoverage = true
+        }
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -73,6 +76,7 @@ dependencies {
     ksp(libs.androidx.room.room.compiler)
 
     testImplementation(libs.junit)
+    testImplementation("pl.pragmatists:JUnitParams:1.1.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

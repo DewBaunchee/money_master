@@ -47,8 +47,12 @@ class RoomOperationRepository(
     override suspend fun delete(operation: Operation) =
         daoProvider.getDaoFor(operation).delete(operation)
 
-    override suspend fun delete(id: UUID, operationType: Operation.Type?) {
+    override suspend fun delete(id: UUID) {
         allDaoRun { it.deleteById(id) }
+    }
+
+    override suspend fun delete(id: UUID, operationType: Operation.Type) {
+        delete(id)
     }
 
     override fun getById(id: UUID): Flow<Operation?> =

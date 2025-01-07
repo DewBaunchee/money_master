@@ -11,7 +11,7 @@ class MoneyAmountConverters {
 
     @TypeConverter
     fun toMoneyAmount(string: String) =
-        MoneyAmount(
+        MoneyAmount.of(
             numerator = string.substringBefore("[").toLong(),
             denominatorPower = string.substringAfter("[").substringBefore("]").toInt()
         )

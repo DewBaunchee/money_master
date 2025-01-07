@@ -66,6 +66,12 @@ data class IconRef(
         val Categories = Icons.Filled.Category.toIconRef("Categories")
         val EditOperation  = Icons.Filled.Edit.toIconRef("Edit operation")
         val DeleteOperation = Icons.Filled.Delete.toIconRef("Delete operation")
+
+        val List = listOf( // TODO Test using reflection
+            Back, Home, Selected, DatePicker, Profile, Notifications, AddIncome, AddExpense,
+            AddTransfer, Statistics, History, More, CreateAccount, Currencies, Categories,
+            EditOperation, DeleteOperation,
+        )
     }
 
     suspend fun load() = loader()

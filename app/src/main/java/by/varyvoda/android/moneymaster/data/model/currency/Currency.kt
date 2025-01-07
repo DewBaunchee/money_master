@@ -14,7 +14,7 @@ data class Currency(
     companion object {
         val USD = Currency(code = "USD", name = "American Dollar", symbol = "$")
         val BYN = Currency(code = "BYN", name = "Belarusian Rouble", symbol = "BYN")
-        val default = USD
+        val Default = USD
     }
 
     override fun toString(): String {

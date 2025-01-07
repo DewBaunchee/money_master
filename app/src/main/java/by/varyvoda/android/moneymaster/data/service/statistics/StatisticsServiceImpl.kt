@@ -41,7 +41,7 @@ class StatisticsServiceImpl(
     ).map { operations ->
         val mainCurrency = Currency.USD
         val currencyCodesToAmount = mutableMapOf<String, MoneyAmount>()
-        var total = MoneyAmount()
+        var total = MoneyAmount.zero()
         val categoriesToAmount = mutableMapOf<Category, MoneyAmount>()
 
         for (operation in operations) {
@@ -57,10 +57,10 @@ class StatisticsServiceImpl(
             total += amountInMainCurrency
             currencyCodesToAmount.compute(
                 currencyCode,
-            ) { _, amount -> (amount ?: MoneyAmount()) + amountInMainCurrency }
+            ) { _, amount -> (amount ?: MoneyAmount.zero()) + amountInMainCurrency }
             categoriesToAmount.compute(
                 category,
-            ) { _, amount -> (amount ?: MoneyAmount()) + amountInMainCurrency }
+            ) { _, amount -> (amount ?: MoneyAmount.zero()) + amountInMainCurrency }
         }
 
         return@map Statistics(

@@ -23,14 +23,14 @@ suspend fun insertCurrencyExchangeRates(dao: CurrencyExchangeRateDao) {
         CurrencyExchangeRate(
             soldCurrencyCode = Currency.USD.code,
             boughtCurrencyCode = Currency.BYN.code,
-            MoneyAmount(numerator = 34405, denominatorPower = 4)
+            MoneyAmount.of(numerator = 34405, denominatorPower = 4)
         )
     )
     dao.insert(
         CurrencyExchangeRate(
             soldCurrencyCode = Currency.BYN.code,
             boughtCurrencyCode = Currency.USD.code,
-            MoneyAmount(numerator = 29, denominatorPower = 2)
+            MoneyAmount.of(numerator = 29, denominatorPower = 2)
         )
     )
 }
