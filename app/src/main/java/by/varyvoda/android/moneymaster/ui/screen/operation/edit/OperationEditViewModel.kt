@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
+package by.varyvoda.android.moneymaster.ui.screen.operation.edit
 
 import androidx.lifecycle.viewModelScope
 import by.varyvoda.android.moneymaster.data.details.account.AccountDetails
@@ -13,7 +13,7 @@ import by.varyvoda.android.moneymaster.data.repository.account.operation.categor
 import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.component.SavableViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditDestination
 import by.varyvoda.android.moneymaster.util.allNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +54,7 @@ class OperationEditViewModel(
     val expenseViewModel = createIncomeExpenseViewModel(false)
     val transferViewModel = createTransferViewModel()
 
-    override fun applyDestination(destination: OperationEditDestination) {
+    override suspend fun doApplyDestination(destination: OperationEditDestination) {
         val (operationId, operationType, accountId) = destination
         if (operationId == null) {
             accountId?.let {

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +26,7 @@ import by.varyvoda.android.moneymaster.ui.component.IconAndText
 import by.varyvoda.android.moneymaster.ui.component.MoneyText
 import by.varyvoda.android.moneymaster.ui.component.TitledOperationList
 import by.varyvoda.android.moneymaster.ui.theme.ProfileIconShape
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
@@ -34,11 +34,11 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val (_, selectedOperationId) = viewModel.uiState.collectAsState().value
-    val accounts = viewModel.accounts.collectAsState().value
-    val mainCurrency = viewModel.mainCurrency.collectAsState().value
-    val totalBalance = viewModel.totalBalance.collectAsState().value
-    val operations = viewModel.operations.collectAsState().value
+    val (_, selectedOperationId) = viewModel.uiState.collectValue()
+    val accounts = viewModel.accounts.collectValue()
+    val mainCurrency = viewModel.mainCurrency.collectValue()
+    val totalBalance = viewModel.totalBalance.collectValue()
+    val operations = viewModel.operations.collectValue()
 
     if (accounts == null) return
 

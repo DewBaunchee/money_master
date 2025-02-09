@@ -8,7 +8,7 @@ class RoomCurrencyRepository(
     private val currencyDao: CurrencyDao
 ) : CurrencyRepository {
 
-    override suspend fun insert(currency: Currency) = currencyDao.insert(currency)
+    override suspend fun insert(currency: Currency) = currencyDao.upsert(currency)
 
     override suspend fun update(currency: Currency) = currencyDao.update(currency)
 

@@ -3,13 +3,12 @@ package by.varyvoda.android.moneymaster.data.repository.account.operation.catego
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
+import by.varyvoda.android.moneymaster.util.notNull
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
 
-    suspend fun insert(category: Category)
-
-    suspend fun insert(vararg category: Category)
+    suspend fun upsert(category: Category)
 
     suspend fun update(category: Category)
 
@@ -17,7 +16,9 @@ interface CategoryRepository {
 
     suspend fun deleteById(id: Id)
 
-    fun getById(id: Id): Flow<Category?>
+    fun findById(id: Id): Flow<Category?>
+
+    fun getById(id: Id): Flow<Category> = findById(id).notNull()
 
     fun getAll(): Flow<List<Category>>
 

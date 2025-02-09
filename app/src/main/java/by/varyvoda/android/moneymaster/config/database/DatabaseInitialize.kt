@@ -8,29 +8,49 @@ import by.varyvoda.android.moneymaster.data.model.domain.MoneyAmount
 
 // TODO Create asset of DB
 suspend fun initializeDatabase(database: AppRoomDatabase) {
-    database.clearAllTables()
     insertCurrencies(database.currencyDao())
     insertCurrencyExchangeRates(database.currencyExchangeRateDao())
 }
 
 suspend fun insertCurrencies(dao: CurrencyDao) {
-    dao.insert(Currency.USD)
-    dao.insert(Currency.BYN)
+    dao.upsert(
+        Currency.USD,
+        Currency.BYN,
+        Currency.EUR
+    )
 }
 
 suspend fun insertCurrencyExchangeRates(dao: CurrencyExchangeRateDao) {
-    dao.insert(
+    dao.upsert(
         CurrencyExchangeRate(
             soldCurrencyCode = Currency.USD.code,
             boughtCurrencyCode = Currency.BYN.code,
-            MoneyAmount.of(numerator = 34405, denominatorPower = 4)
-        )
-    )
-    dao.insert(
+            MoneyAmount.of(numerator = 328, denominatorPower = 2)
+        ),
         CurrencyExchangeRate(
             soldCurrencyCode = Currency.BYN.code,
             boughtCurrencyCode = Currency.USD.code,
-            MoneyAmount.of(numerator = 29, denominatorPower = 2)
+            MoneyAmount.of(numerator = 30, denominatorPower = 2)
+        ),
+        CurrencyExchangeRate(
+            soldCurrencyCode = Currency.EUR.code,
+            boughtCurrencyCode = Currency.USD.code,
+            MoneyAmount.of(numerator = 105, denominatorPower = 2)
+        ),
+        CurrencyExchangeRate(
+            soldCurrencyCode = Currency.USD.code,
+            boughtCurrencyCode = Currency.EUR.code,
+            MoneyAmount.of(numerator = 97, denominatorPower = 2)
+        ),
+        CurrencyExchangeRate(
+            soldCurrencyCode = Currency.USD.code,
+            boughtCurrencyCode = Currency.BYN.code,
+            MoneyAmount.of(numerator = 339, denominatorPower = 2)
+        ),
+        CurrencyExchangeRate(
+            soldCurrencyCode = Currency.BYN.code,
+            boughtCurrencyCode = Currency.EUR.code,
+            MoneyAmount.of(numerator = 30, denominatorPower = 2)
         )
     )
 }

@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Money Master"
+rootProject.name = "Money Master Android"
 include(":app")
  

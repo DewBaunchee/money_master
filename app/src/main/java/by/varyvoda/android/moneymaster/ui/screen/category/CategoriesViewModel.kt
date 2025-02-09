@@ -1,10 +1,10 @@
-package by.varyvoda.android.moneymaster.ui.screen.categories
+package by.varyvoda.android.moneymaster.ui.screen.category
 
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.data.model.domain.Id
 import by.varyvoda.android.moneymaster.data.repository.account.operation.category.CategoryRepository
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditDestination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

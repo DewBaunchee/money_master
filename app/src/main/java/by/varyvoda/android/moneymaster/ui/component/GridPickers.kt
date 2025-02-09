@@ -1,5 +1,6 @@
 package by.varyvoda.android.moneymaster.ui.component
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun <T> CompactGridPicker(
@@ -27,6 +29,7 @@ fun <T> CompactGridPicker(
 @Composable
 fun <T> GridPicker(
     items: List<T>,
+    contentPadding: PaddingValues = PaddingValues(formPadding()),
     modifier: Modifier = Modifier,
     itemContent: @Composable LazyGridItemScope.(item: T) -> Unit,
 ) {
@@ -34,6 +37,7 @@ fun <T> GridPicker(
         GridCells.Fixed(4),
 //        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
 //        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.grid_picker_space)),
+        contentPadding = contentPadding,
         modifier = modifier,
     ) {
         this.items(items, itemContent = itemContent)

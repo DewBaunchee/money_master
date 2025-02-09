@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AccountRepository {
 
-    suspend fun insert(account: Account)
-
-    suspend fun update(account: Account)
+    suspend fun upsert(account: Account)
 
     suspend fun updateBalance(accountId: Id, balance: MoneyAmount)
 

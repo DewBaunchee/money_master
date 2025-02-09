@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
+package by.varyvoda.android.moneymaster.ui.screen.operation.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

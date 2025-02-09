@@ -19,6 +19,7 @@ interface OperationRepository {
 
     suspend fun delete(id: UUID, operationType: Operation.Type)
 
+    // TODO Rewrite to get and find
     fun getById(id: UUID): Flow<Operation?>
 
     fun getAll(): Flow<List<Operation>>

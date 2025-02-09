@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.config
+package by.varyvoda.android.moneymaster.config.di
 
 import android.content.Context
 import by.varyvoda.android.moneymaster.config.database.AppRoomDatabase
@@ -35,13 +35,14 @@ import by.varyvoda.android.moneymaster.data.service.icons.GoogleIconsService
 import by.varyvoda.android.moneymaster.data.service.icons.IconsService
 import by.varyvoda.android.moneymaster.data.service.statistics.StatisticsService
 import by.varyvoda.android.moneymaster.data.service.statistics.StatisticsServiceImpl
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.AccountsViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesViewModel
-import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
+import by.varyvoda.android.moneymaster.ui.screen.category.CategoriesViewModel
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.currency.CurrenciesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
+import by.varyvoda.android.moneymaster.ui.screen.operation.edit.OperationEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -113,6 +114,9 @@ fun viewModelModule() = DI.Module("viewModelModule") {
         MoreViewModel()
     }
 
+    bind<AccountsViewModel>() with singleton {
+        AccountsViewModel(instance())
+    }
     bind<AccountEditViewModel>() with singleton {
         AccountEditViewModel(instance(), instance(), instance(), instance())
     }
@@ -157,6 +161,6 @@ fun databaseModule(context: Context) = DI.Module("databaseModule") {
         instance<AppRoomDatabase>().accountTransferDao()
     }
     bind<CategoryDao>() with singleton {
-        instance<AppRoomDatabase>().accountOperationCategoryDao()
+        instance<AppRoomDatabase>().categoryDao()
     }
 }

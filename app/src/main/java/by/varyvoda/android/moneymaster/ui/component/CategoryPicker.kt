@@ -1,6 +1,7 @@
 package by.varyvoda.android.moneymaster.ui.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,16 +15,19 @@ import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Category
 import by.varyvoda.android.moneymaster.data.model.domain.toBrush
 import by.varyvoda.android.moneymaster.ui.util.formPadding
+import by.varyvoda.android.moneymaster.ui.util.plus
 
 @Composable
 fun CategoryPicker(
     categories: List<Category>,
     isSelected: (Category) -> Boolean,
     onSelect: (Category) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(formPadding()),
     modifier: Modifier = Modifier,
 ) {
     GridPicker(
         items = categories,
+        contentPadding = contentPadding,
         modifier = modifier,
     ) {
         CategoryBox(
@@ -111,40 +115,42 @@ fun CategoriesPickerForm(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SearchableContent(
-        searchEnabled = true,
-        searchString = searchString,
-        onSearchStringChange = onSearchStringChange,
-        modifier = Modifier.formPadding(),
-    ) {
-        FormBox(
-            buttons = listOf(
-                {
-                    AppButton(
-                        onClick = onAddCategoryClick,
-                        isSecondary = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(text = stringResource(R.string.add_category))
-                    }
-                },
-                {
-                    AppButton(
-                        onClick = onClose,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(text = stringResource(R.string.close))
-                    }
+    FormBox(
+        buttons = listOf(
+            {
+                AppButton(
+                    onClick = onAddCategoryClick,
+                    isSecondary = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.add_category))
                 }
-            ),
-            modifier = modifier,
+            },
+            {
+                AppButton(
+                    onClick = onClose,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.close))
+                }
+            }
+        ),
+        modifier = modifier,
+    ) { bottomSectionHeightDp ->
+        SearchableContent(
+            searchEnabled = true,
+            searchString = searchString,
+            onSearchStringChange = onSearchStringChange,
+            modifier = Modifier.formPadding(),
         ) {
             CategoryPicker(
                 categories = categories,
                 isSelected = isSelected,
                 onSelect = onSelect,
+                contentPadding = PaddingValues(vertical = formPadding()) +
+                        PaddingValues(bottom = bottomSectionHeightDp)
             )
         }
     }

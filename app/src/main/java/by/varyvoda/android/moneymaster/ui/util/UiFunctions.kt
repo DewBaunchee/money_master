@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +16,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun smallPadding() = dimensionResource(R.dimen.small_padding)
@@ -62,3 +65,9 @@ fun Modifier.debugBorder() = border(
     1.dp,
     listOf(Color.Red, Color.Green, Color.Blue, Color.Magenta).random()
 )
+
+@Composable
+fun <T> Flow<T>.collectValue(initial: T) = collectAsState(initial).value
+
+@Composable
+fun <T> StateFlow<T>.collectValue() = collectAsState().value

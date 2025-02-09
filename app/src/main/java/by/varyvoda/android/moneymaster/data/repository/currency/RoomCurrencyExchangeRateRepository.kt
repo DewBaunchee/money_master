@@ -9,7 +9,7 @@ class RoomCurrencyExchangeRateRepository(
 ) : CurrencyExchangeRateRepository {
 
     override suspend fun insert(currencyExchangeRate: CurrencyExchangeRate) =
-        currencyExchangeRateDao.insert(currencyExchangeRate)
+        currencyExchangeRateDao.upsert(currencyExchangeRate)
 
     override suspend fun update(currencyExchangeRate: CurrencyExchangeRate) =
         currencyExchangeRateDao.update(currencyExchangeRate)

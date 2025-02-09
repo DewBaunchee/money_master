@@ -29,6 +29,7 @@ import by.varyvoda.android.moneymaster.data.model.currency.Currency
 import by.varyvoda.android.moneymaster.data.model.currency.CurrencyExchangeRate
 
 @Database(
+    version = 1,
     entities = [
         Currency::class,
         CurrencyExchangeRate::class,
@@ -39,7 +40,6 @@ import by.varyvoda.android.moneymaster.data.model.currency.CurrencyExchangeRate
         Transfer::class,
         Category::class,
     ],
-    version = 17,
     exportSchema = false
 )
 @TypeConverters(
@@ -66,22 +66,20 @@ abstract class AppRoomDatabase : RoomDatabase() {
 
     abstract fun accountTransferDao(): TransferDao
 
-    abstract fun accountOperationCategoryDao(): CategoryDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
 
         fun createDatabase(
             context: Context,
             iconConverter: RoomIconConverter,
-        ): AppRoomDatabase {
-            return Room.databaseBuilder(
-                context,
-                AppRoomDatabase::class.java,
-                "moneymaster_database"
-            )
-                .addTypeConverter(iconConverter)
-                .fallbackToDestructiveMigration()
-                .build()
-        }
+        ) = Room.databaseBuilder(
+            context,
+            AppRoomDatabase::class.java,
+            "moneymaster_database"
+        )
+            .addTypeConverter(iconConverter)
+            .fallbackToDestructiveMigration(false)
+            .build()
     }
 }

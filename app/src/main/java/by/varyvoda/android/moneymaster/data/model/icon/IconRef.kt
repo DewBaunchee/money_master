@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.CurrencyExchange
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
@@ -34,7 +35,7 @@ data class IconRef(
 
         private const val APPLICATION_CATEGORY = "Application"
 
-        fun ImageVector.toIconRef(label: String = name) = IconRef(
+        fun ImageVector.toIconRef(name: String = this.name.replace(Regex(".*\\."), ""), label: String = name) = IconRef(
             name = name,
             label = label,
             category = APPLICATION_CATEGORY,
@@ -62,15 +63,16 @@ data class IconRef(
         val History = Icons.Filled.History.toIconRef("History")
         val More = Icons.Filled.MoreHoriz.toIconRef("More")
         val CreateAccount = Icons.Filled.AddCard.toIconRef("Create account")
+        val Accounts = Icons.Filled.CreditCard.toIconRef("Accounts")
         val Currencies = Icons.Filled.CurrencyExchange.toIconRef("Currencies")
         val Categories = Icons.Filled.Category.toIconRef("Categories")
         val EditOperation  = Icons.Filled.Edit.toIconRef("Edit operation")
-        val DeleteOperation = Icons.Filled.Delete.toIconRef("Delete operation")
+        val Delete = Icons.Filled.Delete.toIconRef("Delete")
 
         val List = listOf( // TODO Test using reflection
             Back, Home, Selected, DatePicker, Profile, Notifications, AddIncome, AddExpense,
-            AddTransfer, Statistics, History, More, CreateAccount, Currencies, Categories,
-            EditOperation, DeleteOperation,
+            AddTransfer, Statistics, History, More, CreateAccount, Accounts, Currencies, Categories,
+            EditOperation, Delete,
         )
     }
 

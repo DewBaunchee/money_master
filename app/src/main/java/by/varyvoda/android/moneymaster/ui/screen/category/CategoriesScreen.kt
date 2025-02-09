@@ -1,15 +1,15 @@
-package by.varyvoda.android.moneymaster.ui.screen.categories
+package by.varyvoda.android.moneymaster.ui.screen.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import by.varyvoda.android.moneymaster.R
 import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.ui.component.CategoriesPickerForm
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.TitleOperationTypeSelector
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
@@ -28,8 +28,8 @@ fun CategoriesScreen(viewModel: CategoriesViewModel, modifier: Modifier = Modifi
 @Composable
 fun CategoriesScreenBody(viewModel: CategoriesViewModel, modifier: Modifier = Modifier) {
     val (categorySearchString, operationType) =
-        viewModel.uiState.collectAsState().value
-    val categories = viewModel.categories.collectAsState().value
+        viewModel.uiState.collectValue()
+    val categories = viewModel.categories.collectValue()
 
     TitleOperationTypeSelector(
         options = listOf(

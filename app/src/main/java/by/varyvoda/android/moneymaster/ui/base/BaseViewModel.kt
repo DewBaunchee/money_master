@@ -8,7 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,9 +29,17 @@ abstract class BaseViewModel<D> : ViewModel() {
     private val _effect = Channel<BaseEffect>(Channel.BUFFERED)
     val effect: Flow<BaseEffect> = _effect.receiveAsFlow()
 
+    private val _initialized = MutableStateFlow(false)
+    val initialized = _initialized.asStateFlow()
+
     open fun onError(context: CoroutineContext, throwable: Throwable) = Unit
 
-    open fun applyDestination(destination: D) {}
+    suspend fun applyDestination(destination: D) {
+        doApplyDestination(destination)
+        _initialized.value = true
+    }
+
+    protected open suspend fun doApplyDestination(destination: D) {}
 
     protected fun emitEffect(effect: BaseEffect) {
         launchOnMain {

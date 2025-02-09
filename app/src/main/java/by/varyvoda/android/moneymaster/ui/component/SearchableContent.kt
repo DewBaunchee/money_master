@@ -10,10 +10,10 @@ import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
 @Composable
 fun SearchableContent(
-    modifier: Modifier = Modifier,
     searchEnabled: Boolean = false,
     searchString: String = "",
     onSearchStringChange: (String) -> Unit = {},
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.formSpacedBy(), modifier = modifier) {

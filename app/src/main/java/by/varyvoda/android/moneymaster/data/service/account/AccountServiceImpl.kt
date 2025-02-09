@@ -25,15 +25,17 @@ class AccountServiceImpl(
     private val balanceService: BalanceService,
 ) : AccountService {
 
-    override suspend fun createAccount(
+    override suspend fun createOrUpdateAccount(
+        id: Id,
         name: String,
         currencyCode: String,
         initialBalance: MoneyAmount,
         iconRef: IconRef,
         theme: ColorTheme,
     ) {
-        accountRepository.insert(
+        accountRepository.upsert(
             Account(
+                id = id,
                 name = name,
                 currencyCode = currencyCode,
                 initialBalance = initialBalance,
@@ -43,6 +45,13 @@ class AccountServiceImpl(
             )
         )
     }
+
+    override suspend fun deleteAccount(accountId: Id) {
+        accountRepository.delete(id = accountId)
+    }
+
+    override suspend fun getAccount(accountId: Id) =
+        accountRepository.getDetailsById(accountId).notNull()
 
     override suspend fun addIncome(
         accountId: Id,

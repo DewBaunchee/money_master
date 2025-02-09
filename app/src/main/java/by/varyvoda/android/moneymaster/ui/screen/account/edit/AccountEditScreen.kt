@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -22,10 +21,12 @@ import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
 import by.varyvoda.android.moneymaster.ui.component.CurrencySelect
+import by.varyvoda.android.moneymaster.ui.component.DeleteButton
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
@@ -38,7 +39,11 @@ fun AccountEditScreen(
         modifier = modifier,
     ) {
         MainTopBar(
-            titleId = R.string.create_account,
+            titleId =
+            if (viewModel.isCreate.collectValue())
+                R.string.create_account
+            else
+                R.string.edit_account,
             onBackClick = { viewModel.onBackClick() }
         )
         AccountEditBody(viewModel = viewModel)
@@ -50,17 +55,19 @@ fun AccountEditBody(
     viewModel: AccountEditViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val currencies = viewModel.currencies.collectAsState().value
-    val icons = viewModel.icons.collectAsState().value
-    val colorThemes = viewModel.colorThemes.collectAsState().value
-    val (name, currency, initialBalance, iconRef, theme, iconSearchString) = viewModel.uiState.collectAsState().value
+    val isCreate = viewModel.isCreate.collectValue()
+    val currencies = viewModel.currencies.collectValue()
+    val icons = viewModel.icons.collectValue()
+    val colorThemes = viewModel.colorThemes.collectValue()
+    val (_, name, currency, initialBalance, iconRef, theme, iconSearchString) = viewModel.uiState.collectValue()
 
     FormBox(
         buttons = listOf {
+            if (!isCreate) DeleteButton(viewModel = viewModel)
             SaveButton(viewModel = viewModel)
         },
         modifier = modifier,
-    ) { buttonColumnHeightDp ->
+    ) { bottomSectionHeightDp ->
         Column(
             verticalArrangement = Arrangement.formSpacedBy(),
             modifier = Modifier
@@ -91,17 +98,19 @@ fun AccountEditBody(
                     modifier = Modifier
                         .fillMaxWidth()
                 )
-                AppTextField(
-                    value = initialBalance,
-                    onValueChange = { viewModel.changeInitialBalance(it) },
-                    label = { Text(text = stringResource(R.string.account_creation_balance_field_label)) },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+                if (isCreate) {
+                    AppTextField(
+                        value = initialBalance,
+                        onValueChange = { viewModel.changeInitialBalance(it) },
+                        label = { Text(text = stringResource(R.string.account_creation_balance_field_label)) },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
                 CurrencySelect(
                     currencies = currencies,
                     selectedCurrency = currency,
@@ -123,7 +132,7 @@ fun AccountEditBody(
                 modifier = modifier
                     .formPadding(),
             )
-            Spacer(Modifier.height(buttonColumnHeightDp))
+            Spacer(Modifier.height(bottomSectionHeightDp))
         }
     }
 }

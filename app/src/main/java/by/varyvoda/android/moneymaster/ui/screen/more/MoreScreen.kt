@@ -3,7 +3,6 @@ package by.varyvoda.android.moneymaster.ui.screen.more
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -12,10 +11,11 @@ import by.varyvoda.android.moneymaster.ui.component.IconAndText
 import by.varyvoda.android.moneymaster.ui.component.ListPicker
 import by.varyvoda.android.moneymaster.ui.component.ListPickerOption
 import by.varyvoda.android.moneymaster.ui.component.SquareBox
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 
 @Composable
 fun MoreScreen(viewModel: MoreViewModel = viewModel()) {
-    val options = viewModel.uiState.collectAsState().value.options
+    val options = viewModel.uiState.collectValue().options
 
     ListPicker(
         items = options,

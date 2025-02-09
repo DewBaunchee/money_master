@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.io.InputStreamReader
 
-private const val ICONS_NAMES_FILENAME = "google_icons_names.json"
+private const val ICONS_NAMES_FILENAME = "app_google_icons_names.json"
 
 class GoogleIconsService(assets: AssetManager) : IconsService {
 
@@ -70,15 +70,16 @@ class GoogleIconsService(assets: AssetManager) : IconsService {
             }
     }
 
+    // TODO Throw error
     override fun load(name: String) =
-        requireNotNull(iconList.find { it.name == name }) { "Can't find icon with name $name" }
+        iconList.find { it.name == name } ?: IconRef.Default
 }
 
 private fun getLoaderFor(name: String): () -> ImageVector? = loader@{
     try {
         val className = "androidx.compose.material.icons.filled.${name}Kt"
         val cl = Class.forName(className)
-        val method = cl.declaredMethods.first()
+        val method = cl.declaredMethods[1]
         return@loader method.invoke(null, Icons.Filled) as ImageVector
     } catch (e: Throwable) {
         return@loader null

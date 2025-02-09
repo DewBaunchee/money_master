@@ -123,7 +123,7 @@ fun OperationItemEditPanel(
                 )
                 AppIconButton(
                     onClick = { onDeleteClick(operation) },
-                    iconRef = IconRef.DeleteOperation,
+                    iconRef = IconRef.Delete,
                     text = null,
                     tint = Negative,
                 )

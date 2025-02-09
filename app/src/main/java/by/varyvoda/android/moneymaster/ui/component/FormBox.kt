@@ -20,28 +20,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import by.varyvoda.android.moneymaster.R
+import by.varyvoda.android.moneymaster.data.model.icon.IconRef
+import by.varyvoda.android.moneymaster.ui.theme.Negative
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 
 @Composable
 fun FormBox(
     buttons: List<@Composable ColumnScope.() -> Unit>,
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.(buttonSectionHeight: Dp) -> Unit,
+    content: @Composable BoxScope.(buttonSectionHeightDp: Dp) -> Unit,
 ) {
     val localDensity = LocalDensity.current
-    var buttonColumnHeightDp by remember { mutableStateOf(0.dp) }
+    var bottomSectionHeightDp by remember { mutableStateOf(0.dp) }
 
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
-        content(buttonColumnHeightDp)
+        content(bottomSectionHeightDp)
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .formPadding()
                 .onGloballyPositioned {
-                    buttonColumnHeightDp = with(localDensity) { it.size.height.toDp() }
+                    bottomSectionHeightDp = with(localDensity) { it.size.height.toDp() }
                 }
         ) {
             for (button in buttons) {
@@ -67,5 +69,33 @@ fun SaveButton(viewModel: SavableViewModel, modifier: Modifier = Modifier) {
             .fillMaxWidth()
     ) {
         Text(text = stringResource(R.string.save))
+    }
+}
+
+
+interface DeletableViewModel {
+
+    fun canDelete(): Boolean
+
+    fun delete()
+}
+
+@Composable
+fun DeleteButton(viewModel: DeletableViewModel, modifier: Modifier = Modifier) {
+    AppButton(
+        onClick = { viewModel.delete() },
+        isSecondary = true,
+        enabled = viewModel.canDelete(),
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        AppIcon(
+            iconRef = IconRef.Delete,
+            tint = Negative
+        )
+        Text(
+            text = stringResource(R.string.delete),
+            color = Negative
+        )
     }
 }

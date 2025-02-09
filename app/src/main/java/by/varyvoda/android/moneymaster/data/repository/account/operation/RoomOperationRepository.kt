@@ -39,7 +39,7 @@ class RoomOperationRepository(
         OperationDaoProvider(balanceEditDao, incomeDao, expenseDao, transferDao)
 
     override suspend fun insert(operation: Operation) =
-        daoProvider.getDaoFor(operation).insert(operation)
+        daoProvider.getDaoFor(operation).upsert(operation)
 
     override suspend fun update(operation: Operation) =
         daoProvider.getDaoFor(operation).update(operation)
@@ -98,14 +98,14 @@ class RoomOperationRepository(
     private fun Expense.details(): ExpenseDetails =
         ExpenseDetails(
             model = this,
-            category = categoryRepository.getById(categoryId).notNull(),
+            category = categoryRepository.findById(categoryId).notNull(),
             account = accountRepository.getDetailsById(accountId).notNull()
         )
 
     private fun Income.details(): IncomeDetails =
         IncomeDetails(
             model = this,
-            category = categoryRepository.getById(categoryId).notNull(),
+            category = categoryRepository.findById(categoryId).notNull(),
             account = accountRepository.getDetailsById(accountId).notNull()
         )
 

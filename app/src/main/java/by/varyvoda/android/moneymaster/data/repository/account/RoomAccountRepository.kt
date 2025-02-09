@@ -15,9 +15,7 @@ class RoomAccountRepository(
     private val currencyRepository: CurrencyRepository,
 ) : AccountRepository {
 
-    override suspend fun insert(account: Account) = accountDao.insert(account)
-
-    override suspend fun update(account: Account) = accountDao.update(account)
+    override suspend fun upsert(account: Account) = accountDao.upsert(account)
 
     override suspend fun updateBalance(accountId: Id, balance: MoneyAmount) =
         accountDao.updateBalance(accountId, balance)

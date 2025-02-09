@@ -23,30 +23,34 @@ import by.varyvoda.android.moneymaster.ui.base.NavigateUpEffect
 import by.varyvoda.android.moneymaster.ui.component.MainBottomBar
 import by.varyvoda.android.moneymaster.ui.effect.appEffects
 import by.varyvoda.android.moneymaster.ui.effect.handle
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.category.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.account.AccountsDestination
+import by.varyvoda.android.moneymaster.ui.screen.account.AccountsScreen
+import by.varyvoda.android.moneymaster.ui.screen.account.AccountsViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditScreen
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditScreen
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditViewModel
-import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesDestination
-import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesScreen
-import by.varyvoda.android.moneymaster.ui.screen.categories.CategoriesViewModel
-import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesDestination
-import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesScreen
-import by.varyvoda.android.moneymaster.ui.screen.currencies.CurrenciesViewModel
+import by.varyvoda.android.moneymaster.ui.screen.category.CategoriesDestination
+import by.varyvoda.android.moneymaster.ui.screen.category.CategoriesScreen
+import by.varyvoda.android.moneymaster.ui.screen.category.CategoriesViewModel
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.category.edit.CategoryEditViewModel
+import by.varyvoda.android.moneymaster.ui.screen.currency.CurrenciesDestination
+import by.varyvoda.android.moneymaster.ui.screen.currency.CurrenciesScreen
+import by.varyvoda.android.moneymaster.ui.screen.currency.CurrenciesViewModel
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeDestination
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeScreen
 import by.varyvoda.android.moneymaster.ui.screen.home.HomeViewModel
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreDestination
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreScreen
 import by.varyvoda.android.moneymaster.ui.screen.more.MoreViewModel
+import by.varyvoda.android.moneymaster.ui.screen.operation.edit.OperationEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.operation.edit.OperationEditScreen
+import by.varyvoda.android.moneymaster.ui.screen.operation.edit.OperationEditViewModel
 import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsDestination
 import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsScreen
 import by.varyvoda.android.moneymaster.ui.screen.statistics.StatisticsViewModel
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import org.kodein.di.DI
 import org.kodein.di.compose.localDI
 import org.kodein.di.instance
@@ -64,7 +68,7 @@ fun NavComponent(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = StatisticsDestination,
+            startDestination = HomeDestination,
             modifier = modifier.padding(innerPadding),
         ) {
             route<HomeDestination, HomeViewModel>(di, navController) {
@@ -80,11 +84,14 @@ fun NavComponent(
                 MoreScreen(viewModel = it)
             }
 
+            route<AccountsDestination, AccountsViewModel>(di, navController) {
+                bottomBarVisible = false
+                AccountsScreen(viewModel = it)
+            }
             route<AccountEditDestination, AccountEditViewModel>(di, navController) {
                 bottomBarVisible = false
                 AccountEditScreen(viewModel = it)
             }
-
             route<CurrenciesDestination, CurrenciesViewModel>(di, navController) {
                 bottomBarVisible = false
                 CurrenciesScreen(viewModel = it)
@@ -112,9 +119,16 @@ private inline fun <reified D : Any, reified VM : BaseViewModel<D>> NavGraphBuil
 ) {
     composable<D> {
         val viewModel: VM by di.instance()
-        viewModel.applyDestination(it.toRoute())
-        NavigationHandler(navController = navController, baseViewModel = viewModel)
-        screen(viewModel)
+        val route = it.toRoute<D>()
+        
+        LaunchedEffect(route) {
+            viewModel.applyDestination(route)
+        }
+
+        if (viewModel.initialized.collectValue()) {
+            NavigationHandler(navController = navController, baseViewModel = viewModel)
+            screen(viewModel)
+        }
     }
 }
 

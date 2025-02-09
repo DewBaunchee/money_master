@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.category
+package by.varyvoda.android.moneymaster.ui.screen.category.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -17,11 +16,13 @@ import by.varyvoda.android.moneymaster.data.model.account.operation.Operation
 import by.varyvoda.android.moneymaster.ui.component.AppTextField
 import by.varyvoda.android.moneymaster.ui.component.AppTitle
 import by.varyvoda.android.moneymaster.ui.component.AppearanceBuilder
+import by.varyvoda.android.moneymaster.ui.component.DeleteButton
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitleOperationTypeSelector
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
@@ -33,7 +34,11 @@ fun CategoryEditScreen(
     Scaffold(
         topBar = {
             MainTopBar(
-                titleId = R.string.new_category,
+                titleId =
+                if (viewModel.isCreate.collectValue())
+                    R.string.new_category
+                else
+                    R.string.edit_category,
                 onBackClick = { viewModel.onBackClick() }
             )
         },
@@ -52,12 +57,14 @@ private fun Body(
     modifier: Modifier = Modifier,
     viewModel: CategoryEditViewModel
 ) {
-    val icons = viewModel.icons.collectAsState().value
-    val colorThemes = viewModel.colorThemes.collectAsState().value
-    val (_, name, operationType, icon, colorTheme, iconSearchString) = viewModel.uiState.collectAsState().value
+    val isCreate = viewModel.isCreate.collectValue()
+    val icons = viewModel.icons.collectValue()
+    val colorThemes = viewModel.colorThemes.collectValue()
+    val (_, name, operationType, icon, colorTheme, iconSearchString) = viewModel.uiState.collectValue()
 
     FormBox(
         buttons = listOf {
+            if(!isCreate) DeleteButton(viewModel = viewModel)
             SaveButton(viewModel = viewModel)
         },
         modifier = modifier,

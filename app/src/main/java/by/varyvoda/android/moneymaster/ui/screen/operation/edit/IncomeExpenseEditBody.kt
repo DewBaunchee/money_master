@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.account.operation.edit
+package by.varyvoda.android.moneymaster.ui.screen.operation.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +25,7 @@ import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
 import by.varyvoda.android.moneymaster.ui.component.TitledCategoryPicker
 import by.varyvoda.android.moneymaster.ui.component.TitledContent
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 
 
 @Composable
@@ -34,13 +34,13 @@ fun IncomeExpenseEditBody(
     modifier: Modifier = Modifier,
 ) {
     val accounts =
-        viewModel.accounts.collectAsState().value
+        viewModel.accounts.collectValue()
     val dateSuggestions =
-        viewModel.dateSuggestions.collectAsState().value
+        viewModel.dateSuggestions.collectValue()
     val categories =
-        viewModel.categories.collectAsState().value
+        viewModel.categories.collectValue()
     val (_, amount, date, categoryId, description, _, categorySearchString) =
-        viewModel.uiState.collectAsState().value
+        viewModel.uiState.collectValue()
 
     val currentAccount = viewModel.currentAccount
 

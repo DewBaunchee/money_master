@@ -65,4 +65,9 @@
     <string name="transfer">Transfer</string>
     <string name="select_period">Select period</string>
     <string name="pretty_date_format">EEE, MMM d, yyyy</string>
+    <string name="accounts">Accounts</string>
+    <string name="add_account">Add account</string>
+    <string name="edit_account">Edit account</string>
+    <string name="delete">Delete</string>
+    <string name="edit_category">Edit category</string>
 </resources>

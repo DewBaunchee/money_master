@@ -1,10 +1,8 @@
 package by.varyvoda.android.moneymaster.data.repository.account.operation
 
-import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import by.varyvoda.android.moneymaster.config.appModule
-import by.varyvoda.android.moneymaster.config.database.AppRoomDatabase
+import by.varyvoda.android.moneymaster.config.di.appModule
 import by.varyvoda.android.moneymaster.util.randomIncome
 import by.varyvoda.android.moneymaster.util.randomString
 import kotlinx.coroutines.flow.first
@@ -14,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.kodein.di.DI
 import org.kodein.di.instance
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @RunWith(AndroidJUnit4::class)

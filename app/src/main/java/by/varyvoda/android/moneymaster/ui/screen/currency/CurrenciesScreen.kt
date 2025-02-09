@@ -1,4 +1,4 @@
-package by.varyvoda.android.moneymaster.ui.screen.currencies
+package by.varyvoda.android.moneymaster.ui.screen.currency
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import by.varyvoda.android.moneymaster.R
@@ -16,6 +15,7 @@ import by.varyvoda.android.moneymaster.ui.component.CurrencySelect
 import by.varyvoda.android.moneymaster.ui.component.FormBox
 import by.varyvoda.android.moneymaster.ui.component.MainTopBar
 import by.varyvoda.android.moneymaster.ui.component.SaveButton
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 
@@ -35,8 +35,8 @@ fun CurrenciesScreen(viewModel: CurrenciesViewModel, modifier: Modifier = Modifi
 @Composable
 fun CurrenciesScreenBody(viewModel: CurrenciesViewModel, modifier: Modifier = Modifier) {
     val (_, _, firstToSecondRate, secondToFirstRate) =
-        viewModel.uiState.collectAsState().value
-    val currencies = viewModel.currencies.collectAsState().value ?: return
+        viewModel.uiState.collectValue()
+    val currencies = viewModel.currencies.collectValue() ?: return
 
     val firstCurrency = viewModel.firstCurrency
     val secondCurrency = viewModel.secondCurrency
@@ -46,7 +46,7 @@ fun CurrenciesScreenBody(viewModel: CurrenciesViewModel, modifier: Modifier = Mo
             SaveButton(viewModel = viewModel)
         },
         modifier = modifier,
-    ) { buttonColumnHeightDp ->
+    ) { bottomSectionHeightDp ->
         Column(
             verticalArrangement = Arrangement.formSpacedBy(),
             modifier = modifier
@@ -87,6 +87,6 @@ fun CurrenciesScreenBody(viewModel: CurrenciesViewModel, modifier: Modifier = Mo
                     .fillMaxWidth()
             )
         }
-        Spacer(Modifier.height(buttonColumnHeightDp))
+        Spacer(Modifier.height(bottomSectionHeightDp))
     }
 }

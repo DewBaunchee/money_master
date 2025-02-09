@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +41,7 @@ import by.varyvoda.android.moneymaster.ui.component.MoneyText
 import by.varyvoda.android.moneymaster.ui.component.TitleAndText
 import by.varyvoda.android.moneymaster.ui.component.TitleOperationTypeSelector
 import by.varyvoda.android.moneymaster.ui.component.TitledList
+import by.varyvoda.android.moneymaster.ui.util.collectValue
 import by.varyvoda.android.moneymaster.ui.util.formPadding
 import by.varyvoda.android.moneymaster.ui.util.formSpacedBy
 import by.varyvoda.android.moneymaster.ui.util.ofScreenHeight
@@ -53,9 +52,9 @@ import java.util.Locale
 
 @Composable
 fun StatisticsScreen(viewModel: StatisticsViewModel, modifier: Modifier = Modifier) {
-    val (operationType, dateRange) = viewModel.uiState.collectAsState().value
-    val dateRangeSuggestions = viewModel.dateRangeSuggestions.collectAsState().value
-    val statistics = viewModel.statistics.collectAsState().value
+    val (operationType, dateRange) = viewModel.uiState.collectValue()
+    val dateRangeSuggestions = viewModel.dateRangeSuggestions.collectValue()
+    val statistics = viewModel.statistics.collectValue()
 
     Column(
         modifier = modifier

@@ -11,10 +11,11 @@ import by.varyvoda.android.moneymaster.data.service.account.AccountService
 import by.varyvoda.android.moneymaster.data.service.balance.BalanceService
 import by.varyvoda.android.moneymaster.ui.base.BaseViewModel
 import by.varyvoda.android.moneymaster.ui.screen.account.edit.AccountEditDestination
-import by.varyvoda.android.moneymaster.ui.screen.account.operation.edit.OperationEditDestination
+import by.varyvoda.android.moneymaster.ui.screen.operation.edit.OperationEditDestination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -71,16 +72,20 @@ class HomeViewModel(
                 operationRepository.getAllDetailsByAccountId(it)
             } ?: flowOf(null)
         }
+        .catch {
+            // TODO Investigate
+            println(it)
+        }
         .stateInThis(null)
 
     val currentAccount get() = accounts.value?.find { it.id == uiState.value.currentAccountId }
 
     fun changeCurrentAccount(accountId: Id) {
-        this._uiState.update { it.copy(currentAccountId = accountId) }
+        _uiState.update { it.copy(currentAccountId = accountId) }
     }
 
     fun selectOperation(operationId: UUID) {
-        this._uiState.update {
+        _uiState.update {
             it.copy(
                 selectedOperationId =
                 if (it.selectedOperationId != operationId)
